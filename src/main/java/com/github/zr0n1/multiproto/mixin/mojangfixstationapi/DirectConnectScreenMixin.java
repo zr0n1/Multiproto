@@ -16,7 +16,7 @@ public abstract class DirectConnectScreenMixin extends Screen {
     @Inject(method = "init", at = @At("RETURN"))
     private void addButton(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-            I18n.getTranslation("multiplayer.viababric:changeProtocol"), (button) -> {
+            I18n.getTranslation("multiplayer.multiproto:changeProtocol"), (button) -> {
                 minecraft.setScreen(new ChangeVersionScreen(this));
         }));
     }

@@ -13,10 +13,10 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return switch(mixinClassName) {
-            case "com.github.zr0n1.viababric.mixin.mojangfixstationapi.DirectConnectScreenMixin",
-                 "com.github.zr0n1.viababric.mixin.mojangfixstationapi.EditServerScreenMixin",
-                 "com.github.zr0n1.viababric.mixin.mojangfixstationapi.MultiplayerServerListWidgetMixin",
-                 "com.github.zr0n1.viababric.mixin.mojangfixstationapi.ServerDataMixin" ->
+            case "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.DirectConnectScreenMixin",
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.EditServerScreenMixin",
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.MultiplayerServerListWidgetMixin",
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.ServerDataMixin" ->
                     Multiproto.shouldApplyMojangFixStationApiIntegration();
             default -> true;
         };

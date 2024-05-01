@@ -26,7 +26,7 @@ public class ChangeVersionScreen extends Screen {
 
     public void render(int mouseX, int mouseY, float delta) {
         renderBackground();
-        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiplayer.viababric:changeVersion"),
+        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiplayer.multiproto:changeVersion"),
         this.width / 2, 20, 16777215);
         super.render(mouseX, mouseY, delta);
     }
