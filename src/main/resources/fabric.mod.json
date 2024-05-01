@@ -1,44 +1,41 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "viababric",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "ViaBabric",
+  "description": "Client-side protocol translation mod for Babric and StationAPI allowing Minecraft Beta 1.7.3 clients to connect to earlier versions.",
   "authors": [
-    "Me!"
+    "0n1"
   ],
   "contact": {
-    "homepage": "https://glass-launcher.net/",
-    "sources": "https://github.com/calmilamsy/stationapi-example-mod"
+    "homepage": "https://github.com/zr0n1/Multiproto",
+    "sources": "https://github.com/zr0n1/Multiproto"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/examplemod/icon.png",
+  "license": "GPLv3",
+  "icon": "assets/multiproto/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "stationapi:event_bus": [
-      "net.glasslauncher.example.events.init.AchievementListener",
-      "net.glasslauncher.example.events.init.BlockListener",
-      "net.glasslauncher.example.events.init.ItemListener",
-      "net.glasslauncher.example.events.init.PlayerHandlerListener",
-      "net.glasslauncher.example.events.init.RecipeListener"
-    ],
     "stationapi:event_bus_client": [
-      "net.glasslauncher.example.events.init.KeyBindingListener",
-      "net.glasslauncher.example.events.init.TextureListener",
-      "net.glasslauncher.example.events.ingame.KeyPressedListener"
+      "com.github.zr0n1.multiproto.Multiproto"
     ],
     "stationapi:event_bus_server": [
-      "net.glasslauncher.example.events.init.ServerInitListener"
     ]
   },
   "mixins": [
-    "examplemod.mixins.json"
+    "multiproto.mixins.json"
   ],
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "pl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData": [
+        "com/github/zr0n1/interfaces/MultiprotoServerData"
+      ]
+    }
   }
 }

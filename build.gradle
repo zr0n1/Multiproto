@@ -46,6 +46,10 @@ repositories {
 		name = 'Froge'
 		url 'https://maven.minecraftforge.net/'
 	}
+	maven {
+		name = 'ViaVersion'
+		url 'https://repo.viaversion.com'
+	}
 	// Used for projects that do not have a maven repository, but do have a GitHub repository with working build scripts.
 	maven {
 		name = 'Jitpack'
@@ -69,16 +73,20 @@ repositories {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.glasslauncher:biny:${project.yarn_mappings}:v2"
+	mappings "net.glasslauncher:biny:${project.mappings}:v2"
 	modImplementation "babric:fabric-loader:${project.loader_version}"
 
 	implementation "org.slf4j:slf4j-api:1.8.0-beta4"
 	implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
 	implementation "blue.endless:jankson:1.2.1"
 
+	testImplementation "net.raphimc:ViaLoader:${project.vialoader_version}"
+	testImplementation "net.raphimc:ViaLegacy:${project.vialegacy_version}"
+	testImplementation "com.viaversion:viaversion-api:${project.viaversion_version}"
+
 	modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
 
-	// Optional, but convenient mods for mod creators and users alike.
+	// Optional dependencies
 	modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
 		transitive false
 	}
@@ -86,6 +94,12 @@ dependencies {
 		transitive false
 	}
 	modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.howmanyitems_version}") {
+		transitive false
+	}
+	modImplementation("maven.modrinth:mojangfix-stationapi-edition:${project.mojangfix_stapi_version}") {
+		transitive false
+	}
+	implementation("com.github.GeyserMC:MCAuthLib:d9d773e5d50327c33898c65cd545a4f6ef3ba1b5") {
 		transitive false
 	}
 }

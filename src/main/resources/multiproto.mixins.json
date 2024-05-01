@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.zr0n1.multiproto.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin",
+  "mixins": [
+  ],
+  "server": [
+  ],
+  "client": [
+    "mojangfixstationapi.DirectConnectScreenMixin",
+    "mojangfixstationapi.EditServerScreenMixin",
+    "mojangfixstationapi.MultiplayerServerListWidgetMixin",
+    "mojangfixstationapi.ServerDataMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
