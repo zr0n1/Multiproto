@@ -35,7 +35,7 @@ public class ChangeVersionScreen extends Screen {
         for(int i = 0; i < alphaVersions.size(); i++) {
             ProtocolVersion a = alphaVersions.get(i);
             ButtonWidget button = new ButtonWidget(versions.indexOf(a), (i % 2 == 0) ? width / 2 - 184 : width / 2 + 4,
-                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, a.names.range());
+                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, a.nameRange());
             if(i == alphaVersions.size() - 1 && i % 2 == 0) button.x = width / 2 - 90;
             button.visible = false;
             button.active = false;
@@ -44,7 +44,7 @@ public class ChangeVersionScreen extends Screen {
         for(int i = 0; i < betaVersions.size(); i++) {
             ProtocolVersion b = betaVersions.get(i);
             ButtonWidget button = new ButtonWidget(versions.indexOf(b), (i % 2 == 0) ? width / 2 - 184 : width / 2 + 4,
-                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, b.names.range());
+                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, b.nameRange());
             if(i == betaVersions.size() - 1 && i % 2 == 0) button.x = width / 2 - 90;
             buttons.add(button);
         }

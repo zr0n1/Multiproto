@@ -19,7 +19,7 @@ public class MultiplayerScreenMixin extends Screen {
         ButtonWidget b = (ButtonWidget)buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
                 I18n.getTranslation("multiproto.button.changeVersion") + ": " +
-                        ProtocolVersion.getCurrentVersion().names.range(true)));
+                        ProtocolVersion.getCurrentVersion().nameRange(true)));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)
