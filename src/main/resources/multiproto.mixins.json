@@ -9,6 +9,7 @@
   "server": [
   ],
   "client": [
+    "MultiplayerScreenMixin",
     "mojangfixstationapi.DirectConnectScreenMixin",
     "mojangfixstationapi.EditServerScreenMixin",
     "mojangfixstationapi.MultiplayerServerListWidgetMixin",

@@ -1,1 +1,2 @@
-multiplayer.changeVersion=Server version
+@.button.changeVersion=Server version
+@.screen.changeVersion=Change version

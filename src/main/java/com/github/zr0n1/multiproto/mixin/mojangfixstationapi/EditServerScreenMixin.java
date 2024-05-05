@@ -22,8 +22,8 @@ public class EditServerScreenMixin extends Screen {
     @Inject(method = "init", at = @At("RETURN"))
     private void addButton(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-            I18n.translate("multiplayer.multiproto:changeVersion"), (button) -> {
-                minecraft.openScreen(new ChangeVersionScreen(this));
+            I18n.getTranslation("multiproto.changeVersion"), (button) -> {
+                minecraft.setScreen(new ChangeVersionScreen(this));
         }));
     }
 }

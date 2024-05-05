@@ -12,19 +12,113 @@ import java.util.regex.Pattern;
 public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
 
     public static final SortedSet<ProtocolVersion> PROTOCOL_VERSIONS = new TreeSet<>();
+    public static final SortedSet<ProtocolVersion> ALPHA_PROTOCOL_VERSIONS = new TreeSet<>();
+    public static final SortedSet<ProtocolVersion> BETA_PROTOCOL_VERSIONS = new TreeSet<>();
 
     /**
      * Beta 1.7 - Beta 1.7.3
      */
     public static final ProtocolVersion BETA_14 = new ProtocolVersion(14, Type.BETA,
-            new VersionNames.Builder(Type.BETA, 7, 0, 3).put(1, 1).build()) {
+            new VersionNames.Builder(Type.BETA, 7).subpatch(1).patchRange(2, 3).build()) {
     };
     /**
      * Beta 1.6 - Beta 1.6.6
      */
     public static final ProtocolVersion BETA_13 = new ProtocolVersion(13, Type.BETA,
-            new VersionNames.Builder(Type.BETA,6, 0, 6).build()) {
+            new VersionNames.Builder(Type.BETA,6).patchRange(0, 6).build()) {
     };
+
+    /**
+     * Beta 1.5 - Beta 1.5_02
+     */
+    public static final ProtocolVersion BETA_11 = new ProtocolVersion(11, Type.BETA,
+            new VersionNames.Builder(Type.BETA, 5).subpatchRange(1, 2).build()) {
+    };
+
+    /**
+     * Beta 1.4 - Beta 1.4_01
+     */
+    public static final ProtocolVersion BETA_10 = new ProtocolVersion(10, Type.BETA,
+            new VersionNames.Builder(Type.BETA, 4).subpatch(1).build()) {
+    };
+
+    /**
+     * Beta 1.3 - Beta 1.3_01
+     */
+    public static final ProtocolVersion BETA_9 = new ProtocolVersion(9, Type.BETA,
+            new VersionNames.Builder(Type.BETA, 3).subpatch(1).build()) {
+    };
+
+    /**
+     * Beta 1.1_02 - Beta 1.2_02
+     */
+    public static final ProtocolVersion BETA_8 = new ProtocolVersion(8, Type.BETA,
+            new VersionNames.Builder(Type.BETA, 1, 0, 2).subpatchRange(2, 0, 0, 2).build()) {
+    };
+
+    /**
+     * Beta 1.0 - Beta 1.1_01
+     */
+    public static final ProtocolVersion BETA_7 = new ProtocolVersion(7, Type.BETA,
+            new VersionNames.Builder(Type.BETA, 0).subpatchRange(1, 2).add(1, 1).build()) {
+    };
+
+    /**
+     * Alpha v1.2.3_05 - Alpha v1.2.6
+     */
+    public static final ProtocolVersion ALPHA_LATER_6 = new ProtocolVersion(6, Type.ALPHA_LATER,
+            new VersionNames.Builder(Type.ALPHA_LATER, 2, 3, 5).add(4, 1).patchRange(4, 6).build()) {
+    };
+
+    /**
+     * Alpha v1.2.3 - Alpha v1.2.3_04
+     */
+    public static final ProtocolVersion ALPHA_LATER_5 = new ProtocolVersion(5, Type.ALPHA_LATER,
+            new VersionNames.Builder(Type.ALPHA_LATER, 2, 3).subpatchRange(3, 1, 2).add(3, 4).build()) {
+    };
+
+    /**
+     * Alpha v1.2.2
+     */
+    public static final ProtocolVersion ALPHA_LATER_4 = new ProtocolVersion(4, Type.ALPHA_LATER,
+            new VersionNames.Builder(Type.ALPHA_LATER, 2, 2).build()) {
+    };
+
+    /**
+     * Alpha v1.2.0 - Alpha v1.2.1_01
+     */
+    public static final ProtocolVersion ALPHA_LATER_3 = new ProtocolVersion(3, Type.ALPHA_LATER,
+            new VersionNames.Builder(Type.ALPHA_LATER, 2).subpatchRange(1, 2).subpatchRange(1, 0, 1).build()) {
+    };
+
+    /**
+     * Alpha v1.1.0 - Alpha v1.1.2_01
+     */
+    public static final ProtocolVersion ALPHA_2 = new ProtocolVersion(2, Type.ALPHA,
+            new VersionNames.Builder(Type.ALPHA, 1).patchRange(1, 2).add(2, 1).build()) {
+    };
+
+    /**
+     * Alpha v1.0.17 - Alpha v1.0.17_04
+     */
+    public static final ProtocolVersion ALPHA_1 = new ProtocolVersion(1, Type.ALPHA,
+            new VersionNames.Builder(Type.ALPHA, 0, 17).subpatchRange(17, 1, 4).build()) {
+    };
+
+    /**
+     * Alpha v1.0.16 - Alpha v1.0.16_02
+     */
+    public static final ProtocolVersion ALPHA_EARLY_14 = new ProtocolVersion(14, Type.ALPHA_EARLY,
+            new VersionNames.Builder(Type.ALPHA, 0, 16).subpatchRange(16, 1, 2).build()) {
+    };
+
+    /**
+     * Alpha v1.0.15 (First version with SMP!)
+     */
+    public static final ProtocolVersion ALPHA_EARLY_13 = new ProtocolVersion(13, Type.ALPHA_EARLY,
+            new VersionNames.Builder(Type.ALPHA, 0, 15).build()) {
+    };
+
 
     private static ProtocolVersion currentVersion = BETA_14;
 
@@ -61,6 +155,11 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
         this.type = type;
         this.names = names;
         PROTOCOL_VERSIONS.add(this);
+        if(type.alpha) {
+            ALPHA_PROTOCOL_VERSIONS.add(this);
+        } else {
+            BETA_PROTOCOL_VERSIONS.add(this);
+        }
     }
 
     /**
@@ -245,19 +344,27 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
         public static class Builder {
             private final Type type;
             private final int major;
-            private final int defaultMinor;
+            private final int startingMinor;
             private final SortedSet<VersionNumbers> numbers;
 
-            public Builder(Type type, int minor, int start, int end) {
-                this(type, type.majorVersion, minor, start, end);
+            public Builder(Type type, int minor) {
+                this(type, type.majorVersion, minor, 0, 0);
             }
 
-            public Builder(Type type, int major, int minor, int start, int end) {
+            public Builder(Type type, int minor, int patch) {
+                this(type, type.majorVersion, minor, patch, 0);
+            }
+
+            public Builder(Type type, int minor, int patch, int subpatch) {
+                this(type, type.majorVersion, minor, patch, subpatch);
+            }
+
+            public Builder(Type type, int major, int minor, int patch, int subpatch) {
                 this.type = type;
                 this.major = major;
-                this.defaultMinor = minor;
+                this.startingMinor = minor;
                 this.numbers = new TreeSet<>();
-                patchRange(minor, start, end);
+                add(minor, patch, subpatch);
             }
 
             /**
@@ -265,6 +372,10 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
              */
             public VersionNames build() {
                 return new VersionNames(type, numbers);
+            }
+
+            public Builder patchRange(int start, int end) {
+                return patchRange(startingMinor, start, end);
             }
 
             /**
@@ -279,13 +390,25 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
                 return this;
             }
 
+            public Builder subpatchRange(int start, int end) {
+                return subpatchRange(startingMinor, 0, start, end);
+            }
+
+            public Builder subpatchRange(int patch, int start, int end) {
+                return subpatchRange(startingMinor, patch, start, end);
+            }
+
             public Builder subpatchRange(int minor, int patch, int start, int end) {
                 for(int subpatch = start; subpatch <= end; subpatch++) add(minor, patch, subpatch);
                 return this;
             }
 
+            public Builder subpatch(int i) {
+                return add(startingMinor, 0, i);
+            }
+
             public Builder add(int patch, int subpatch) {
-                return add(defaultMinor, patch, subpatch);
+                return add(startingMinor, patch, subpatch);
             }
 
             /**
@@ -300,55 +423,6 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
                 return this;
             }
 
-            /**
-             * Removes a patch version.
-             * @param minor Minor version number.
-             * @param patch Patch version number.
-             * @return Itself.
-             */
-            private Builder remove(int minor, int patch) {
-                numbers.remove(new VersionNumbers(major, minor, patch, 0));
-                return this;
-            }
-
-            /**
-             * Replaces a patch version with a subpatch version.<br>
-             * Used for subpatch versions which have no corresponding patch version within the protocol version
-             * (a1.2.3_05, a1.2.4_01) or for versions with an x.y_z subpatch but no x.y.z patch (b1.7_01).
-             * @param patch Patch version to replace.
-             * @param subpatch Replacement subpatch version.
-             * @return Itself.
-             */
-            public Builder put(int patch, int subpatch) {
-                return put(defaultMinor, patch, 0, subpatch);
-            }
-
-            /**
-             * Replaces a patch version with a subpatch version.<br>
-             * Used for subpatch versions which have no corresponding patch version within the protocol version
-             * (a1.2.3_05, a1.2.4_01) or for versions with an x.y_z subpatch but no x.y.z patch (b1.7_01).
-             * @param minor Minor version to replace a patch for.
-             * @param patch Patch version to replace.
-             * @param subpatch Replacement subpatch version.
-             * @return Itself.
-             */
-            public Builder put(int minor, int patch, int subpatch) {
-                return put(minor, patch, 0, subpatch);
-            }
-
-            /**
-             * Replaces a patch version with a subpatch version.<br>
-             * Used for subpatch versions which have no corresponding patch version within the protocol version
-             * (a1.2.3_05, a1.2.4_01) or for x.y versions with a x.y_0z subpatch but no x.y.z patch (b1.7_01).
-             * @param minor Minor version to replace a patch for.
-             * @param patch Patch version to replace.
-             * @param replacement Replacement patch version.
-             * @param subpatch Replacement subpatch version.
-             * @return Itself.
-             */
-            public Builder put(int minor, int patch, int subpatch, int replacement) {
-                return remove(minor, patch).add(minor, replacement, subpatch);
-            }
         }
         private record VersionNumbers(int major, int minor, int patch, int subpatch) implements Comparable<VersionNumbers> {
             /**
