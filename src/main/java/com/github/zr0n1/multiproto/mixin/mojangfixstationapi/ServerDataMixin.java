@@ -3,7 +3,7 @@ package com.github.zr0n1.multiproto.mixin.mojangfixstationapi;
 import com.github.zr0n1.multiproto.interfaces.MultiprotoServerData;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.io.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,10 +16,10 @@ public abstract class ServerDataMixin implements MultiprotoServerData {
     @Unique
     private ProtocolVersion version;
 
-    @Inject(method = "save()Lnet/minecraft/nbt/NbtCompound;",
+    @Inject(method = "save()Lnet/minecraft/util/io/CompoundTag;",
     at = @At(value = "RETURN", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;save()Lnet/minecraft/nbt/NbtCompound;"))
-    private void save(CallbackInfoReturnable<NbtCompound> cir, @Local NbtCompound nbt) {
-        nbt.putString("version", version.toString());
+    private void save(CallbackInfoReturnable<CompoundTag> cir, @Local CompoundTag nbt) {
+        nbt.put("version", version.toString());
     }
 
     @Override
