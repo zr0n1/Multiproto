@@ -5,11 +5,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.CraftingRecipeManager;
+import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VersionCraftingHelper {
+public class VersionRecipesHelper {
     public static List vanillaRecipes = new ArrayList();
 
     /**
@@ -36,7 +37,9 @@ public class VersionCraftingHelper {
         if(v.compareTo(ProtocolVersion.BETA_11) < 0) {
             CraftingRecipeManager.getInstance().getRecipes().removeIf(r ->
                     ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.POWERED_RAIL, 6)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.DETECTOR_RAIL, 6)));
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.DETECTOR_RAIL, 6)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.LADDER, 2)));
+            CraftingRegistry.addShapedRecipe(new ItemStack(Block.LADDER, 1), "# #", "###", "# #", '#', Item.STICK);
         }
         // Beta 1.4
         if(v.compareTo(ProtocolVersion.BETA_10) < 0) {
@@ -50,7 +53,13 @@ public class VersionCraftingHelper {
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.REPEATER, 1)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 3)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 2)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 1)));
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 1)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 0)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.STONE_PRESSURE_PLATE, 1)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.WOODEN_PRESSURE_PLATE, 1)));
+            CraftingRegistry.addShapedRecipe(new ItemStack(Block.SLAB, 3, 0), "##", '#', Block.STONE);
+            CraftingRegistry.addShapedRecipe(new ItemStack(Block.STONE_PRESSURE_PLATE, 1), "###", '#', Block.STONE);
+            CraftingRegistry.addShapedRecipe(new ItemStack(Block.WOODEN_PRESSURE_PLATE, 1), "###", '#', Block.PLANKS);
         }
         // Beta 1.2
         if(v.compareTo(ProtocolVersion.BETA_8) < 0) {

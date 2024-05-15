@@ -20,15 +20,16 @@ public abstract class FurnaceBlockMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void getTexture(int side, CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0 && side == 1 || side == 0) {
+        if(side == 1 || side == 0 && ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
+                Multiproto.config.versionGraphics) {
             cir.setReturnValue(STONE.textureId);
         }
     }
 
     @Inject(method = "getTextureId", at = @At("HEAD"), cancellable = true)
     private void getTextureId(BlockView bv, int x, int y, int z, int side, CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
-                Multiproto.config.versionGraphics && side == 1 || side == 0) {
+        if(side == 1 || side == 0 && ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
+                Multiproto.config.versionGraphics) {
             cir.setReturnValue(STONE.textureId);
         }
     }

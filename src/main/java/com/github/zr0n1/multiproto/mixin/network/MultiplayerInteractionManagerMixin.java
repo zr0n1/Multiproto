@@ -71,12 +71,12 @@ public abstract class MultiplayerInteractionManagerMixin {
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
             opcode = Opcodes.PUTFIELD)))
     private void redirectSendBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) > 0) handler.sendPacket(packet);
+        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
     private void redirectMethod_1707(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) > 0) {
+        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_9) >= 0) {
             method_1707(i, j, k, l);
         } else {
             field_2611 = 0.0F;

@@ -20,10 +20,10 @@ public abstract class EntityEquipmentUpdateS2CPacketMixin {
 
     @Shadow public int itemDamage;
 
-    @Redirect(method = "read", at = @At(value = "FIELD",
-            target = "Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;itemDamage:I", opcode = Opcodes.PUTFIELD))
-    private void redirectReadDamage(EntityEquipmentUpdateS2CPacket packet, int value, @Local DataInputStream stream) throws IOException {
-        packet.itemDamage = ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) >= 0 ? stream.readShort() : 0;
+    @Redirect(method = "read", at = @At(value = "INVOKE",
+            target = "Ljava/io/DataInputStream;readShort()S", ordinal = 2))
+    private short redirectReadDamage(DataInputStream stream) throws IOException {
+        return (ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) >= 0) ? stream.readShort() : 0;
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),

@@ -2,7 +2,6 @@ package com.github.zr0n1.multiproto;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
-import com.github.zr0n1.multiproto.protocol.VersionGraphicsHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
@@ -19,10 +18,11 @@ public class Config implements PreConfigSavedListener {
 
     @Override
     public void onPreConfigSaved(int source, JsonObject oldJson, JsonObject newJson) {
-        if(source == EventStorage.EventSource.USER_SAVE &&
-                oldJson.getBoolean("versionGraphics", false) !=
-                        newJson.getBoolean("versionGraphics", true)) {
-            VersionGraphicsHelper.applyChanges();
+        boolean versionGraphicsOld = oldJson.getBoolean("versionGraphics", true);
+        boolean versionGraphicsNew = newJson.getBoolean("versionGraphics", false);
+        if(source == EventStorage.EventSource.USER_SAVE && versionGraphicsOld != versionGraphicsNew) {
+            versionGraphics = versionGraphicsNew;
+            ((Minecraft)FabricLoader.getInstance().getGameInstance()).textureManager.method_1096();
         }
     }
 }

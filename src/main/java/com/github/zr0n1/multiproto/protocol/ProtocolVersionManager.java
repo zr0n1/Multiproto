@@ -10,7 +10,7 @@ public class ProtocolVersionManager {
 
     public static void setCurrentVersion(ProtocolVersion version) {
         currentVersion = version;
-        VersionCraftingHelper.applyChanges();
-        VersionGraphicsHelper.applyChanges();
+        VersionRecipesHelper.applyChanges();
+        VersionItemHelper.applyChanges();
     }
 }

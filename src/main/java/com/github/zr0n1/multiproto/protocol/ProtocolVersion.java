@@ -90,13 +90,13 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
     /**
      * Alpha v1.0.16 - Alpha v1.0.16_02
      */
-    public static final ProtocolVersion ALPHA_EARLY_14 = new ProtocolVersion(14, Type.ALPHA_INITIAL, "1.0.16",
+    public static final ProtocolVersion ALPHA_INITIAL_14 = new ProtocolVersion(14, Type.ALPHA_INITIAL, "1.0.16",
             "1.0.16_02");
 
     /**
      * Alpha v1.0.15 (First version with SMP!)
      */
-    public static final ProtocolVersion ALPHA_EARLY_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
+    public static final ProtocolVersion ALPHA_INITIAL_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
 
     /**
      * Protocol version int.

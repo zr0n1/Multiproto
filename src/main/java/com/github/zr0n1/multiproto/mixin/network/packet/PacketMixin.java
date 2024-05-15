@@ -1,5 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network.packet;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.llamalad7.mixinextras.sugar.Local;

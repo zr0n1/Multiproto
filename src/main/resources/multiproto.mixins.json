@@ -7,6 +7,8 @@
   "mixins": [
     "block.FurnaceBlockMixin",
     "block.LeavesBlockMixin",
+    "block.SlabBlockMixin",
+    "item.ToolItemAccessor",
     "network.packet.PacketMixin",
     "network.packet.c2s.play.ClickSlotC2SPacketMixin",
     "network.packet.c2s.play.PlayerInteractBlockC2SPacketMixin",
@@ -28,7 +30,8 @@
     "mojangfixstationapi.gui.MultiplayerServerListWidgetMixin",
     "mojangfixstationapi.gui.ServerDataMixin",
     "network.MultiplayerClientPlayerEntityMixin",
-    "network.MultiplayerInteractionManagerMixin"
+    "network.MultiplayerInteractionManagerMixin",
+    "stationapi.ArsenicItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

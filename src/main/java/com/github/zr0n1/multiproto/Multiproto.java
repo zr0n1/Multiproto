@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.Block;
 import net.minecraft.recipe.CraftingRecipeManager;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -30,16 +29,18 @@ public class Multiproto {
     @EventListener
     void registerTextures(TextureRegisterEvent event) {
         ExpandableAtlas terrain = Atlases.getTerrain();
-        VersionGraphicsHelper.vanillaCobblestoneTexture = Block.COBBLESTONE.textureId;
-        VersionGraphicsHelper.vanillaBricksTexture = Block.BRICKS.textureId;
         VersionGraphicsHelper.cobblestoneTexture = terrain.addTexture(NAMESPACE.id("block/cobblestone")).index;
         VersionGraphicsHelper.bricksTexture = terrain.addTexture(NAMESPACE.id("block/bricks")).index;
+        VersionGraphicsHelper.stoneSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/stone_slab_side")).index;
+        VersionGraphicsHelper.sandstoneSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/sandstone_slab_side")).index;
+        VersionGraphicsHelper.planksSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/planks_slab_side")).index;
+        VersionGraphicsHelper.cobblestoneSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/cobblestone_slab_side")).index;
         VersionGraphicsHelper.applyChanges();
     }
 
     @EventListener
-    void registerVanillaPacketsAndRecipes(PacketRegisterEvent event) {
-        VersionCraftingHelper.vanillaRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
+    void registerVanillaRecipes(PacketRegisterEvent event) {
+        VersionRecipesHelper.vanillaRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
     }
 
     public static boolean shouldApplyMojangFixStationApiIntegration() {
