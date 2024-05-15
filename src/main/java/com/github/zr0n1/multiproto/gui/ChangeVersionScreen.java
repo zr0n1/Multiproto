@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.gui;
 
-import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.font.TextRenderer;
@@ -18,7 +19,7 @@ public class ChangeVersionScreen extends Screen {
     private final List<ProtocolVersion> alphaVersions;
     private final List<ProtocolVersion> betaVersions;
     private ButtonWidget pageButton;
-    private boolean page = true;
+    private ButtonWidget betaButton;
 
     public ChangeVersionScreen(Screen parent, ServerData server) {
         this.parent = parent;
@@ -48,10 +49,10 @@ public class ChangeVersionScreen extends Screen {
             if(i == betaVersions.size() - 1 && i % 2 == 0) button.x = width / 2 - 90;
             buttons.add(button);
         }
-        buttons.add(new ButtonWidget(100, width / 2 - 100, height / 4 + 120 + 12,
+        buttons.add(new ButtonWidget(100, width / 2 - 100, height / 4 + 120 - 12,
                 I18n.getTranslation("gui.cancel")));
         buttons.add(pageButton =
-                new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 12, ProtocolVersion.Type.ALPHA.label));
+                new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 36, I18n.getTranslation("multiproto.gui.changePage")));
     }
 
     @Override
@@ -59,22 +60,22 @@ public class ChangeVersionScreen extends Screen {
         if(button.id == 100) {
             minecraft.setScreen(parent);
         } else if(button.id == 101) {
-            page = !page;
-            pageButton.text = page ? ProtocolVersion.Type.ALPHA.label : ProtocolVersion.Type.BETA.label;
             for(int i = 0; i < versions.size(); i++) {
                 ButtonWidget b = (ButtonWidget)buttons.get(i);
                 b.active = !b.active;
                 b.visible = !b.visible;
             }
         } else if(button.id <= versions.size()) {
-            ProtocolVersion.setCurrentVersion(versions.get(button.id));
+            ProtocolVersion v = versions.get(button.id);
+            if(server != null) ((MultiprotoServerData) server).setVersion(v);
+            else ProtocolVersionManager.setCurrentVersion(v);
             minecraft.setScreen(parent);
         }
     }
 
     public void render(int x, int y, float delta) {
         renderBackground();
-        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiproto.screen.changeVersion"),
+        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiproto.gui.changeVersion"),
                 width / 2, 20, 16777215);
         super.render(x, y, delta);
     }

@@ -18,8 +18,14 @@
 
   "environment": "client",
   "entrypoints": {
-    "client": ["com.github.zr0n1.multiproto.Multiproto"],
-    "stationapi:event_bus_server": [
+    "stationapi:event_bus_client": [
+      "com.github.zr0n1.multiproto.Multiproto"
+    ],
+    "gcapi": [
+      "com.github.zr0n1.multiproto.Multiproto"
+    ],
+    "gcapi:presave": [
+      "com.github.zr0n1.multiproto.Config"
     ]
   },
   "mixins": [

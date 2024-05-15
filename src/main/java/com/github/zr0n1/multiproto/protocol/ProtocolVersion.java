@@ -7,8 +7,7 @@ import java.util.*;
 /**
  * Represents a Minecraft multiplayer protocol version.
  */
-public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
-
+public class ProtocolVersion implements Comparable<ProtocolVersion> {
     public static final SortedSet<ProtocolVersion> PROTOCOL_VERSIONS = new TreeSet<>();
     public static final SortedSet<ProtocolVersion> ALPHA_PROTOCOL_VERSIONS = new TreeSet<>();
     public static final SortedSet<ProtocolVersion> BETA_PROTOCOL_VERSIONS = new TreeSet<>();
@@ -16,108 +15,88 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
     /**
      * Beta 1.7 - Beta 1.7.3
      */
-    public static final ProtocolVersion BETA_14 = new ProtocolVersion(14, Type.BETA, "1.7", "1.7.3") {
-    };
+    public static final ProtocolVersion BETA_14 = new ProtocolVersion(14, Type.BETA, "1.7", "1.7.3");
     /**
      * Beta 1.6 - Beta 1.6.6
      */
-    public static final ProtocolVersion BETA_13 = new ProtocolVersion(13, Type.BETA, "1.6", "1.6.6") {
-    };
+    public static final ProtocolVersion BETA_13 = new ProtocolVersion(13, Type.BETA, "1.6", "1.6.6");
 
     /**
-     * Beta 1.5 - Beta 1.5_02
+     * Beta 1.5 - Beta 1.5_01
      */
-    public static final ProtocolVersion BETA_11 = new ProtocolVersion(11, Type.BETA, "1.5", "1.5_02") {
-    };
+    public static final ProtocolVersion BETA_11 = new ProtocolVersion(11, Type.BETA, "1.5", "1.5_01");
 
     /**
      * Beta 1.4 - Beta 1.4_01
      */
-    public static final ProtocolVersion BETA_10 = new ProtocolVersion(10, Type.BETA, "1.4", "1.4_01") {
-    };
+    public static final ProtocolVersion BETA_10 = new ProtocolVersion(10, Type.BETA, "1.4", "1.4_01");
 
     /**
      * Beta 1.3 - Beta 1.3_01
      */
-    public static final ProtocolVersion BETA_9 = new ProtocolVersion(9, Type.BETA, "1.3", "1.3_01") {
-    };
+    public static final ProtocolVersion BETA_9 = new ProtocolVersion(9, Type.BETA, "1.3", "1.3_01");
 
     /**
-     * Beta 1.1_02 - Beta 1.2_02
+     * Beta 1.2 - Beta 1.2_02
      */
-    public static final ProtocolVersion BETA_8 = new ProtocolVersion(8, Type.BETA, "1.1_02", "1.2_02") {
-    };
+    public static final ProtocolVersion BETA_8 = new ProtocolVersion(8, Type.BETA, "1.2", "1.2_02");
+
+    /**
+     * Beta 1.1_02
+     */
+    public static final ProtocolVersion BETA_INITIAL_8 = new ProtocolVersion(8, Type.BETA_INITIAL, "1.1_02");
 
     /**
      * Beta 1.0 - Beta 1.1_01
      */
-    public static final ProtocolVersion BETA_7 = new ProtocolVersion(7, Type.BETA, "1.0", "1.1_01") {
-    };
+    public static final ProtocolVersion BETA_INITIAL_7 = new ProtocolVersion(7, Type.BETA_INITIAL, "1.0", "1.1_01");
 
     /**
      * Alpha v1.2.3_05 - Alpha v1.2.6
      */
     public static final ProtocolVersion ALPHA_LATER_6 = new ProtocolVersion(6, Type.ALPHA_LATER,
-            "1.2.3_05", "1.2.6") {
-    };
+            "1.2.3_05", "1.2.6");
 
     /**
      * Alpha v1.2.3 - Alpha v1.2.3_04
      */
     public static final ProtocolVersion ALPHA_LATER_5 = new ProtocolVersion(5, Type.ALPHA_LATER,
-            "1.2.3", "1.2.3_04") {
-    };
+            "1.2.3", "1.2.3_04");
 
     /**
      * Alpha v1.2.2
      */
-    public static final ProtocolVersion ALPHA_LATER_4 = new ProtocolVersion(4, Type.ALPHA_LATER, "1.2.2") {
-    };
+    public static final ProtocolVersion ALPHA_LATER_4 = new ProtocolVersion(4, Type.ALPHA_LATER,
+            "1.2.2");
 
     /**
      * Alpha v1.2.0 - Alpha v1.2.1_01
      */
     public static final ProtocolVersion ALPHA_LATER_3 = new ProtocolVersion(3, Type.ALPHA_LATER,
-            "1.20", "1.2.1_01") {
-    };
+            "1.20", "1.2.1_01");
 
     /**
      * Alpha v1.1.0 - Alpha v1.1.2_01
      */
     public static final ProtocolVersion ALPHA_2 = new ProtocolVersion(2, Type.ALPHA,
-            "1.1.0", "1.1.2_01") {
-    };
+            "1.1.0", "1.1.2_01");
 
     /**
      * Alpha v1.0.17 - Alpha v1.0.17_04
      */
     public static final ProtocolVersion ALPHA_1 = new ProtocolVersion(1, Type.ALPHA,
-            "1.0.17", "1.0.17_04") {
-    };
+            "1.0.17", "1.0.17_04");
 
     /**
      * Alpha v1.0.16 - Alpha v1.0.16_02
      */
-    public static final ProtocolVersion ALPHA_EARLY_14 = new ProtocolVersion(14, Type.ALPHA_EARLY, "1.0.16",
-            "1.0.16_02") {
-    };
+    public static final ProtocolVersion ALPHA_EARLY_14 = new ProtocolVersion(14, Type.ALPHA_INITIAL, "1.0.16",
+            "1.0.16_02");
 
     /**
      * Alpha v1.0.15 (First version with SMP!)
      */
-    public static final ProtocolVersion ALPHA_EARLY_13 = new ProtocolVersion(13, Type.ALPHA_EARLY, "1.0.15") {
-    };
-
-
-    private static ProtocolVersion currentVersion = BETA_14;
-
-    public static ProtocolVersion getCurrentVersion() {
-        return currentVersion;
-    }
-
-    public static void setCurrentVersion(ProtocolVersion currentVersion) {
-        ProtocolVersion.currentVersion = currentVersion;
-    }
+    public static final ProtocolVersion ALPHA_EARLY_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
 
     /**
      * Protocol version int.
@@ -154,11 +133,8 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
         this.firstClient = firstClient;
         this.lastClient = lastClient;
         PROTOCOL_VERSIONS.add(this);
-        if(type.alpha) {
-            ALPHA_PROTOCOL_VERSIONS.add(this);
-        } else {
-            BETA_PROTOCOL_VERSIONS.add(this);
-        }
+        if(type.alpha) ALPHA_PROTOCOL_VERSIONS.add(this);
+        else BETA_PROTOCOL_VERSIONS.add(this);
     }
 
     public String nameRange() {
@@ -215,19 +191,23 @@ public abstract class ProtocolVersion implements Comparable<ProtocolVersion> {
      */
     public enum Type {
         /**
-         * Alpha versions before protocol numbering reset.
+         * Alpha v1.0.15 - Alpha v1.0.16_02.
          */
-        ALPHA_EARLY("Alpha", "a", true),
+        ALPHA_INITIAL("Alpha", "a", true),
         /**
-         * Alpha versions before v1.2.0.
+         * Alpha v1.0.17 - Alpha v1.1.2_01.
          */
         ALPHA("Alpha", "a", true),
         /**
-         * Alpha versions v1.2.0+.
+         * Alpha v1.2.0 - v1.2.6.
          */
         ALPHA_LATER("Alpha", "a", true),
         /**
-         * Beta versions.
+         * Beta 1.0 - Beta 1.1_02.
+         */
+        BETA_INITIAL("Beta", "b"),
+        /**
+         * Beta 1.2 - Beta 1.7.3.
          */
         BETA("Beta", "b");
 

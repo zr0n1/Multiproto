@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.interfaces;
+package com.github.zr0n1.multiproto.mixinterface;
 
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.nbt.NbtCompound;
@@ -15,8 +15,7 @@ public interface MultiprotoServerData {
     }
 
     static ServerData constructor(NbtCompound nbt) {
-        ServerData data = new ServerData(nbt.getString("name"), nbt.getString("ip"));
-        ((MultiprotoServerData)data).setVersion(ProtocolVersion.getVersionFromString(nbt.getString("version")));
-        return data;
+        return constructor(nbt.getString("name"), nbt.getString("ip"),
+                ProtocolVersion.getVersionFromString(nbt.getString("version")));
     }
 }

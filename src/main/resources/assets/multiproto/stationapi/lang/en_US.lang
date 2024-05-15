@@ -1,2 +1,2 @@
-@.button.changeVersion=Server version
-@.screen.changeVersion=Change version
+@.gui.changeVersion=Server version
+@.gui.changePage=Change page
