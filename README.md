@@ -1,4 +1,6 @@
-# ![Multiproto](icon/icon_big.png) Multiproto
+# ![Multiproto](img/icon_big.png) Multiproto
+
+![Multiproto](img/screenshot.png)
 
 ### Requirements
 1. [Babric](https://babric.github.io/)
