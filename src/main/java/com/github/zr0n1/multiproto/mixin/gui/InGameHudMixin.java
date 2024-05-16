@@ -2,7 +2,6 @@ package com.github.zr0n1.multiproto.mixin.gui;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
@@ -17,14 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawContext {
+
     @Shadow private Minecraft minecraft;
 
     @Inject(method = "render", at = @At(value = "RETURN", shift = At.Shift.BY, by = -3))
     private void addVersionText(CallbackInfo ci) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_13) < 0 &&
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_13) < 0 &&
                 Multiproto.config.showVersion && !minecraft.options.debugHud) {
             GL11.glPushMatrix();
-            minecraft.textRenderer.drawWithShadow("Minecraft " + ProtocolVersionManager.getCurrentVersion().name(),
+            minecraft.textRenderer.drawWithShadow("Minecraft " + Multiproto.getVersion().name(false),
                     2, 2, 16777215);
             GL11.glPopMatrix();
         }
@@ -33,7 +33,7 @@ public abstract class InGameHudMixin extends DrawContext {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPopMatrix()V", remap = false),
     slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0)))
     private void addDebugText(CallbackInfo ci) {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         if(minecraft.isWorldRemote()) {
             minecraft.textRenderer.drawWithShadow("Protocol version: " + v.nameRange(true)
                     + " (" + v.version + ")", 2, (FabricLoader.getInstance().isModLoaded("mojangfixstationapi") ? 116 : 100), 14737632);

@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.block;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.material.Material;
@@ -20,21 +20,21 @@ public abstract class LeavesBlockMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void getTexture(CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(textureId);
         }
     }
 
     @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
     private void getColor(CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(FoliageColors.getDefaultColor());
         }
     }
 
     @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
     private void getColorMultiplier(CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(FoliageColors.getDefaultColor());
         }
     }

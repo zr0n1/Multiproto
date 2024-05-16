@@ -16,6 +16,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 @Mixin(ServerData.class)
 public abstract class ServerDataMixin implements MultiprotoServerData {
+
     @Unique
     private ProtocolVersion version;
 

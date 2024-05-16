@@ -1,25 +1,27 @@
 package com.github.zr0n1.multiproto.gui;
 
+import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor;
+import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.resource.language.I18n;
+import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.DirectConnectScreen;
+import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.EditServerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class ChangeVersionScreen extends Screen {
+
     private final Screen parent;
     private final ServerData server;
     private final List<ProtocolVersion> versions;
     private final List<ProtocolVersion> alphaVersions;
     private final List<ProtocolVersion> betaVersions;
-    private ButtonWidget pageButton;
-    private ButtonWidget betaButton;
 
     public ChangeVersionScreen(Screen parent, ServerData server) {
         this.parent = parent;
@@ -36,7 +38,7 @@ public class ChangeVersionScreen extends Screen {
         for(int i = 0; i < alphaVersions.size(); i++) {
             ProtocolVersion a = alphaVersions.get(i);
             ButtonWidget button = new ButtonWidget(versions.indexOf(a), (i % 2 == 0) ? width / 2 - 184 : width / 2 + 4,
-                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, a.nameRange());
+                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, a.nameRange(false));
             if(i == alphaVersions.size() - 1 && i % 2 == 0) button.x = width / 2 - 90;
             button.visible = false;
             button.active = false;
@@ -45,14 +47,14 @@ public class ChangeVersionScreen extends Screen {
         for(int i = 0; i < betaVersions.size(); i++) {
             ProtocolVersion b = betaVersions.get(i);
             ButtonWidget button = new ButtonWidget(versions.indexOf(b), (i % 2 == 0) ? width / 2 - 184 : width / 2 + 4,
-                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, b.nameRange());
+                    height / 4 - 24 + 12 * (i - i % 2), 180, 20, b.nameRange(false));
             if(i == betaVersions.size() - 1 && i % 2 == 0) button.x = width / 2 - 90;
             buttons.add(button);
         }
         buttons.add(new ButtonWidget(100, width / 2 - 100, height / 4 + 120 - 12,
                 I18n.getTranslation("gui.cancel")));
-        buttons.add(pageButton =
-                new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 36, I18n.getTranslation("multiproto.gui.changePage")));
+//        buttons.add(new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 36,
+//                I18n.getTranslation("multiproto.gui.changePage")));
     }
 
     @Override
@@ -67,9 +69,31 @@ public class ChangeVersionScreen extends Screen {
             }
         } else if(button.id <= versions.size()) {
             ProtocolVersion v = versions.get(button.id);
-            if(server != null) ((MultiprotoServerData) server).setVersion(v);
-            else ProtocolVersionManager.setCurrentVersion(v);
-            minecraft.setScreen(parent);
+            if(Multiproto.shouldApplyMojangFixStationApiIntegration() && server != null) {
+                ((MultiprotoServerData) server).setVersion(v);
+            }
+            Multiproto.setVersion(v);
+            if(Multiproto.shouldApplyMojangFixStationApiIntegration()) {
+                if (parent instanceof DirectConnectScreen) {
+                    String address = ((DirectConnectScreenAccessor)parent).getAddressField().getText();
+                    boolean active = ((DirectConnectScreenAccessor)parent).getConnectButton().active;
+                    Multiproto.saveLastVersion();
+                    minecraft.setScreen(parent);
+                    ((DirectConnectScreenAccessor)parent).getAddressField().setText(address);
+                    ((DirectConnectScreenAccessor)parent).getConnectButton().active = active;
+                } else if (parent instanceof EditServerScreen) {
+                    String name = ((EditServerScreenAccessor) parent).getNameTextField().getText();
+                    String address = ((EditServerScreenAccessor) parent).getIpTextField().getText();
+                    boolean active = ((EditServerScreenAccessor) parent).getButton().active;
+                    minecraft.setScreen(parent);
+                    ((EditServerScreenAccessor)parent).getNameTextField().setText(name);
+                    ((EditServerScreenAccessor)parent).getIpTextField().setText(address);
+                    ((EditServerScreenAccessor)parent).getButton().active = active;
+                }
+            } else {
+                Multiproto.saveLastVersion();
+                minecraft.setScreen(parent);
+            }
         }
     }
 
@@ -78,9 +102,5 @@ public class ChangeVersionScreen extends Screen {
         drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiproto.gui.changeVersion"),
                 width / 2, 20, 16777215);
         super.render(x, y, delta);
-    }
-
-    public TextRenderer getTextRenderer() {
-        return textRenderer;
     }
 }

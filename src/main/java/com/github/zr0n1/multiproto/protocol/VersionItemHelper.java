@@ -1,6 +1,8 @@
 package com.github.zr0n1.multiproto.protocol;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.mixin.item.ToolItemAccessor;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
@@ -9,7 +11,7 @@ import net.minecraft.item.ToolMaterial;
 public class VersionItemHelper {
 
     public static void applyChanges() {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         for(Item item : Item.ITEMS) {
             if(item instanceof ToolItem) {
                 ToolMaterial material = getToolMaterial(item);

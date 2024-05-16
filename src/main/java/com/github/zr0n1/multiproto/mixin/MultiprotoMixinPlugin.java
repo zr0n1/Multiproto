@@ -17,7 +17,9 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.MultiplayerScreenMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.MultiplayerServerListWidgetMixin",
-                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.ServerDataMixin" ->
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.ServerDataMixin",
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor",
+                 "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor" ->
                     Multiproto.shouldApplyMojangFixStationApiIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
                     !Multiproto.shouldApplyMojangFixStationApiIntegration();

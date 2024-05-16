@@ -5,6 +5,7 @@ import net.minecraft.nbt.NbtCompound;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 public interface MultiprotoServerData {
+
     ProtocolVersion getVersion();
     void setVersion(ProtocolVersion version);
 
@@ -16,6 +17,6 @@ public interface MultiprotoServerData {
 
     static ServerData constructor(NbtCompound nbt) {
         return constructor(nbt.getString("name"), nbt.getString("ip"),
-                ProtocolVersion.getVersionFromString(nbt.getString("version")));
+                ProtocolVersion.fromString(nbt.getString("version")));
     }
 }

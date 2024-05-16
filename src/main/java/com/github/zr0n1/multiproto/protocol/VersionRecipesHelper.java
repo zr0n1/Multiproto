@@ -1,25 +1,33 @@
 package com.github.zr0n1.multiproto.protocol;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.CraftingRecipeManager;
+import net.minecraft.recipe.SmeltingRecipeManager;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VersionRecipesHelper {
-    public static List vanillaRecipes = new ArrayList();
+
+    public static List vanillaCraftingRecipes = new ArrayList();
+    public static Map vanillaSmeltingRecipes = new HashMap();
 
     /**
      * Handles recipe changes between versions.
      */
     public static void applyChanges() {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         CraftingRecipeManager.getInstance().getRecipes().clear();
-        CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaRecipes);
+        CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaCraftingRecipes);
+        SmeltingRecipeManager.getInstance().getRecipes().clear();
+        SmeltingRecipeManager.getInstance().getRecipes().putAll(vanillaSmeltingRecipes);
         // Beta 1.7
         if(v.compareTo(ProtocolVersion.BETA_14) < 0) {
             CraftingRecipeManager.getInstance().getRecipes().removeIf(r ->
@@ -49,15 +57,15 @@ public class VersionRecipesHelper {
         // Beta 1.3
         if(v.compareTo(ProtocolVersion.BETA_9) < 0) {
             CraftingRecipeManager.getInstance().getRecipes().removeIf(r ->
-                    ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.BED, 1)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.REPEATER, 1)) ||
+                    ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.BED)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.REPEATER)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 3)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 2)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 1)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3, 0)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SLAB, 3)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.STONE_PRESSURE_PLATE, 1)) ||
                             ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.WOODEN_PRESSURE_PLATE, 1)));
-            CraftingRegistry.addShapedRecipe(new ItemStack(Block.SLAB, 3, 0), "##", '#', Block.STONE);
+            CraftingRegistry.addShapedRecipe(new ItemStack(Block.SLAB, 3), "##", '#', Block.STONE);
             CraftingRegistry.addShapedRecipe(new ItemStack(Block.STONE_PRESSURE_PLATE, 1), "###", '#', Block.STONE);
             CraftingRegistry.addShapedRecipe(new ItemStack(Block.WOODEN_PRESSURE_PLATE, 1), "###", '#', Block.PLANKS);
         }
@@ -65,15 +73,18 @@ public class VersionRecipesHelper {
         if(v.compareTo(ProtocolVersion.BETA_8) < 0) {
             CraftingRecipeManager.getInstance().getRecipes().removeIf(r ->
                     ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.CAKE, 1)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.DISPENSER, 1)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.NOTE_BLOCK, 1)) ||
-                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SANDSTONE)));
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.DISPENSER)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.NOTE_BLOCK)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.SANDSTONE)) ||
+                            ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.SUGAR)));
             for(int i = 0; i < 16; i++) {
                 int i1 = i;
                 CraftingRecipeManager.getInstance().getRecipes().removeIf(r ->
                         ((CraftingRecipe)r).getOutput().equals(new ItemStack(Block.WOOL, 1, ~i1 & 15)) ||
                                 ((CraftingRecipe)r).getOutput().equals(new ItemStack(Item.DYE,1 , i1)));
             }
+            SmeltingRecipeManager.getInstance().getRecipes().remove(Block.CACTUS.id);
+            SmeltingRecipeManager.getInstance().getRecipes().remove(Block.LOG.id);
         }
     }
 }

@@ -15,6 +15,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 @Mixin(MultiplayerServerListWidget.class)
 public abstract class MultiplayerServerListWidgetMixin {
+
     @Shadow(remap = false)
     private @Final MultiplayerScreen parent;
 

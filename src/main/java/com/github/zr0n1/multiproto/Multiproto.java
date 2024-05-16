@@ -7,6 +7,7 @@ import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.recipe.CraftingRecipeManager;
+import net.minecraft.recipe.SmeltingRecipeManager;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -16,16 +17,20 @@ import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
 
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class Multiproto {
     @Entrypoint.Namespace
     public static final Namespace NAMESPACE = Null.get();
     @Entrypoint.Logger("multiproto")
-    public static Logger LOGGER;
+    public static final Logger LOGGER = Null.get();
     @GConfig(value = "config", visibleName = "Multiproto Config")
     public static final Config config = new Config();
+
+    private static ProtocolVersion version = ProtocolVersion.BETA_14;
 
     @EventListener
     void registerTextures(TextureRegisterEvent event) {
@@ -43,7 +48,44 @@ public class Multiproto {
 
     @EventListener
     void registerVanillaRecipes(PacketRegisterEvent event) {
-        VersionRecipesHelper.vanillaRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
+        VersionRecipesHelper.vanillaCraftingRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
+        VersionRecipesHelper.vanillaSmeltingRecipes = Map.copyOf(SmeltingRecipeManager.getInstance().getRecipes());
+    }
+
+    public static ProtocolVersion getVersion() {
+        return version;
+    }
+
+    public static void setVersion(ProtocolVersion version) {
+        Multiproto.version = version;
+        VersionRecipesHelper.applyChanges();
+        VersionItemHelper.applyChanges();
+        VersionGraphicsHelper.applyChanges();
+    }
+
+    public static void loadLastVersion() {
+        File file = new File(Minecraft.getRunDirectory(), "config/multiproto/lastversion.txt");
+        if(!file.exists()) return;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String s = br.readLine();
+            br.close();
+            setVersion(ProtocolVersion.fromString(s));
+        } catch(Exception e) {
+            LOGGER.error("Unknown error loading last version");
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveLastVersion() {
+        File file = new File(Minecraft.getRunDirectory(), "config/multiproto/lastversion.txt");
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
+            pw.print(version);
+            pw.close();
+        } catch(Exception e) {
+            LOGGER.error("Error writing last version");
+        }
     }
 
     public static boolean shouldApplyMojangFixStationApiIntegration() {

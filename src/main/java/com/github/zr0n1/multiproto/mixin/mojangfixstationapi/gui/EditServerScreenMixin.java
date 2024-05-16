@@ -1,10 +1,10 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.gui.ChangeVersionScreen;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import org.spongepowered.asm.mixin.Final;
@@ -26,8 +26,10 @@ public class EditServerScreenMixin extends Screen {
 
     @Shadow(remap = false)
     private @Final ServerData server;
-    @Shadow private TextFieldWidget nameTextField;
-    @Shadow private TextFieldWidget ipTextField;
+    @Shadow(remap = false)
+    private TextFieldWidget nameTextField;
+    @Shadow(remap = false)
+    private TextFieldWidget ipTextField;
 
 
     @Shadow(remap = false)
@@ -44,7 +46,7 @@ public class EditServerScreenMixin extends Screen {
                 server.setIp(this.ipTextField.getText());
             } else {
                 parent.getServersList().add(MultiprotoServerData.constructor(nameTextField.getText(), ipTextField.getText(),
-                        ProtocolVersionManager.getCurrentVersion()));
+                        Multiproto.getVersion()));
             }
             this.parent.saveServers();
             this.minecraft.setScreen(this.parent);
@@ -56,7 +58,7 @@ public class EditServerScreenMixin extends Screen {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             I18n.getTranslation("multiproto.gui.changeVersion") + ": " + (server != null ?
                     ((MultiprotoServerData)server).getVersion().nameRange(true) :
-                    ProtocolVersionManager.getCurrentVersion().nameRange(true)), (button) -> {
+                    Multiproto.getVersion().nameRange(true)), (button) -> {
                 minecraft.setScreen(new ChangeVersionScreen(this, server));
         }));
     }

@@ -9,6 +9,7 @@ import net.glasslauncher.mods.api.gcapi.impl.EventStorage;
 import net.minecraft.client.Minecraft;
 
 public class Config implements PreConfigSavedListener {
+
     @ConfigName("Show version name")
     @Comment("Show version name on in-game HUD")
     public Boolean showVersion = true;

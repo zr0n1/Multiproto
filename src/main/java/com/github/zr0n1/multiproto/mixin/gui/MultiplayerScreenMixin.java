@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.gui;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.gui.ChangeVersionScreen;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -16,10 +16,11 @@ public class MultiplayerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("RETURN"))
     private void init(CallbackInfo ci) {
+        Multiproto.loadLastVersion();
         ButtonWidget b = (ButtonWidget)buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
                 I18n.getTranslation("multiproto.gui.changeVersion") + ": " +
-                        ProtocolVersionManager.getCurrentVersion().nameRange(true)));
+                        Multiproto.getVersion().nameRange(true)));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)

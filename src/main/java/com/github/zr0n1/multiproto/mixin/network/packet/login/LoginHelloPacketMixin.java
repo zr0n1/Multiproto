@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.login;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.login.LoginHelloPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Mixin(LoginHelloPacket.class)
 public abstract class LoginHelloPacketMixin extends Packet {
+
     @Shadow public String username;
     @Shadow public int protocolVersion;
     @Shadow public long worldSeed;
@@ -27,12 +29,12 @@ public abstract class LoginHelloPacketMixin extends Packet {
 
     @Redirect(method = "write", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/login/LoginHelloPacket;protocolVersion:I"))
     private int redirectProtocolVersion(LoginHelloPacket instance) {
-        return ProtocolVersionManager.getCurrentVersion().version;
+        return Multiproto.getVersion().version;
     }
 
     @Inject(method = "read", at = @At("HEAD"), cancellable = true)
     private void read(DataInputStream stream, CallbackInfo ci) throws IOException {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         protocolVersion = stream.readInt();
         username = readString(stream, 16);
         if(v.compareTo(ProtocolVersion.BETA_11) < 0) password = stream.readUTF();
@@ -45,7 +47,7 @@ public abstract class LoginHelloPacketMixin extends Packet {
 
     @Inject(method = "write", at = @At("HEAD"), cancellable = true)
     private void write(DataOutputStream stream, CallbackInfo ci) throws IOException {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         stream.writeInt(v.version);
         writeString(username, stream);
         if(v.compareTo(ProtocolVersion.BETA_11) < 0) writeString(password, stream);
@@ -58,7 +60,7 @@ public abstract class LoginHelloPacketMixin extends Packet {
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
+        ProtocolVersion v = Multiproto.getVersion();
         if(v.compareTo(ProtocolVersion.BETA_11) < 0) {
             cir.setReturnValue(4 + username.length() + password.length() + 4 + (v.compareTo(ProtocolVersion.ALPHA_LATER_3) >= 0 ? 5 : 0));
         }

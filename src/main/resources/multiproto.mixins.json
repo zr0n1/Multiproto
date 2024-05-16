@@ -7,7 +7,9 @@
   "mixins": [
     "block.FurnaceBlockMixin",
     "block.LeavesBlockMixin",
+    "block.SaplingBlockMixin",
     "block.SlabBlockMixin",
+    "entity.EntityAccessor",
     "item.ToolItemAccessor",
     "network.packet.PacketMixin",
     "network.packet.c2s.play.ClickSlotC2SPacketMixin",
@@ -24,13 +26,18 @@
     "gui.InGameHudMixin",
     "gui.MultiplayerScreenMixin",
     "misc.MinecraftMixin",
+    "mojangfixstationapi.gui.DirectConnectScreenAccessor",
     "mojangfixstationapi.gui.DirectConnectScreenMixin",
+    "mojangfixstationapi.gui.EditServerScreenAccessor",
     "mojangfixstationapi.gui.EditServerScreenMixin",
     "mojangfixstationapi.gui.MultiplayerScreenMixin",
     "mojangfixstationapi.gui.MultiplayerServerListWidgetMixin",
     "mojangfixstationapi.gui.ServerDataMixin",
+    "network.ClientNetworkHandlerMixin",
     "network.MultiplayerClientPlayerEntityMixin",
     "network.MultiplayerInteractionManagerMixin",
+    "render.entity.LivingEntityRendererMixin",
+    "render.entity.PlayerEntityRendererMixin",
     "stationapi.ArsenicItemRendererMixin"
   ],
   "injectors": {

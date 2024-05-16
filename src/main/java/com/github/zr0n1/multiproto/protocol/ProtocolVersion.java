@@ -8,6 +8,7 @@ import java.util.*;
  * Represents a Minecraft multiplayer protocol version.
  */
 public class ProtocolVersion implements Comparable<ProtocolVersion> {
+
     public static final SortedSet<ProtocolVersion> PROTOCOL_VERSIONS = new TreeSet<>();
     public static final SortedSet<ProtocolVersion> ALPHA_PROTOCOL_VERSIONS = new TreeSet<>();
     public static final SortedSet<ProtocolVersion> BETA_PROTOCOL_VERSIONS = new TreeSet<>();
@@ -137,17 +138,9 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
         else BETA_PROTOCOL_VERSIONS.add(this);
     }
 
-    public String nameRange() {
-        return nameRange(false);
-    }
-
     public String nameRange(boolean abbreviate) {
         return (firstClient.equals(lastClient) ? name(firstClient, abbreviate) :
                 String.join((abbreviate ? "-" : " - "), name(firstClient, abbreviate), name(lastClient, abbreviate)));
-    }
-
-    public String name() {
-        return name(lastClient, false);
     }
 
     public String name(boolean abbreviate) {
@@ -181,7 +174,8 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
      * @return {@link ProtocolVersion} which matches the given string or {@link #BETA_14}.
      * @see #toString()
      */
-    public static ProtocolVersion getVersionFromString(String s) {
+    public static ProtocolVersion fromString(String s) {
+        if(s == null) return BETA_14;
         String s1 = s.replaceAll("\\s", "");
         return PROTOCOL_VERSIONS.stream().filter(p -> p.toString().equalsIgnoreCase(s1)).findFirst().orElse(BETA_14);
     }

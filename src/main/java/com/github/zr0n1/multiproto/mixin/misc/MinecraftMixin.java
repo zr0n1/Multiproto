@@ -2,8 +2,6 @@ package com.github.zr0n1.multiproto.mixin.misc;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,20 +20,20 @@ public class MinecraftMixin {
 
     @Inject(method = "method_2120", at = @At("HEAD"))
     private void joinSinglePlayerWorld(CallbackInfo ci) {
-        ProtocolVersionManager.setCurrentVersion(ProtocolVersion.BETA_14);
+        Multiproto.setVersion(ProtocolVersion.BETA_14);
     }
 
     @Inject(method = "method_2148", at = @At("HEAD"), cancellable = true)
     private static void versionGraphicsAo(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(!(Multiproto.config.versionGraphics &&
-                ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
+                Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
                 INSTANCE != null && INSTANCE.options.ao);
     }
 
     @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;fancyGraphics:Z"),
     slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V")))
     private boolean redirectBlockRendererFancyGraphics(GameOptions options) {
-        return !(Multiproto.config.versionGraphics && ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
+        return !(Multiproto.config.versionGraphics && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
                 options.fancyGraphics;
     }
 }

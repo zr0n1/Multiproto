@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.client.network.MultiplayerClientPlayerEntity;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MultiplayerClientPlayerEntity.class)
 public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEntity {
+
     public MultiplayerClientPlayerEntityMixin(Minecraft minecraft, World world, Session session, int dimensionId) {
         super(minecraft, world, session, dimensionId);
     }
@@ -24,7 +26,7 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 0))
     private void redirectClientCommandPacket(ClientNetworkHandler handler, Packet packet) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 104));
     }
 
@@ -32,7 +34,7 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 1))
     private void redirectClientCommandPacketB(ClientNetworkHandler handler, Packet packet) {
-        if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 105));
     }
 }
