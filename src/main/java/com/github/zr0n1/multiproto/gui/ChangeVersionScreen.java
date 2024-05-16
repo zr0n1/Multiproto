@@ -53,8 +53,7 @@ public class ChangeVersionScreen extends Screen {
         }
         buttons.add(new ButtonWidget(100, width / 2 - 100, height / 4 + 120 - 12,
                 I18n.getTranslation("gui.cancel")));
-//        buttons.add(new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 36,
-//                I18n.getTranslation("multiproto.gui.changePage")));
+//        buttons.add(new ButtonWidget(101, width / 2 - 100, height / 4 + 120 - 36, "Change page"));
     }
 
     @Override
@@ -99,7 +98,7 @@ public class ChangeVersionScreen extends Screen {
 
     public void render(int x, int y, float delta) {
         renderBackground();
-        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("multiproto.gui.changeVersion"),
+        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation("Protocol version"),
                 width / 2, 20, 16777215);
         super.render(x, y, delta);
     }

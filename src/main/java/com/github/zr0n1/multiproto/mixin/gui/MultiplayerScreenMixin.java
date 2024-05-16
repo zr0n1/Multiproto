@@ -5,7 +5,6 @@ import com.github.zr0n1.multiproto.gui.ChangeVersionScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +18,7 @@ public class MultiplayerScreenMixin extends Screen {
         Multiproto.loadLastVersion();
         ButtonWidget b = (ButtonWidget)buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
-                I18n.getTranslation("multiproto.gui.changeVersion") + ": " +
-                        Multiproto.getVersion().nameRange(true)));
+                "Protocol version: " + Multiproto.getVersion().nameRange(true)));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)

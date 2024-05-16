@@ -19,7 +19,7 @@ public abstract class DirectConnectScreenMixin extends Screen {
     private void addButton(CallbackInfo ci) {
         Multiproto.loadLastVersion();
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-            I18n.getTranslation("multiproto.gui.changeVersion") + ": " +
+            "Protocol version: " +
                     Multiproto.getVersion().nameRange(true),
                 (button) -> {
                 minecraft.setScreen(new ChangeVersionScreen(this));

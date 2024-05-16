@@ -56,7 +56,7 @@ public class EditServerScreenMixin extends Screen {
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void addButtons(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-            I18n.getTranslation("multiproto.gui.changeVersion") + ": " + (server != null ?
+            "Protocol version: " + (server != null ?
                     ((MultiprotoServerData)server).getVersion().nameRange(true) :
                     Multiproto.getVersion().nameRange(true)), (button) -> {
                 minecraft.setScreen(new ChangeVersionScreen(this, server));

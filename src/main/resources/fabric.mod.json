@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Multiproto",
-  "description": "Client-side protocol translation mod for Babric and StationAPI allowing Minecraft Beta 1.7.3 clients to connect to earlier versions.",
+  "description": "Protocol translation mod allowing Minecraft Beta 1.7.3 clients to connect to earlier Beta server versions.",
   "authors": [
     "0n1"
   ],
