@@ -13,7 +13,6 @@ public class VersionGraphicsHelper {
 
     public static void applyChanges() {
         ProtocolVersion v = ProtocolVersionManager.getCurrentVersion();
-        Multiproto.LOGGER.info(Multiproto.config.versionGraphics);
         if(Multiproto.config.versionGraphics && v.compareTo(ProtocolVersion.BETA_14) < 0) {
             Block.COBBLESTONE.textureId = cobblestoneTexture;
             Block.BRICKS.textureId = bricksTexture;

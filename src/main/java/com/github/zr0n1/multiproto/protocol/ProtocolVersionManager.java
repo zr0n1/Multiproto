@@ -12,5 +12,6 @@ public class ProtocolVersionManager {
         currentVersion = version;
         VersionRecipesHelper.applyChanges();
         VersionItemHelper.applyChanges();
+        VersionGraphicsHelper.applyChanges();
     }
 }

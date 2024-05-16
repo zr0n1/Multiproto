@@ -12,36 +12,34 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.telvarost.mojangfixstationapi.client.gui.CallbackButtonWidget;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.EditServerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.MultiplayerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
+import java.util.function.Consumer;
+
 @Mixin(EditServerScreen.class)
 public class EditServerScreenMixin extends Screen {
 
     @Shadow(remap = false)
     private @Final ServerData server;
-
     @Shadow private TextFieldWidget nameTextField;
-
     @Shadow private TextFieldWidget ipTextField;
-
-    @Shadow private ButtonWidget button;
 
 
     @Shadow(remap = false)
     private @Final MultiplayerScreen parent;
 
-    @Inject(method = "init", at = @At(value = "INVOKE",
-            target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/EditServerScreen;updateButton()V"))
-    private void buttonStuff(CallbackInfo ci) {
-        buttons.remove(button);
-        buttons.add(button = new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, this.server == null ?
-                I18n.getTranslation("multiplayer.mojangfixstationapi.addServer") :
-                I18n.getTranslation("multiplayer.mojangfixstationapi.edit"), (button) -> {
-            if (server != null) {
+    @ModifyArg(method = "init", at = @At(value = "INVOKE",
+            target = "Lpl/telvarost/mojangfixstationapi/client/gui/CallbackButtonWidget;<init>(IILjava/lang/String;Ljava/util/function/Consumer;)V",
+            ordinal = 0),
+            index = 3)
+    private Consumer<CallbackButtonWidget> modifyCallbackButton(Consumer<CallbackButtonWidget> onPress) {
+        return (b) -> {
+            if(server != null) {
                 server.setName(this.nameTextField.getText());
                 server.setIp(this.ipTextField.getText());
             } else {
@@ -50,7 +48,11 @@ public class EditServerScreenMixin extends Screen {
             }
             this.parent.saveServers();
             this.minecraft.setScreen(this.parent);
-        }));
+        };
+    }
+
+    @Inject(method = "init", at = @At(value = "RETURN"))
+    private void addButtons(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             I18n.getTranslation("multiproto.gui.changeVersion") + ": " + (server != null ?
                     ((MultiprotoServerData)server).getVersion().nameRange(true) :

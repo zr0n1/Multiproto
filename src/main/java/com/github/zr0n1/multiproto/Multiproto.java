@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.client.Minecraft;
 import net.minecraft.recipe.CraftingRecipeManager;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -36,6 +37,8 @@ public class Multiproto {
         VersionGraphicsHelper.planksSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/planks_slab_side")).index;
         VersionGraphicsHelper.cobblestoneSlabSideTexture = terrain.addTexture(NAMESPACE.id("block/cobblestone_slab_side")).index;
         VersionGraphicsHelper.applyChanges();
+        Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
+        if(mc.worldRenderer != null) mc.worldRenderer.method_1537();
     }
 
     @EventListener

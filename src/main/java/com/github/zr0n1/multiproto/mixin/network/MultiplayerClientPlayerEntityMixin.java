@@ -33,6 +33,6 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
             ordinal = 1))
     private void redirectClientCommandPacketB(ClientNetworkHandler handler, Packet packet) {
         if(ProtocolVersionManager.getCurrentVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
-        else handler.sendPacket(new EntityAnimationPacket(this, 104));
+        else handler.sendPacket(new EntityAnimationPacket(this, 105));
     }
 }
