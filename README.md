@@ -9,3 +9,6 @@ Screenshot taken on [AlphaPlace](https://alphaplace.net)
 3. [ModMenu Beta](https://modrinth.com/mod/modmenu-beta)
 4. [Glass Config API](https://modrinth.com/mod/glass-config-api)
 5. [MojangFixStationAPI](https://modrinth.com/mod/mojangfix-stationapi-edition) (Optional)
+
+![Version List](img/version_list.png)
+![Server List](img/server_list.png)
