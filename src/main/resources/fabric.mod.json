@@ -13,7 +13,7 @@
     "sources": "https://github.com/zr0n1/Multiproto"
   },
 
-  "license": "GPLv3",
+  "license": "LGPLv3",
   "icon": "assets/multiproto/icon.png",
 
   "environment": "client",
