@@ -6,6 +6,9 @@ import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.MultiplayerInteractionManager;
+import net.minecraft.block.Block;
+import net.minecraft.client.InteractionManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
@@ -21,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiplayerInteractionManager.class)
-public abstract class MultiplayerInteractionManagerMixin {
+public abstract class MultiplayerInteractionManagerMixin extends InteractionManager {
 
     @Shadow private ClientNetworkHandler networkHandler;
     @Shadow private boolean field_2615;
@@ -32,6 +35,10 @@ public abstract class MultiplayerInteractionManagerMixin {
     @Shadow private int field_2608;
     @Shadow private int field_2609;
     @Shadow private int field_2610;
+
+    public MultiplayerInteractionManagerMixin(Minecraft minecraft) {
+        super(minecraft);
+    }
 
     @Shadow public abstract void method_1707(int i, int j, int k, int l);
 
@@ -47,12 +54,28 @@ public abstract class MultiplayerInteractionManagerMixin {
         }
     }
 
+    @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
+    private void mineBlock(int i, int j, int k, int l, CallbackInfo ci) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
+            field_2615 = true;
+            networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
+            int id = minecraft.world.getBlockId(i, j, k);
+            if(id > 0 && field_2611 == 0.0F) {
+                Block.BLOCKS[id].onBlockBreakStart(minecraft.world, i, j, k, minecraft.player);
+            }
+            if (id > 0 && Block.BLOCKS[id].getHardness(this.minecraft.player) >= 1.0F) {
+                this.method_1716(i, j, k, l);
+            }
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "method_1705", at = @At("HEAD"), cancellable = true)
     private void resetBlockMining(CallbackInfo ci) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
             if(!field_2615) ci.cancel();
             field_2614 = 0;
-            networkHandler.sendPacket(new PlayerActionC2SPacket(3, 0, 0, 0, 0));
+            networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
         }
     }
 
@@ -73,13 +96,13 @@ public abstract class MultiplayerInteractionManagerMixin {
     @Redirect(method = "method_1721", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
-            opcode = Opcodes.PUTFIELD)))
+            opcode = Opcodes.PUTFIELD, ordinal = 1)))
     private void redirectSendBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
-    private void redirectMethod_1707(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
+    private void redirectMineBlockInSendBlockMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) {
             method_1707(i, j, k, l);
         } else {
@@ -90,11 +113,5 @@ public abstract class MultiplayerInteractionManagerMixin {
             field_2609 = j;
             field_2610 = k;
         }
-    }
-
-    @Inject(method = "method_1707", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
-    opcode = Opcodes.PUTFIELD), cancellable = true)
-    private void cancelMethod_1707(int i, int j, int k, int l, CallbackInfo ci) {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) ci.cancel();
     }
 }
