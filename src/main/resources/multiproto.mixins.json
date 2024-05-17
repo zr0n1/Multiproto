@@ -10,6 +10,7 @@
     "block.SaplingBlockMixin",
     "block.SlabBlockMixin",
     "entity.EntityAccessor",
+    "entity.MixinLivingEntity",
     "item.ToolItemAccessor",
     "network.packet.PacketMixin",
     "network.packet.c2s.play.ClickSlotC2SPacketMixin",
