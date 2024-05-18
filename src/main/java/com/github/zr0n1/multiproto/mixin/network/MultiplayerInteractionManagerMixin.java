@@ -5,10 +5,8 @@ import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.ClientNetworkHandler;
@@ -26,17 +24,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiplayerInteractionManager.class)
-public abstract class MultiplayerInteractionManagerMixin {
+public abstract class MultiplayerInteractionManagerMixin extends InteractionManager {
 
     @Shadow private ClientNetworkHandler networkHandler;
     @Shadow private boolean field_2615;
-    @Shadow private int field_2614;
-    @Shadow private float field_2611;
-    @Shadow private float field_2612;
-    @Shadow private float field_2613;
     @Shadow private int field_2608;
     @Shadow private int field_2609;
     @Shadow private int field_2610;
+    @Shadow private float field_2611;
+    @Shadow private float field_2612;
+    @Shadow private float field_2613;
+    @Shadow private int field_2614;
+
+    public MultiplayerInteractionManagerMixin(Minecraft minecraft) {
+        super(minecraft);
+    }
 
     @Shadow public abstract void method_1707(int i, int j, int k, int l);
 
@@ -57,24 +59,23 @@ public abstract class MultiplayerInteractionManagerMixin {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
-            Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
-            int id = mc.world.getBlockId(i, j, k);
+            int id = minecraft.world.getBlockId(i, j, k);
             if(id > 0 && field_2611 == 0.0F) {
-                Block.BLOCKS[id].onBlockBreakStart(mc.world, i, j, k, mc.player);
+                Block.BLOCKS[id].onBlockBreakStart(minecraft.world, i, j, k, minecraft.player);
             }
-            if (id > 0 && Block.BLOCKS[id].getHardness(mc.player) >= 1.0F) {
-                ((MultiplayerInteractionManager)(Object)this).method_1716(i, j, k, l);
+            if (id > 0 && Block.BLOCKS[id].getHardness(this.minecraft.player) >= 1.0F) {
+                this.method_1716(i, j, k, l);
             }
             ci.cancel();
         }
     }
 
-    @Inject(method = "method_1705", at = @At("HEAD"), cancellable = true)
+    //causes crashes on certain servers, mining wrks fine without it -being able 2mine blocks w consecutive left clicks
+    @Inject(method = "method_1705", at = @At("HEAD"))
     private void resetBlockMining(CallbackInfo ci) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
-            if(!field_2615) ci.cancel();
-            field_2614 = 0;
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
+            field_2614 = 0;
         }
     }
 
@@ -87,7 +88,7 @@ public abstract class MultiplayerInteractionManagerMixin {
     }
 
     @Redirect(method = "method_1721", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
-    opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
+            opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
     private void redirectPutField_2615(MultiplayerInteractionManager instance, boolean b) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) field_2615 = b;
     }
@@ -95,7 +96,7 @@ public abstract class MultiplayerInteractionManagerMixin {
     @Redirect(method = "method_1721", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
-            opcode = Opcodes.PUTFIELD, ordinal = 1)))
+                    opcode = Opcodes.PUTFIELD, ordinal = 1)))
     private void redirectSendBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
     }
