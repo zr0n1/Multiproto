@@ -70,7 +70,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
         }
     }
 
-    //causes crashes on certain servers, mining wrks fine without it -being able 2mine blocks w consecutive left clicks
+    /* causes crashes on certain servers, mining wrks fine without it -being able 2mine blocks w consecutive left clicks
     @Inject(method = "method_1705", at = @At("HEAD"))
     private void resetBlockMining(CallbackInfo ci) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
@@ -78,6 +78,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             field_2614 = 0;
         }
     }
+     */
 
     @Inject(method = "method_1721", at = @At("HEAD"))
     private void sendBlockMining(int i, int j, int k, int l, CallbackInfo ci) {
