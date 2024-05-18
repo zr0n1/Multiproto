@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.block;
+package com.github.zr0n1.multiproto.mixin.parity.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
@@ -19,17 +19,17 @@ public abstract class FurnaceBlockMixin extends Block {
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
-    private void getTexture(int side, CallbackInfoReturnable<Integer> cir) {
+    private void textureParity(int side, CallbackInfoReturnable<Integer> cir) {
         if(side == 1 || side == 0 && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
-                Multiproto.config.versionGraphics) {
+                Multiproto.config.visualParity) {
             cir.setReturnValue(STONE.textureId);
         }
     }
 
     @Inject(method = "getTextureId", at = @At("HEAD"), cancellable = true)
-    private void getTextureId(BlockView bv, int x, int y, int z, int side, CallbackInfoReturnable<Integer> cir) {
+    private void textureIdParity(BlockView bv, int x, int y, int z, int side, CallbackInfoReturnable<Integer> cir) {
         if(side == 1 || side == 0 && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
-                Multiproto.config.versionGraphics) {
+                Multiproto.config.visualParity) {
             cir.setReturnValue(STONE.textureId);
         }
     }

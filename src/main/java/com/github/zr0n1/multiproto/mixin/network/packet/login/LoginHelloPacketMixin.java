@@ -48,13 +48,14 @@ public abstract class LoginHelloPacketMixin extends Packet {
     @Inject(method = "write", at = @At("HEAD"), cancellable = true)
     private void write(DataOutputStream stream, CallbackInfo ci) throws IOException {
         ProtocolVersion v = Multiproto.getVersion();
-        stream.writeInt(v.version);
+        stream.writeInt(protocolVersion = v.version);
         writeString(username, stream);
         if(v.compareTo(ProtocolVersion.BETA_11) < 0) writeString(password, stream);
         if(v.compareTo(ProtocolVersion.ALPHA_LATER_3) >= 0) {
             stream.writeLong(worldSeed);
             stream.writeByte(dimensionId);
         }
+        Multiproto.LOGGER.info("Logging in as {} with protocol version {}", username, protocolVersion);
         ci.cancel();
     }
 

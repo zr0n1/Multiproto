@@ -23,6 +23,9 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                     Multiproto.shouldApplyMojangFixStationApiIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
                     !Multiproto.shouldApplyMojangFixStationApiIntegration();
+            case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor",
+                 "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
+                Multiproto.shouldApplyHMIFabricIntegration();
             default -> true;
         };
     }

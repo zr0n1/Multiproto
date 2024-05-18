@@ -26,6 +26,9 @@
     ],
     "gcapi:presave": [
       "com.github.zr0n1.multiproto.Config"
+    ],
+    "hmifabric:item_list_refresh": [
+      "com.github.zr0n1.multiproto.parity.hmifabric.HMIItemListRefreshListener"
     ]
   },
   "mixins": [

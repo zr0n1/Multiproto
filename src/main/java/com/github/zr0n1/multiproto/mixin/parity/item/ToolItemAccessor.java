@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.item;
+package com.github.zr0n1.multiproto.mixin.parity.item;
 
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;

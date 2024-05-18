@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.block;
+package com.github.zr0n1.multiproto.mixin.parity.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;

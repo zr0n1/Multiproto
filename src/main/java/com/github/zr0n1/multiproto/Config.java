@@ -11,18 +11,18 @@ import net.minecraft.client.Minecraft;
 public class Config implements PreConfigSavedListener {
 
     @ConfigName("Show version name")
-    @Comment("Show version name on in-game HUD")
+    @Comment("Shows version name on in-game HUD")
     public Boolean showVersion = true;
-    @ConfigName("Version graphics")
-    @Comment("Automatically applies textures and graphics matching the multiplayer version")
-    public Boolean versionGraphics = true;
+    @ConfigName("Visual parity")
+    @Comment("Changes game visuals to match chosen version")
+    public Boolean visualParity = true;
 
     @Override
     public void onPreConfigSaved(int source, JsonObject oldJson, JsonObject newJson) {
-        boolean versionGraphicsOld = oldJson.getBoolean("versionGraphics", true);
-        boolean versionGraphicsNew = newJson.getBoolean("versionGraphics", false);
-        if(source == EventStorage.EventSource.USER_SAVE && versionGraphicsOld != versionGraphicsNew) {
-            versionGraphics = versionGraphicsNew;
+        boolean visualParityOld = oldJson.getBoolean("visualParity", true);
+        boolean visualParityNew = newJson.getBoolean("visualParity", false);
+        if(source == EventStorage.EventSource.USER_SAVE && visualParityOld != visualParityNew) {
+            visualParity = visualParityNew;
             ((Minecraft)FabricLoader.getInstance().getGameInstance()).textureManager.method_1096();
         }
     }

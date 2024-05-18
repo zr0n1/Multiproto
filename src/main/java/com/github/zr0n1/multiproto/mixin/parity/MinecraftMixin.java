@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.misc;
+package com.github.zr0n1.multiproto.mixin.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
@@ -24,16 +24,16 @@ public class MinecraftMixin {
     }
 
     @Inject(method = "method_2148", at = @At("HEAD"), cancellable = true)
-    private static void versionGraphicsAo(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(!(Multiproto.config.versionGraphics &&
+    private static void versionAo(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(!(Multiproto.config.visualParity &&
                 Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
                 INSTANCE != null && INSTANCE.options.ao);
     }
 
     @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;fancyGraphics:Z"),
     slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V")))
-    private boolean redirectBlockRendererFancyGraphics(GameOptions options) {
-        return !(Multiproto.config.versionGraphics && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
+    private boolean fancyGrassParity(GameOptions options) {
+        return !(Multiproto.config.visualParity && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
                 options.fancyGraphics;
     }
 }

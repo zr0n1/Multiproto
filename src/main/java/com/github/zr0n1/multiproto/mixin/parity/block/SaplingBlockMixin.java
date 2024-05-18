@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.block;
+package com.github.zr0n1.multiproto.mixin.parity.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
@@ -19,7 +19,7 @@ public abstract class SaplingBlockMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void getTexture(int side, int meta, CallbackInfoReturnable<Integer> cir) {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) {
             cir.setReturnValue(textureId);
         }
     }

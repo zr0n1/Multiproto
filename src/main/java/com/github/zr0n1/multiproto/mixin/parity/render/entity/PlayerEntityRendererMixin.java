@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.render.entity;
+package com.github.zr0n1.multiproto.mixin.parity.render.entity;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
@@ -20,8 +20,8 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer {
     }
 
     @ModifyVariable(method = "method_821(Lnet/minecraft/entity/player/PlayerEntity;DDD)V", at = @At("STORE"), ordinal = 1)
-    private float modifyNameScale(float f, @Local(argsOnly = true) PlayerEntity e) {
-        return (Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && Multiproto.config.versionGraphics) ?
+    private float nameScaleParity(float f, @Local(argsOnly = true) PlayerEntity e) {
+        return (Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && Multiproto.config.visualParity) ?
                 (float)((double)f * (Math.sqrt(e.getDistance(dispatcher.field_2496)) / 2.0D)) : f;
     }
 }

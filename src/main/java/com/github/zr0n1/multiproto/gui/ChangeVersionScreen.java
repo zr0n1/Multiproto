@@ -70,8 +70,7 @@ public class ChangeVersionScreen extends Screen {
             ProtocolVersion v = versions.get(button.id);
             if(Multiproto.shouldApplyMojangFixStationApiIntegration() && server != null) {
                 ((MultiprotoServerData) server).setVersion(v);
-            }
-            Multiproto.setVersion(v);
+            } else Multiproto.setVersion(v);
             if(Multiproto.shouldApplyMojangFixStationApiIntegration()) {
                 if (parent instanceof DirectConnectScreen) {
                     String address = ((DirectConnectScreenAccessor)parent).getAddressField().getText();
