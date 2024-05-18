@@ -5,6 +5,7 @@ import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiplayerInteractionManager.class)
-public abstract class MultiplayerInteractionManagerMixin extends InteractionManager {
+public abstract class MultiplayerInteractionManagerMixin {
 
     @Shadow private ClientNetworkHandler networkHandler;
     @Shadow private boolean field_2615;
@@ -36,10 +37,6 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     @Shadow private int field_2608;
     @Shadow private int field_2609;
     @Shadow private int field_2610;
-
-    public MultiplayerInteractionManagerMixin(Minecraft minecraft) {
-        super(minecraft);
-    }
 
     @Shadow public abstract void method_1707(int i, int j, int k, int l);
 
@@ -60,12 +57,13 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
-            int id = minecraft.world.getBlockId(i, j, k);
+            Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
+            int id = mc.world.getBlockId(i, j, k);
             if(id > 0 && field_2611 == 0.0F) {
-                Block.BLOCKS[id].onBlockBreakStart(minecraft.world, i, j, k, minecraft.player);
+                Block.BLOCKS[id].onBlockBreakStart(mc.world, i, j, k, mc.player);
             }
-            if (id > 0 && Block.BLOCKS[id].getHardness(this.minecraft.player) >= 1.0F) {
-                this.method_1716(i, j, k, l);
+            if (id > 0 && Block.BLOCKS[id].getHardness(mc.player) >= 1.0F) {
+                ((MultiplayerInteractionManager)(Object)this).method_1716(i, j, k, l);
             }
             ci.cancel();
         }

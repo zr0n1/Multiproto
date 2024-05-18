@@ -16,7 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 @Mixin(ClickSlotC2SPacket.class)
-public abstract class ClickSlotC2SPacketMixin extends Packet {
+public abstract class ClickSlotC2SPacketMixin {
 
     @Redirect(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readShort()S", ordinal = 1),
             slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readBoolean()Z")))

@@ -15,7 +15,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 @Mixin(EntitySpawnS2CPacket.class)
-public abstract class EntitySpawnS2CPacketMixin extends Packet {
+public abstract class EntitySpawnS2CPacketMixin {
 
     @Inject(method = "read", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;z:I",
     shift = At.Shift.AFTER), cancellable = true)

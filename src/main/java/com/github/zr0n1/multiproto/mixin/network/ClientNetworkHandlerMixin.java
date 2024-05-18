@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientNetworkHandler.class)
-public class ClientNetworkHandlerMixin {
+public abstract class ClientNetworkHandlerMixin {
 
     @Inject(method = "onEntityAnimation", at = @At("RETURN"))
     private void onEntityAnimation(EntityAnimationPacket packet, CallbackInfo ci, @Local Entity e) {

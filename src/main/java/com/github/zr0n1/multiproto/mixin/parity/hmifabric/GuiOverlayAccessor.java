@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 @Mixin(GuiOverlay.class)
 public interface GuiOverlayAccessor {
+
     @Accessor
     static void setCurrentItems(ArrayList<ItemStack> items) { }
     @Invoker

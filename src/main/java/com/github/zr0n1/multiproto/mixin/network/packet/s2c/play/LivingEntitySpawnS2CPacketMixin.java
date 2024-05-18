@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(LivingEntitySpawnS2CPacket.class)
-public class LivingEntitySpawnS2CPacketMixin {
+public abstract class LivingEntitySpawnS2CPacketMixin {
 
     @Redirect(method = "read", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;readEntries(Ljava/io/DataInputStream;)Ljava/util/List;"))

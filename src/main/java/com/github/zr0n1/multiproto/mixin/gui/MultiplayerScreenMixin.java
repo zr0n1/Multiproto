@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MultiplayerScreen.class)
-public class MultiplayerScreenMixin extends Screen {
+public abstract class MultiplayerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("RETURN"))
     private void init(CallbackInfo ci) {

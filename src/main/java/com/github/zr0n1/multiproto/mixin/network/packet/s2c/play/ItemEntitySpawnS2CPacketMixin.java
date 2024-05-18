@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 @Mixin(ItemEntitySpawnS2CPacket.class)
-public class ItemEntitySpawnS2CPacketMixin {
+public abstract class ItemEntitySpawnS2CPacketMixin {
 
     @Redirect(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readShort()S"),
                 slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B")))

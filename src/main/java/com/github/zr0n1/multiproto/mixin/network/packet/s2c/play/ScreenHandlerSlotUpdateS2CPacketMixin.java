@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 @Mixin(ScreenHandlerSlotUpdateS2CPacket.class)
-public class ScreenHandlerSlotUpdateS2CPacketMixin {
+public abstract class ScreenHandlerSlotUpdateS2CPacketMixin {
 
     @Redirect(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readShort()S"),
                 slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1)))

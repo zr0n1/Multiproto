@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CobwebBlock.class)
-public class CobwebBlockMixin {
+public abstract class CobwebBlockMixin {
 
     @Inject(method = "isFullCube", at = @At("HEAD"), cancellable = true)
     private void isFullCube(CallbackInfoReturnable<Boolean> cir) {

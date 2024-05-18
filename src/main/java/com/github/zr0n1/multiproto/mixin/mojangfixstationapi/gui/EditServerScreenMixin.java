@@ -22,7 +22,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 import java.util.function.Consumer;
 
 @Mixin(EditServerScreen.class)
-public class EditServerScreenMixin extends Screen {
+public abstract class EditServerScreenMixin extends Screen {
 
     @Shadow(remap = false)
     private @Final ServerData server;
