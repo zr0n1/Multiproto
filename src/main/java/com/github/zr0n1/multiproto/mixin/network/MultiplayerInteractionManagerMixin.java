@@ -70,15 +70,14 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
         }
     }
 
-    /* causes crashes on certain servers, mining wrks fine without it -being able 2mine blocks w consecutive left clicks
     @Inject(method = "method_1705", at = @At("HEAD"))
     private void resetBlockMining(CallbackInfo ci) {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
+        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && field_2615) {
+            field_2615 = false;
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
             field_2614 = 0;
         }
     }
-     */
 
     @Inject(method = "method_1721", at = @At("HEAD"))
     private void sendBlockMining(int i, int j, int k, int l, CallbackInfo ci) {
@@ -98,7 +97,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
-    private void redirectSendBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
+    private void redirectSendResetBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
     }
 
