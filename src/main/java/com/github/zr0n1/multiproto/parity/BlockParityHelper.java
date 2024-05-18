@@ -25,20 +25,26 @@ public class BlockParityHelper {
         visualParity();
         // reset cobweb fields
         ((BlockAccessor)Block.COBWEB).setMaterial(Material.COBWEB);
+        Block.COBWEB.setHardness(4F);
         Block.COBWEB.setOpacity(1);
+        Block.BLOCKS_OPAQUE[Block.COBWEB.id] = Block.COBWEB.isOpaque();
         // reset glowstone fields
         ((BlockAccessor)Block.GLOWSTONE).setMaterial(Material.STONE);
-        Block.BLOCKS_OPAQUE[Block.GLOWSTONE.id] = Block.GLOWSTONE.isOpaque();
+        Block.GLOWSTONE.setHardness(0.3F);
         ProtocolVersion version = Multiproto.getVersion();
         // < b1.7
         if(version.compareTo(ProtocolVersion.BETA_14) < 0) {
             ((BlockAccessor)Block.COBWEB).setMaterial(Material.WOOL);
-            Block.COBWEB.setHardness(0.0F);
+            Block.COBWEB.setHardness(0F);
             Block.COBWEB.setOpacity(0);
+            Block.BLOCKS_OPAQUE[Block.COBWEB.id] = false;
         }
         // < b1.6
         if(version.compareTo(ProtocolVersion.BETA_13) < 0) {
-            ((BlockAccessor) Block.GLOWSTONE).setMaterial(Material.GLASS);
+            ((BlockAccessor)Block.GLOWSTONE).setMaterial(Material.GLASS);
+            // No Idea Why Vanilla Hardness Doesnt Work Since It Didnt Change But Okay
+            Block.GLOWSTONE.setHardness(0.1F);
+            Multiproto.LOGGER.info(Block.GLOWSTONE.material.isHandHarvestable());
         }
         Multiproto.LOGGER.info("Applied version block parity");
         // hmifabric integration

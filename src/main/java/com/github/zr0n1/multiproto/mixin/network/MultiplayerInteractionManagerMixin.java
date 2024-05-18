@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.ClientNetworkHandler;
