@@ -52,52 +52,52 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
      */
     public static final ProtocolVersion BETA_INITIAL_7 = new ProtocolVersion(7, Type.BETA_INITIAL, "1.0", "1.1_01");
 
-    /**
-     * Alpha v1.2.3_05 - Alpha v1.2.6
-     */
-    public static final ProtocolVersion ALPHA_LATER_6 = new ProtocolVersion(6, Type.ALPHA_LATER,
-            "1.2.3_05", "1.2.6");
-
-    /**
-     * Alpha v1.2.3 - Alpha v1.2.3_04
-     */
-    public static final ProtocolVersion ALPHA_LATER_5 = new ProtocolVersion(5, Type.ALPHA_LATER,
-            "1.2.3", "1.2.3_04");
-
-    /**
-     * Alpha v1.2.2
-     */
-    public static final ProtocolVersion ALPHA_LATER_4 = new ProtocolVersion(4, Type.ALPHA_LATER,
-            "1.2.2");
-
-    /**
-     * Alpha v1.2.0 - Alpha v1.2.1_01
-     */
-    public static final ProtocolVersion ALPHA_LATER_3 = new ProtocolVersion(3, Type.ALPHA_LATER,
-            "1.20", "1.2.1_01");
-
-    /**
-     * Alpha v1.1.0 - Alpha v1.1.2_01
-     */
-    public static final ProtocolVersion ALPHA_2 = new ProtocolVersion(2, Type.ALPHA,
-            "1.1.0", "1.1.2_01");
-
-    /**
-     * Alpha v1.0.17 - Alpha v1.0.17_04
-     */
-    public static final ProtocolVersion ALPHA_1 = new ProtocolVersion(1, Type.ALPHA,
-            "1.0.17", "1.0.17_04");
-
-    /**
-     * Alpha v1.0.16 - Alpha v1.0.16_02
-     */
-    public static final ProtocolVersion ALPHA_INITIAL_14 = new ProtocolVersion(14, Type.ALPHA_INITIAL, "1.0.16",
-            "1.0.16_02");
-
-    /**
-     * Alpha v1.0.15 (First version with SMP!)
-     */
-    public static final ProtocolVersion ALPHA_INITIAL_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
+//    /**
+//     * Alpha v1.2.3_05 - Alpha v1.2.6
+//     */
+//    public static final ProtocolVersion ALPHA_LATER_6 = new ProtocolVersion(6, Type.ALPHA_LATER,
+//            "1.2.3_05", "1.2.6");
+//
+//    /**
+//     * Alpha v1.2.3 - Alpha v1.2.3_04
+//     */
+//    public static final ProtocolVersion ALPHA_LATER_5 = new ProtocolVersion(5, Type.ALPHA_LATER,
+//            "1.2.3", "1.2.3_04");
+//
+//    /**
+//     * Alpha v1.2.2
+//     */
+//    public static final ProtocolVersion ALPHA_LATER_4 = new ProtocolVersion(4, Type.ALPHA_LATER,
+//            "1.2.2");
+//
+//    /**
+//     * Alpha v1.2.0 - Alpha v1.2.1_01
+//     */
+//    public static final ProtocolVersion ALPHA_LATER_3 = new ProtocolVersion(3, Type.ALPHA_LATER,
+//            "1.20", "1.2.1_01");
+//
+//    /**
+//     * Alpha v1.1.0 - Alpha v1.1.2_01
+//     */
+//    public static final ProtocolVersion ALPHA_2 = new ProtocolVersion(2, Type.ALPHA,
+//            "1.1.0", "1.1.2_01");
+//
+//    /**
+//     * Alpha v1.0.17 - Alpha v1.0.17_04
+//     */
+//    public static final ProtocolVersion ALPHA_1 = new ProtocolVersion(1, Type.ALPHA,
+//            "1.0.17", "1.0.17_04");
+//
+//    /**
+//     * Alpha v1.0.16 - Alpha v1.0.16_02
+//     */
+//    public static final ProtocolVersion ALPHA_INITIAL_14 = new ProtocolVersion(14, Type.ALPHA_INITIAL, "1.0.16",
+//            "1.0.16_02");
+//
+//    /**
+//     * Alpha v1.0.15 (First version with SMP!)
+//     */
+//    public static final ProtocolVersion ALPHA_INITIAL_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
 
     /**
      * Protocol version int.

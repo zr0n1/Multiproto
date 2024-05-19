@@ -1,10 +1,9 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.gui.ChangeVersionScreen;
+import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,14 +14,14 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.DirectConnectScre
 @Mixin(DirectConnectScreen.class)
 public abstract class DirectConnectScreenMixin extends Screen {
 
-    @Inject(method = "init", at = @At("RETURN"))
+    @Inject(method = "init", at = @At("TAIL"))
     private void addButton(CallbackInfo ci) {
-        Multiproto.loadLastVersion();
+        Utils.loadLastVersion();
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             "Protocol version: " +
-                    Multiproto.getVersion().nameRange(true),
+                    Utils.getVersion().nameRange(true),
                 (button) -> {
-                minecraft.setScreen(new ChangeVersionScreen(this));
+                minecraft.setScreen(new ProtocolVersionScreen(this));
         }));
     }
 

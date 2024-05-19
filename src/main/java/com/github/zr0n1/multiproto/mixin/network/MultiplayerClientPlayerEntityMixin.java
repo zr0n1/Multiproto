@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
-import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import net.minecraft.client.Minecraft;
@@ -25,16 +25,16 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
     @Redirect(method = "method_1922", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 0))
-    private void redirectClientCommandPacket(ClientNetworkHandler handler, Packet packet) {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+    private void redirectSendStartSneakingPacket(ClientNetworkHandler handler, Packet packet) {
+        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 104));
     }
 
     @Redirect(method = "method_1922", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 1))
-    private void redirectClientCommandPacketB(ClientNetworkHandler handler, Packet packet) {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+    private void redirectSendStopSneakingPacket(ClientNetworkHandler handler, Packet packet) {
+        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 105));
     }
 }

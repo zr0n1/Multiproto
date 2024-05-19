@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -24,7 +25,7 @@ public class RecipeParityHelper {
      * Handles recipe changes between versions.
      */
     public static void parity() {
-        ProtocolVersion v = Multiproto.getVersion();
+        ProtocolVersion v = Utils.getVersion();
         CraftingRecipeManager.getInstance().getRecipes().clear();
         CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaCraftingRecipes);
         SmeltingRecipeManager.getInstance().getRecipes().clear();

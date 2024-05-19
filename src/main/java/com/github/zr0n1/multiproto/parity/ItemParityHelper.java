@@ -1,12 +1,12 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor;
 import com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor;
 import com.github.zr0n1.multiproto.mixin.parity.item.ToolItemAccessor;
 
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.item.*;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class ItemParityHelper {
     public static void parity() {
         removed.clear();
         removed.addAll(BlockParityHelper.removed);
-        ProtocolVersion version = Multiproto.getVersion();
+        ProtocolVersion version = Utils.getVersion();
         // tools and swords
         for(Item item : Item.ITEMS) {
             if(item instanceof ToolItem) {
@@ -36,33 +36,34 @@ public class ItemParityHelper {
             }
         }
         Multiproto.LOGGER.info("Applied version item parity");
-        // hmi fabric integration
-        if(Multiproto.shouldApplyHMIFabricIntegration()) {
-            // < b1.7
-            removeBefore(Item.SHEARS, ProtocolVersion.BETA_14);
-            // < b1.6
-            removeBefore(Item.MAP, ProtocolVersion.BETA_13);
-            // < b1.4
-            removeBefore(Item.COOKIE, ProtocolVersion.BETA_10);
-            // < b1.3
-            removeBefore(Item.REPEATER, ProtocolVersion.BETA_9);
-            removeBefore(Item.BED, ProtocolVersion.BETA_9);
-            // < b1.2
-            removeBefore(Item.CAKE, ProtocolVersion.BETA_8);
-            removeBefore(Item.BONE, ProtocolVersion.BETA_8);
-            removeBefore(Item.SUGAR, ProtocolVersion.BETA_8);
-            removeBefore(Item.DYE, ProtocolVersion.BETA_8);
-            if(UtilsAccessor.getAllItems() != null) {
-                UtilsAccessor.setAllItems(null);
-                GuiOverlayAccessor.setCurrentItems(GuiOverlayAccessor.invokeGetCurrentList(Utils.itemList()));
-            }
-            Multiproto.LOGGER.info("Removed {} blocks, {} items from HMI-Fabric", BlockParityHelper.removed.size(),
-                    ItemParityHelper.removed.size() - BlockParityHelper.removed.size());
+        if(Utils.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
+    }
+
+    public static void applyHMIFabricIntegration() {
+        // < b1.7
+        removeBefore(Item.SHEARS, ProtocolVersion.BETA_14);
+        // < b1.6
+        removeBefore(Item.MAP, ProtocolVersion.BETA_13);
+        // < b1.4
+        removeBefore(Item.COOKIE, ProtocolVersion.BETA_10);
+        // < b1.3
+        removeBefore(Item.REPEATER, ProtocolVersion.BETA_9);
+        removeBefore(Item.BED, ProtocolVersion.BETA_9);
+        // < b1.2
+        removeBefore(Item.CAKE, ProtocolVersion.BETA_8);
+        removeBefore(Item.BONE, ProtocolVersion.BETA_8);
+        removeBefore(Item.SUGAR, ProtocolVersion.BETA_8);
+        removeBefore(Item.DYE, ProtocolVersion.BETA_8);
+        if(UtilsAccessor.getAllItems() != null) {
+            UtilsAccessor.setAllItems(null);
+            GuiOverlayAccessor.setCurrentItems(GuiOverlayAccessor.invokeGetCurrentList(net.glasslauncher.hmifabric.Utils.itemList()));
         }
+        Multiproto.LOGGER.info("Removed {} blocks, {} items from HMI-Fabric", BlockParityHelper.removed.size(),
+                ItemParityHelper.removed.size() - BlockParityHelper.removed.size());
     }
 
     public static void removeBefore(Item item, ProtocolVersion version) {
-        if(Multiproto.getVersion().compareTo(version) < 0) removed.add(item);
+        if(com.github.zr0n1.multiproto.Utils.getVersion().compareTo(version) < 0) removed.add(item);
     }
 
     public static ToolMaterial getToolMaterial(Item item) {

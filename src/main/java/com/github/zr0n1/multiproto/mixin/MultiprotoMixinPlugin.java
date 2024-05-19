@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin;
 
-import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -20,12 +20,12 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.ServerDataMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor" ->
-                    Multiproto.shouldApplyMojangFixStationApiIntegration();
+                    Utils.shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
-                    !Multiproto.shouldApplyMojangFixStationApiIntegration();
+                    !Utils.shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor",
                  "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
-                Multiproto.shouldApplyHMIFabricIntegration();
+                Utils.shouldApplyHMIFabricIntegration();
             default -> true;
         };
     }

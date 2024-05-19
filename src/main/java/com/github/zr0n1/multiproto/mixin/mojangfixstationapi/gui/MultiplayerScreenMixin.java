@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +16,6 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Inject(method = "joinServer", at = @At(value = "INVOKE",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"))
     private void joinServer(ServerData server, CallbackInfo ci) {
-        Multiproto.setVersion(((MultiprotoServerData)server).getVersion());
+        Utils.setVersion(((MultiprotoServerData)server).getVersion());
     }
 }

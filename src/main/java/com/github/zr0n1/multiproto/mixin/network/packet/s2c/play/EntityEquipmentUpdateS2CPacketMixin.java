@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
@@ -23,13 +23,13 @@ public abstract class EntityEquipmentUpdateS2CPacketMixin {
     @Redirect(method = "read", at = @At(value = "INVOKE",
             target = "Ljava/io/DataInputStream;readShort()S", ordinal = 2))
     private short redirectReadDamage(DataInputStream stream) throws IOException {
-        return (Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) ? stream.readShort() : 0;
+        return (Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) ? stream.readShort() : 0;
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;itemRawId:I",
-            opcode = Opcodes.GETFIELD)))
+            slice = @Slice(from = @At(value = "FIELD",
+                    target = "Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;itemRawId:I")))
     private void redirectWriteDamage(DataOutputStream stream, int i) throws IOException {
-        if(Multiproto.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeShort(itemDamage);
+        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeShort(itemDamage);
     }
 }

@@ -1,12 +1,11 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.gui.ChangeVersionScreen;
+import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.I18n;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,7 +45,7 @@ public abstract class EditServerScreenMixin extends Screen {
                 server.setIp(this.ipTextField.getText());
             } else {
                 parent.getServersList().add(MultiprotoServerData.constructor(nameTextField.getText(), ipTextField.getText(),
-                        Multiproto.getVersion()));
+                        Utils.getVersion()));
             }
             this.parent.saveServers();
             this.minecraft.setScreen(this.parent);
@@ -58,8 +57,8 @@ public abstract class EditServerScreenMixin extends Screen {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             "Protocol version: " + (server != null ?
                     ((MultiprotoServerData)server).getVersion().nameRange(true) :
-                    Multiproto.getVersion().nameRange(true)), (button) -> {
-                minecraft.setScreen(new ChangeVersionScreen(this, server));
+                    Utils.getVersion().nameRange(true)), (button) -> {
+                minecraft.setScreen(new ProtocolVersionScreen(this, server));
         }));
     }
 }

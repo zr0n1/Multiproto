@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.render.entity;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import com.llamalad7.mixinextras.sugar.Local;
@@ -13,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin extends EntityRenderer {
+public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
 
     @ModifyVariable(method = "method_818(Lnet/minecraft/entity/LivingEntity;Ljava/lang/String;DDDI)V", at = @At("STORE"), ordinal = 1)
-    private float nameScaleParity(float scale, @Local(ordinal = 0) float distance, @Local(argsOnly = true)LivingEntity e) {
-        return (Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 &&
-                Multiproto.config.visualParity && e instanceof PlayerEntity) ?
+    private float applyNameScaleParity(float scale, @Local(ordinal = 0) float distance, @Local(argsOnly = true)LivingEntity e) {
+        return (Utils.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 &&
+                Multiproto.config.nameScaleParity && e instanceof PlayerEntity) ?
                 (float)((double)scale * (Math.sqrt(distance) / 2.0D)) : scale;
     }
 }

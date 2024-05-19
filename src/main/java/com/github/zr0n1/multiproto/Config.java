@@ -13,17 +13,37 @@ public class Config implements PreConfigSavedListener {
     @ConfigName("Show version name")
     @Comment("Shows version name on in-game HUD")
     public Boolean showVersion = true;
-    @ConfigName("Visual parity")
-    @Comment("Changes game visuals to match chosen version")
-    public Boolean visualParity = true;
+    @ConfigName("Texture parity")
+    @Comment("Changes textures to match chosen version")
+    public Boolean textureParity = true;
+    @ConfigName("Lighting parity")
+    @Comment("Changes smooth lighting to match chosen version")
+    public Boolean lightingParity = true;
+    @ConfigName("Name rendering parity")
+    @Comment("Renders usernames larger in versions < Beta 1.3")
+    public Boolean nameScaleParity = true;
+
+    @ConfigName("Custom version name")
+    @Comment("Custom version name on in-game HUD")
+    public String customVersionName = "";
+
 
     @Override
-    public void onPreConfigSaved(int source, JsonObject oldJson, JsonObject newJson) {
-        boolean visualParityOld = oldJson.getBoolean("visualParity", true);
-        boolean visualParityNew = newJson.getBoolean("visualParity", false);
-        if(source == EventStorage.EventSource.USER_SAVE && visualParityOld != visualParityNew) {
-            visualParity = visualParityNew;
-            ((Minecraft)FabricLoader.getInstance().getGameInstance()).textureManager.method_1096();
+    public void onPreConfigSaved(int source, JsonObject jsonA, JsonObject jsonB) {
+        boolean textureParityA = jsonA.getBoolean("textureParity", true);
+        boolean textureParityB = jsonB.getBoolean("textureParity", false);
+        boolean lightingParityA = jsonA.getBoolean("lightingParity", true);
+        boolean lightingParityB = jsonB.getBoolean("lightingParity", false);
+        if(source == EventStorage.EventSource.USER_SAVE) {
+            Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
+            if(textureParityA != textureParityB) {
+                textureParity = textureParityB;
+                mc.textureManager.method_1096();
+            }
+            if(lightingParityA != lightingParityB) {
+                lightingParity = lightingParityB;
+                mc.worldRenderer.method_1537();
+            }
         }
     }
 }

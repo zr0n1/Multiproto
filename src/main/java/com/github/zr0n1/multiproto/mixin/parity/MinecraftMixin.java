@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.Utils;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.option.GameOptions;
@@ -20,20 +21,20 @@ public class MinecraftMixin {
 
     @Inject(method = "method_2120", at = @At("HEAD"))
     private void joinSinglePlayerWorld(CallbackInfo ci) {
-        Multiproto.setVersion(ProtocolVersion.BETA_14);
+        Utils.setVersion(ProtocolVersion.BETA_14);
     }
 
     @Inject(method = "method_2148", at = @At("HEAD"), cancellable = true)
-    private static void versionAo(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(!(Multiproto.config.visualParity &&
-                Multiproto.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
+    private static void applyLightingParity(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(!(Multiproto.config.lightingParity &&
+                Utils.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
                 INSTANCE != null && INSTANCE.options.ao);
     }
 
     @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;fancyGraphics:Z"),
     slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V")))
-    private boolean fancyGrassParity(GameOptions options) {
-        return !(Multiproto.config.visualParity && Multiproto.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
+    private boolean applyFancyGrassParity(GameOptions options) {
+        return !(Multiproto.config.textureParity && Utils.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
                 options.fancyGraphics;
     }
 }
