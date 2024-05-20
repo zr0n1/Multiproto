@@ -1,4 +1,4 @@
-# ![Multiproto](img/icon_medium.png) Multiproto
+# ![Multiproto](img/icon_27x27.png) Multiproto
 
 ![Screenshot](img/screenshot.png)
 Screenshot taken on [AlphaPlace](https://alphaplace.net)
