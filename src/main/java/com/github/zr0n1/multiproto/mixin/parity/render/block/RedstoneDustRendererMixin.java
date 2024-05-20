@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = BlockRenderManager.class)
+@Mixin(BlockRenderManager.class)
 public class RedstoneDustRendererMixin {
 
     @Redirect(method = "renderRedstoneDust", at = @At(value = "INVOKE",
