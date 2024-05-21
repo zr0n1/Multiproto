@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.parity.block;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.block.Block;
 import net.minecraft.block.LeavesBlock;
@@ -20,21 +20,21 @@ public abstract class LeavesBlockTextureMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void applyTextureParity(CallbackInfoReturnable<Integer> cir) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(textureId);
         }
     }
 
     @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
     private void applyTextureParityColor(CallbackInfoReturnable<Integer> cir) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(FoliageColors.getDefaultColor());
         }
     }
 
     @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
     private void applyTextureParityColorMultiplier(CallbackInfoReturnable<Integer> cir) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
             cir.setReturnValue(FoliageColors.getDefaultColor());
         }
     }

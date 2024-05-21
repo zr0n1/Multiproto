@@ -13,15 +13,22 @@ public class Config implements PreConfigSavedListener {
     @ConfigName("Show version name")
     @Comment("Shows version name on in-game HUD")
     public Boolean showVersion = true;
+
     @ConfigName("Texture parity")
     @Comment("Changes textures to match chosen version")
     public Boolean textureParity = true;
+
     @ConfigName("Lighting parity")
-    @Comment("Changes smooth lighting to match chosen version")
+    @Comment("Toggles smooth lighting to match chosen version")
     public Boolean lightingParity = true;
+
     @ConfigName("Name rendering parity")
-    @Comment("Renders usernames larger in versions < Beta 1.3")
-    public Boolean nameScaleParity = true;
+    @Comment("Renders player names larger < Beta 1.3")
+    public Boolean nameRenderParity = true;
+
+    @ConfigName("Block item rendering parity")
+    @Comment("Renders block items without color multipliers < Beta 1.6")
+    public Boolean blockItemRenderParity = true;
 
     @ConfigName("Custom version name")
     @Comment("Custom version name on in-game HUD")

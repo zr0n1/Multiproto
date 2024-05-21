@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.mixin.parity.gui;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
@@ -23,11 +24,11 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     private void applyVersionNameParity(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
         if((!custom.isBlank() ||
-                (Utils.getVersion().compareTo(ProtocolVersion.BETA_13) < 0 && Multiproto.config.showVersion)) &&
+                (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0 && Multiproto.config.showVersion)) &&
                 !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +
-                    (custom.isBlank() ? Utils.getVersion().name(false) : custom), 2, 2, 16777215);
+                    (custom.isBlank() ? ProtocolVersionManager.getVersion().name(false) : custom), 2, 2, 16777215);
             GL11.glPopMatrix();
         }
     }
@@ -35,10 +36,10 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPopMatrix()V", remap = false),
     slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0)))
     private void addDebugText(CallbackInfo ci) {
-        ProtocolVersion v = Utils.getVersion();
+        ProtocolVersion v = ProtocolVersionManager.getVersion();
         if(minecraft.isWorldRemote()) {
             minecraft.textRenderer.drawWithShadow("Protocol version: " + v.nameRange(true)
-                    + " (" + v.version + ")", 2, (Utils.shouldApplyMojangFixStAPIDebugScreenIntegration() ? 116 : 100), 14737632);
+                    + " (" + v.version + ")", 2, (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIDebugScreenIntegration() ? 116 : 100), 14737632);
         }
     }
 }

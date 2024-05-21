@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin;
 
-import com.github.zr0n1.multiproto.Utils;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -20,14 +20,26 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.ServerDataMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor" ->
-                    Utils.shouldApplyMojangFixStAPIServerListIntegration();
+                    shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
-                    !Utils.shouldApplyMojangFixStAPIServerListIntegration();
+                    !shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor",
                  "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
-                Utils.shouldApplyHMIFabricIntegration();
+                shouldApplyHMIFabricIntegration();
             default -> true;
         };
+    }
+
+    public static boolean shouldApplyMojangFixStAPIServerListIntegration() {
+        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableMultiplayerServerChanges;
+    }
+
+    public static boolean shouldApplyMojangFixStAPIDebugScreenIntegration() {
+        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableDebugMenuWorldSeed;
+    }
+
+    public static boolean shouldApplyHMIFabricIntegration() {
+        return FabricLoader.getInstance().isModLoaded("hmifabric");
     }
 
     // Boilerplate

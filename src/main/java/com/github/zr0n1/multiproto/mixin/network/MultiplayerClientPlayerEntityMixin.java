@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 0))
     private void redirectSendStartSneakingPacket(ClientNetworkHandler handler, Packet packet) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 104));
     }
 
@@ -34,7 +34,7 @@ public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEnt
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 1))
     private void redirectSendStopSneakingPacket(ClientNetworkHandler handler, Packet packet) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) handler.sendPacket(packet);
         else handler.sendPacket(new EntityAnimationPacket(this, 105));
     }
 }

@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.gui;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor;
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
@@ -73,14 +74,14 @@ public class ProtocolVersionScreen extends Screen {
             }
         } else if(button.id <= versions.size()) {
             ProtocolVersion v = versions.get(button.id);
-            if(Utils.shouldApplyMojangFixStAPIServerListIntegration() && server != null) {
+            if(MultiprotoMixinPlugin.shouldApplyMojangFixStAPIServerListIntegration() && server != null) {
                 ((MultiprotoServerData) server).setVersion(v);
-            } else Utils.setVersion(v);
-            if(Utils.shouldApplyMojangFixStAPIServerListIntegration()) {
+            } else ProtocolVersionManager.setVersion(v);
+            if(MultiprotoMixinPlugin.shouldApplyMojangFixStAPIServerListIntegration()) {
                 if (parent instanceof DirectConnectScreen) {
                     String address = ((DirectConnectScreenAccessor)parent).getAddressField().getText();
                     boolean active = ((DirectConnectScreenAccessor)parent).getConnectButton().active;
-                    Utils.saveLastVersion();
+                    ProtocolVersionManager.saveLastVersion();
                     minecraft.setScreen(parent);
                     ((DirectConnectScreenAccessor)parent).getAddressField().setText(address);
                     ((DirectConnectScreenAccessor)parent).getConnectButton().active = active;
@@ -94,7 +95,7 @@ public class ProtocolVersionScreen extends Screen {
                     ((EditServerScreenAccessor)parent).getButton().active = active;
                 }
             } else {
-                Utils.saveLastVersion();
+                ProtocolVersionManager.saveLastVersion();
                 minecraft.setScreen(parent);
             }
         }

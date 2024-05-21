@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 
@@ -36,8 +36,7 @@ public abstract class EditServerScreenMixin extends Screen {
 
     @ModifyArg(method = "init", at = @At(value = "INVOKE",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/CallbackButtonWidget;<init>(IILjava/lang/String;Ljava/util/function/Consumer;)V",
-            ordinal = 0),
-            index = 3)
+            ordinal = 0), index = 3)
     private Consumer<CallbackButtonWidget> modifyCallbackButton(Consumer<CallbackButtonWidget> onPress) {
         return (b) -> {
             if(server != null) {
@@ -45,7 +44,7 @@ public abstract class EditServerScreenMixin extends Screen {
                 server.setIp(this.ipTextField.getText());
             } else {
                 parent.getServersList().add(MultiprotoServerData.constructor(nameTextField.getText(), ipTextField.getText(),
-                        Utils.getVersion()));
+                        ProtocolVersionManager.getVersion()));
             }
             this.parent.saveServers();
             this.minecraft.setScreen(this.parent);
@@ -57,7 +56,7 @@ public abstract class EditServerScreenMixin extends Screen {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             "Protocol version: " + (server != null ?
                     ((MultiprotoServerData)server).getVersion().nameRange(true) :
-                    Utils.getVersion().nameRange(true)), (button) -> {
+                    ProtocolVersionManager.getVersion().nameRange(true)), (button) -> {
                 minecraft.setScreen(new ProtocolVersionScreen(this, server));
         }));
     }

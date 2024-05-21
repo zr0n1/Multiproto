@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import net.minecraft.block.Block;
@@ -35,7 +36,7 @@ public class BlockParityHelper {
         // reset glowstone fields
         ((BlockAccessor)Block.GLOWSTONE).setMaterial(Material.STONE);
         Block.GLOWSTONE.setHardness(0.3F);
-        ProtocolVersion version = Utils.getVersion();
+        ProtocolVersion version = ProtocolVersionManager.getVersion();
         // < b1.7
         if(version.compareTo(ProtocolVersion.BETA_14) < 0) {
             ((BlockAccessor)Block.COBWEB).setMaterial(Material.WOOL);
@@ -51,7 +52,7 @@ public class BlockParityHelper {
             Multiproto.LOGGER.info(Block.GLOWSTONE.material.isHandHarvestable());
         }
         Multiproto.LOGGER.info("Applied version block parity");
-        if(Utils.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
+        if(MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
     }
 
     public static void applyTextureParity() {
@@ -59,7 +60,7 @@ public class BlockParityHelper {
         Block.BRICKS.textureId = 7;
         // < b1.7
         if(!Multiproto.config.textureParity) return;
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {
             Block.COBBLESTONE.textureId = BlockParityHelper.cobblestoneTexture;
             Block.BRICKS.textureId = BlockParityHelper.bricksTexture;
         }
@@ -93,6 +94,6 @@ public class BlockParityHelper {
     }
 
     public static void removeBefore(Block block, ProtocolVersion version) {
-        if(Utils.getVersion().compareTo(version) < 0) removed.add(Item.ITEMS[block.id]);
+        if(ProtocolVersionManager.getVersion().compareTo(version) < 0) removed.add(Item.ITEMS[block.id]);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -16,10 +16,10 @@ public abstract class DirectConnectScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void addButton(CallbackInfo ci) {
-        Utils.loadLastVersion();
+        ProtocolVersionManager.loadLastVersion();
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
             "Protocol version: " +
-                    Utils.getVersion().nameRange(true),
+                    ProtocolVersionManager.getVersion().nameRange(true),
                 (button) -> {
                 minecraft.setScreen(new ProtocolVersionScreen(this));
         }));

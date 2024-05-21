@@ -1,7 +1,8 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor;
 import com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor;
 import com.github.zr0n1.multiproto.mixin.parity.item.ToolItemAccessor;
@@ -18,7 +19,7 @@ public class ItemParityHelper {
     public static void parity() {
         removed.clear();
         removed.addAll(BlockParityHelper.removed);
-        ProtocolVersion version = Utils.getVersion();
+        ProtocolVersion version = ProtocolVersionManager.getVersion();
         // tools and swords
         for(Item item : Item.ITEMS) {
             if(item instanceof ToolItem) {
@@ -36,7 +37,7 @@ public class ItemParityHelper {
             }
         }
         Multiproto.LOGGER.info("Applied version item parity");
-        if(Utils.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
+        if(MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
     }
 
     public static void applyHMIFabricIntegration() {
@@ -63,7 +64,7 @@ public class ItemParityHelper {
     }
 
     public static void removeBefore(Item item, ProtocolVersion version) {
-        if(com.github.zr0n1.multiproto.Utils.getVersion().compareTo(version) < 0) removed.add(item);
+        if(ProtocolVersionManager.getVersion().compareTo(version) < 0) removed.add(item);
     }
 
     public static ToolMaterial getToolMaterial(Item item) {

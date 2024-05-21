@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import net.minecraft.entity.data.DataTracker;
@@ -22,18 +22,18 @@ public abstract class LivingEntitySpawnS2CPacketMixin {
     @Redirect(method = "read", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;readEntries(Ljava/io/DataInputStream;)Ljava/util/List;"))
     private List redirectReadEntries(DataInputStream stream) {
-        return Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0 ?
+        return ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0 ?
                 DataTracker.readEntries(stream) : new ArrayList();
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;writeAllEntries(Ljava/io/DataOutputStream;)V"))
     private void redirectWriteAllEntries(DataTracker tracker, DataOutputStream stream) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) tracker.writeAllEntries(stream);
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) tracker.writeAllEntries(stream);
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(19);
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(19);
     }
 }

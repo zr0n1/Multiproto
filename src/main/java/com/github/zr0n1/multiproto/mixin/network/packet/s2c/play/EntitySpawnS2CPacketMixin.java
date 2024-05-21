@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.Utils;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -18,18 +18,18 @@ public abstract class EntitySpawnS2CPacketMixin {
 
     @Inject(method = "read", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;z:I",
     shift = At.Shift.AFTER), cancellable = true)
-    private void read(DataInputStream stream, CallbackInfo ci) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
+    private void cancelReadEntityData(DataInputStream stream, CallbackInfo ci) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
     }
 
     @Inject(method = "write", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;z:I",
             shift = At.Shift.AFTER), cancellable = true)
-    private void write(DataOutputStream stream, CallbackInfo ci) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
+    private void cancelWriteEntityData(DataOutputStream stream, CallbackInfo ci) {
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if(Utils.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) cir.setReturnValue(17);
+        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) cir.setReturnValue(17);
     }
 }

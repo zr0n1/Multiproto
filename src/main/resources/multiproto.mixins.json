@@ -23,7 +23,6 @@
     "parity.block.SaplingBlockTextureMixin",
     "parity.block.SlabBlockTextureMixin",
     "parity.entity.EntityAccessor",
-    "parity.entity.LivingEntityLadderMixin",
     "parity.hmifabric.UtilsAccessor",
     "parity.item.ToolItemAccessor"
   ],
@@ -42,10 +41,10 @@
     "parity.gui.InGameHudVersionTextMixin",
     "parity.hmifabric.GuiOverlayAccessor",
     "parity.network.ClientNetworkHandlerEntityAnimationMixin",
+    "parity.render.block.BlockInventoryRendererMixin",
     "parity.render.block.RedstoneDustRendererMixin",
     "parity.render.entity.LivingEntityNameRendererMixin",
-    "parity.render.entity.PlayerEntityNameRendererMixin",
-    "stationapi.ArsenicItemRendererMixin"
+    "parity.render.entity.PlayerEntityNameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
