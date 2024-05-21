@@ -15,7 +15,7 @@ public class BlockParityHelper {
 
     public static ArrayList<Item> removed = new ArrayList<>();
 
-    public static void parity() {
+    public static void applyParity() {
         removed.clear();
         // reset cobweb fields
         ((BlockAccessor) Block.COBWEB).setMaterial(Material.COBWEB);

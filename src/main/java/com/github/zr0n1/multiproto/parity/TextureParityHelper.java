@@ -7,8 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.api.client.event.color.block.BlockColorsRegisterEvent;
-import net.modificationstation.stationapi.api.client.event.color.item.ItemColorsRegisterEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -25,21 +23,10 @@ public class TextureParityHelper {
 
     @EventListener
     void registerTextures(TextureRegisterEvent event) {
-        parity();
+        applyParity();
     }
 
-    @EventListener
-    void registerColorProvider(BlockColorsRegisterEvent event) {
-    }
-
-    @EventListener
-    void registerColorProvider(ItemColorsRegisterEvent event) {
-        event.itemColors.register(
-                (item, tint) -> ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) >= 0 || !Multiproto.config.textureParity ? tint : -1,
-                Block.LEAVES);
-    }
-
-    public static void parity() {
+    public static void applyParity() {
         if(!Multiproto.config.textureParity) return;
         ExpandableAtlas terrain = Atlases.getTerrain();
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {

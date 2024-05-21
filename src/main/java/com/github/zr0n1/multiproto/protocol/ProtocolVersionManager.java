@@ -21,10 +21,10 @@ public final class ProtocolVersionManager {
     public static void setVersion(ProtocolVersion version) {
         if (ProtocolVersionManager.version != version) {
             ProtocolVersionManager.version = version;
-            BlockParityHelper.parity();
-            ItemParityHelper.parity();
-            RecipeParityHelper.parity();
-            TextureParityHelper.parity();
+            BlockParityHelper.applyParity();
+            ItemParityHelper.applyParity();
+            RecipeParityHelper.applyParity();
+            TextureParityHelper.applyParity();
         }
     }
 

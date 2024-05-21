@@ -18,7 +18,7 @@ public class ItemParityHelper {
 
     public static ArrayList<Item> removed = new ArrayList<>();
 
-    public static void parity() {
+    public static void applyParity() {
         removed.clear();
         removed.addAll(BlockParityHelper.removed);
         ProtocolVersion version = ProtocolVersionManager.getVersion();

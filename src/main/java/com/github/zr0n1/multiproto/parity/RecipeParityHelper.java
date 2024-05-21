@@ -24,7 +24,7 @@ public class RecipeParityHelper {
     /**
      * Handles recipe changes between versions.
      */
-    public static void parity() {
+    public static void applyParity() {
         ProtocolVersion v = ProtocolVersionManager.getVersion();
         CraftingRecipeManager.getInstance().getRecipes().clear();
         CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaCraftingRecipes);
