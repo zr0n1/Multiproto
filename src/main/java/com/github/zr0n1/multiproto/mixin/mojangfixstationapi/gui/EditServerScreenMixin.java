@@ -21,9 +21,6 @@ public abstract class EditServerScreenMixin extends Screen {
     @Shadow(remap = false)
     private @Final ServerData server;
 
-    @Shadow(remap = false)
-    private @Final MultiplayerScreen parent;
-
     @Redirect(method = "lambda$init$0", at = @At(value = "NEW",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;", remap = false), remap = false)
     private ServerData redirectMultiprotoServerData(String name, String ip) {
@@ -35,8 +32,7 @@ public abstract class EditServerScreenMixin extends Screen {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
                 "Protocol version: " + (server != null ?
                         ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true) :
-                        ProtocolVersionScreen.getLastServerVersion().nameRange(true)), (button) -> {
-            minecraft.setScreen(new ProtocolVersionScreen(this, server));
-        }));
+                        ProtocolVersionScreen.getLastServerVersion().nameRange(true)),
+                button -> minecraft.setScreen(new ProtocolVersionScreen(this, server))));
     }
 }
