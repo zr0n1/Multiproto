@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.telvarost.mojangfixstationapi.client.gui.CallbackButtonWidget;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.EditServerScreen;
-import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.MultiplayerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 @Mixin(EditServerScreen.class)
