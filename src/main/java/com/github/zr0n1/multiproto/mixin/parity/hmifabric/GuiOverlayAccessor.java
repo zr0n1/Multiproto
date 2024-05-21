@@ -11,11 +11,11 @@ import java.util.ArrayList;
 @Mixin(GuiOverlay.class)
 public interface GuiOverlayAccessor {
 
-    @Accessor
+    @Accessor(remap = false)
     static void setCurrentItems(ArrayList<ItemStack> items) {
     }
 
-    @Invoker
+    @Invoker(remap = false)
     static ArrayList<ItemStack> invokeGetCurrentList(ArrayList<ItemStack> listToSearch) {
         return null;
     }

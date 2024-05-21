@@ -10,12 +10,12 @@ import java.util.ArrayList;
 @Mixin(Utils.class)
 public interface UtilsAccessor {
 
-    @Accessor
+    @Accessor(remap = false)
     static ArrayList<ItemStack> getAllItems() {
         return null;
     }
 
-    @Accessor
+    @Accessor(remap = false)
     static void setAllItems(ArrayList<ItemStack> allItems) {
     }
 }
