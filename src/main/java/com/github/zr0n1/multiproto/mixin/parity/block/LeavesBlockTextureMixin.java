@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,10 +33,14 @@ public abstract class LeavesBlockTextureMixin extends Block {
         }
     }
 
-    @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
-    private void applyTextureParityColorMultiplier(CallbackInfoReturnable<Integer> cir) {
+    @Inject(method = "getColorMultiplier", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/BlockView;getBlockMeta(III)I", shift = At.Shift.AFTER), cancellable = true)
+    private void applyTextureParityColorMultiplier(BlockView blockView, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) {
-            cir.setReturnValue(FoliageColors.getDefaultColor());
+            blockView.method_1781().method_1788(x, z, 1, 1);
+            double temperature = blockView.method_1781().field_2235[0];
+            double humidity = blockView.method_1781().field_2236[0];
+            cir.setReturnValue(FoliageColors.getColor(temperature, humidity));
         }
     }
 }
