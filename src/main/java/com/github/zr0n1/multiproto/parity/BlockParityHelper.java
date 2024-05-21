@@ -13,21 +13,10 @@ import java.util.ArrayList;
 
 public class BlockParityHelper {
 
-    public static int cobblestoneTexture;
-    public static int bricksTexture;
-
-    /**
-     * stone, sandstone, planks, cobble
-     */
-    public static int[] slabSideTextures;
-
-    public static int[] redstoneWireTextures;
-
     public static ArrayList<Item> removed = new ArrayList<>();
 
     public static void parity() {
         removed.clear();
-        applyTextureParity();
         // reset cobweb fields
         ((BlockAccessor) Block.COBWEB).setMaterial(Material.COBWEB);
         Block.COBWEB.setHardness(4F);
@@ -49,21 +38,9 @@ public class BlockParityHelper {
             ((BlockAccessor) Block.GLOWSTONE).setMaterial(Material.GLASS);
             // No Idea Why Vanilla Hardness Doesnt Work Since It Didnt Change But Okay
             Block.GLOWSTONE.setHardness(0.1F);
-            Multiproto.LOGGER.info(Block.GLOWSTONE.material.isHandHarvestable());
         }
         Multiproto.LOGGER.info("Applied version block parity");
         if (MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
-    }
-
-    public static void applyTextureParity() {
-        Block.COBBLESTONE.textureId = 16;
-        Block.BRICKS.textureId = 7;
-        // < b1.7
-        if (!Multiproto.config.textureParity) return;
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {
-            Block.COBBLESTONE.textureId = BlockParityHelper.cobblestoneTexture;
-            Block.BRICKS.textureId = BlockParityHelper.bricksTexture;
-        }
     }
 
     public static void applyHMIFabricIntegration() {

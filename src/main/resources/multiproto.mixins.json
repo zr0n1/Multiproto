@@ -41,7 +41,6 @@
     "parity.gui.InGameHudVersionTextMixin",
     "parity.hmifabric.GuiOverlayAccessor",
     "parity.network.ClientNetworkHandlerEntityAnimationMixin",
-    "parity.render.block.BlockInventoryRendererMixin",
     "parity.render.block.RedstoneDustRendererMixin",
     "parity.render.entity.LivingEntityNameRendererMixin",
     "parity.render.entity.PlayerEntityNameRendererMixin"

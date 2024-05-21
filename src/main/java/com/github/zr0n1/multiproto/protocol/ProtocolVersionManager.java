@@ -4,6 +4,7 @@ import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.parity.BlockParityHelper;
 import com.github.zr0n1.multiproto.parity.ItemParityHelper;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
+import com.github.zr0n1.multiproto.parity.TextureParityHelper;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
@@ -23,6 +24,7 @@ public final class ProtocolVersionManager {
             BlockParityHelper.parity();
             ItemParityHelper.parity();
             RecipeParityHelper.parity();
+            TextureParityHelper.parity();
         }
     }
 

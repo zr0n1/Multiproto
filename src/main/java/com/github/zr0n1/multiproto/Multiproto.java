@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto;
 
-import com.github.zr0n1.multiproto.parity.BlockParityHelper;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
+import com.github.zr0n1.multiproto.parity.TextureParityHelper;
 import com.github.zr0n1.multiproto.parity.player.PlayerOnLadderHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
@@ -33,33 +33,7 @@ public class Multiproto {
     public static final Config config = new Config();
 
     @EventListener
-    void registerTextures(TextureRegisterEvent event) {
-        ExpandableAtlas terrain = Atlases.getTerrain();
-        // old cobble and brick
-        BlockParityHelper.cobblestoneTexture = terrain.addTexture(NAMESPACE.id("block/cobblestone")).index;
-        BlockParityHelper.bricksTexture = terrain.addTexture(NAMESPACE.id("block/bricks")).index;
-        // slab side textures
-        BlockParityHelper.slabSideTextures = new int[]{
-                terrain.addTexture(NAMESPACE.id("block/stone_slab_side")).index,
-                terrain.addTexture(NAMESPACE.id("block/sandstone_slab_side")).index,
-                terrain.addTexture(NAMESPACE.id("block/planks_slab_side")).index,
-                terrain.addTexture(NAMESPACE.id("block/cobblestone_slab_side")).index
-        };
-        // redstone wire textures
-        BlockParityHelper.redstoneWireTextures = new int[2];
-        BlockParityHelper.redstoneWireTextures[0] = terrain.addTexture(NAMESPACE.id("block/redstone_wire_cross")).index;
-        terrain.addTexture(NAMESPACE.id("block/redstone_wire_line"));
-        BlockParityHelper.redstoneWireTextures[1] = terrain.addTexture(NAMESPACE.id("block/redstone_wire_cross_powered")).index;
-        terrain.addTexture(NAMESPACE.id("block/redstone_wire_line_powered"));
-        // apply parity
-        BlockParityHelper.applyTextureParity();
-        Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        if (mc.worldRenderer != null) mc.worldRenderer.method_1537();
-        LOGGER.info("Registered version parity textures");
-    }
-
-    @EventListener
-    public void registerPlayerHandlers(PlayerEvent.HandlerRegister event) {
+    void registerPlayerHandlers(PlayerEvent.HandlerRegister event) {
         if (event.player instanceof MultiplayerClientPlayerEntity player) {
             event.playerHandlers.add(new PlayerOnLadderHandler(event.player));
         }

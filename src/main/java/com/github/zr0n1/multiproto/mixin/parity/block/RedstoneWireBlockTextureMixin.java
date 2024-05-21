@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.parity.BlockParityHelper;
+import com.github.zr0n1.multiproto.parity.TextureParityHelper;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.Block;
@@ -23,7 +23,7 @@ public abstract class RedstoneWireBlockTextureMixin extends Block {
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && Multiproto.config.textureParity) {
-            cir.setReturnValue(meta > 0 ? BlockParityHelper.redstoneWireTextures[1] : BlockParityHelper.redstoneWireTextures[0]);
+            cir.setReturnValue(meta > 0 ? TextureParityHelper.redstoneWireTextures[1] : TextureParityHelper.redstoneWireTextures[0]);
         }
     }
 
