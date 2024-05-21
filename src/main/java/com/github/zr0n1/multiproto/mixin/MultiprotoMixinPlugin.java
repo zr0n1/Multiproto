@@ -10,9 +10,21 @@ import java.util.Set;
 
 public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
 
+    public static boolean shouldApplyMojangFixStAPIServerListIntegration() {
+        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableMultiplayerServerChanges;
+    }
+
+    public static boolean shouldApplyMojangFixStAPIDebugScreenIntegration() {
+        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableDebugMenuWorldSeed;
+    }
+
+    public static boolean shouldApplyHMIFabricIntegration() {
+        return FabricLoader.getInstance().isModLoaded("hmifabric");
+    }
+
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return switch(mixinClassName) {
+        return switch (mixinClassName) {
             case "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenMixin",
                  "com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.MultiplayerScreenMixin",
@@ -25,21 +37,9 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                     !shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor",
                  "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
-                shouldApplyHMIFabricIntegration();
+                    shouldApplyHMIFabricIntegration();
             default -> true;
         };
-    }
-
-    public static boolean shouldApplyMojangFixStAPIServerListIntegration() {
-        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableMultiplayerServerChanges;
-    }
-
-    public static boolean shouldApplyMojangFixStAPIDebugScreenIntegration() {
-        return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableDebugMenuWorldSeed;
-    }
-
-    public static boolean shouldApplyHMIFabricIntegration() {
-        return FabricLoader.getInstance().isModLoaded("hmifabric");
     }
 
     // Boilerplate

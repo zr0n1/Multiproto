@@ -2,7 +2,8 @@ package com.github.zr0n1.multiproto.protocol;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Represents a Minecraft multiplayer protocol version.
@@ -106,6 +107,7 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
     public final int version;
     /**
      * Version type.
+     *
      * @see Type
      */
     public final Type type;
@@ -120,8 +122,8 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
 
     /**
      * @param version {@link #version}
-     * @param type {@link #type}
-     * @param client {@link #firstClient} {@link #lastClient}
+     * @param type    {@link #type}
+     * @param client  {@link #firstClient} {@link #lastClient}
      */
 
     public ProtocolVersion(int version, Type type, String client) {
@@ -134,8 +136,19 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
         this.firstClient = firstClient;
         this.lastClient = lastClient;
         PROTOCOL_VERSIONS.add(this);
-        if(type.alpha) ALPHA_PROTOCOL_VERSIONS.add(this);
+        if (type.alpha) ALPHA_PROTOCOL_VERSIONS.add(this);
         else BETA_PROTOCOL_VERSIONS.add(this);
+    }
+
+    /**
+     * @param s {@link String} representing a protocol's type and version.
+     * @return {@link ProtocolVersion} which matches the given string or {@link #BETA_14}.
+     * @see #toString()
+     */
+    public static ProtocolVersion fromString(String s) {
+        if (s == null) return BETA_14;
+        String s1 = s.replaceAll("\\s", "");
+        return PROTOCOL_VERSIONS.stream().filter(p -> p.toString().equalsIgnoreCase(s1)).findFirst().orElse(BETA_14);
     }
 
     public String nameRange(boolean abbreviate) {
@@ -165,19 +178,8 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
      */
     @Override
     public int compareTo(@NotNull ProtocolVersion v) {
-        if(this.type != v.type) return this.type.compareTo(v.type);
+        if (this.type != v.type) return this.type.compareTo(v.type);
         return Integer.compare(this.version, v.version);
-    }
-
-    /**
-     * @param s {@link String} representing a protocol's type and version.
-     * @return {@link ProtocolVersion} which matches the given string or {@link #BETA_14}.
-     * @see #toString()
-     */
-    public static ProtocolVersion fromString(String s) {
-        if(s == null) return BETA_14;
-        String s1 = s.replaceAll("\\s", "");
-        return PROTOCOL_VERSIONS.stream().filter(p -> p.toString().equalsIgnoreCase(s1)).findFirst().orElse(BETA_14);
     }
 
     /**
@@ -199,11 +201,11 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
         /**
          * Beta 1.0 - Beta 1.1_02.
          */
-        BETA_INITIAL("Beta", "b"),
+        BETA_INITIAL("Beta", "b", false),
         /**
          * Beta 1.2 - Beta 1.7.3.
          */
-        BETA("Beta", "b");
+        BETA("Beta", "b", false);
 
         public final String label;
         public final String shortLabel;
@@ -215,13 +217,6 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
             this.shortLabel = shortLabel;
             this.majorVersion = 1;
             this.alpha = alpha;
-        }
-
-        Type(String label, String shortLabel) {
-            this.label = label;
-            this.shortLabel = shortLabel;
-            this.majorVersion = 1;
-            this.alpha = false;
         }
     }
 }

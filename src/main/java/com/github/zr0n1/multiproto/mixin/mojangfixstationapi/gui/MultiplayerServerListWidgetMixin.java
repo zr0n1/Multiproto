@@ -22,6 +22,6 @@ public abstract class MultiplayerServerListWidgetMixin {
     @Inject(method = "renderEntry", at = @At("TAIL"))
     private void addVersionText(int i, int x, int y, int l, Tessellator arg, CallbackInfo ci, @Local ServerData server) {
         this.parent.drawTextWithShadow(this.parent.getFontRenderer(),
-                ((MultiprotoServerData)server).getVersion().nameRange(true), x + 2, y + 23, 8421504);
+                ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true), x + 2, y + 23, 8421504);
     }
 }

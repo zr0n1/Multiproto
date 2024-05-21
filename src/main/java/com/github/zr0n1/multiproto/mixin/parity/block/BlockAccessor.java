@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Block.class)
 public interface BlockAccessor {
 
-    @Accessor @Mutable
+    @Accessor
+    @Mutable
     void setMaterial(Material material);
 }

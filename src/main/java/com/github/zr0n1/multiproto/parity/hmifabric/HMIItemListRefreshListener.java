@@ -1,8 +1,8 @@
 package com.github.zr0n1.multiproto.parity.hmifabric;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.parity.ItemParityHelper;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.glasslauncher.hmifabric.event.HMIItemListRefreshEvent;
 import net.minecraft.item.ItemStack;
 

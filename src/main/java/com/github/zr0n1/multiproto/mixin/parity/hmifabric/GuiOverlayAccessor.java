@@ -12,7 +12,11 @@ import java.util.ArrayList;
 public interface GuiOverlayAccessor {
 
     @Accessor
-    static void setCurrentItems(ArrayList<ItemStack> items) { }
+    static void setCurrentItems(ArrayList<ItemStack> items) {
+    }
+
     @Invoker
-    static ArrayList<ItemStack> invokeGetCurrentList(ArrayList<ItemStack> listToSearch) { return null; }
+    static ArrayList<ItemStack> invokeGetCurrentList(ArrayList<ItemStack> listToSearch) {
+        return null;
+    }
 }

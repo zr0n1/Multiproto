@@ -41,13 +41,13 @@ public class Config implements PreConfigSavedListener {
         boolean textureParityB = jsonB.getBoolean("textureParity", false);
         boolean lightingParityA = jsonA.getBoolean("lightingParity", true);
         boolean lightingParityB = jsonB.getBoolean("lightingParity", false);
-        if(source == EventStorage.EventSource.USER_SAVE) {
-            Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
-            if(textureParityA != textureParityB) {
+        if (source == EventStorage.EventSource.USER_SAVE) {
+            Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
+            if (textureParityA != textureParityB) {
                 textureParity = textureParityB;
                 mc.textureManager.method_1096();
             }
-            if(lightingParityA != lightingParityB) {
+            if (lightingParityA != lightingParityB) {
                 lightingParity = lightingParityB;
                 mc.worldRenderer.method_1537();
             }

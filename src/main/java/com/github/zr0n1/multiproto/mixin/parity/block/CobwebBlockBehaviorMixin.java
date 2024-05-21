@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.block;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.CobwebBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

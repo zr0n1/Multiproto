@@ -10,8 +10,10 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.EditServerScreen;
 public interface EditServerScreenAccessor {
     @Accessor
     TextFieldWidget getNameTextField();
+
     @Accessor
     TextFieldWidget getIpTextField();
+
     @Accessor
     ButtonWidget getButton();
 }

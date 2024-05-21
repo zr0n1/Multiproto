@@ -6,17 +6,18 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 public interface MultiprotoServerData {
 
-    ProtocolVersion getVersion();
-    void setVersion(ProtocolVersion version);
+    static ServerData create(NbtCompound nbt) {
+        return create(nbt.getString("name"), nbt.getString("ip"),
+                ProtocolVersion.fromString(nbt.getString("version")));
+    }
 
-    static ServerData constructor(String name, String ip, ProtocolVersion protocol) {
+    static ServerData create(String name, String ip, ProtocolVersion protocol) {
         ServerData data = new ServerData(name, ip);
-        ((MultiprotoServerData)data).setVersion(protocol);
+        ((MultiprotoServerData) data).multiproto_setVersion(protocol);
         return data;
     }
 
-    static ServerData constructor(NbtCompound nbt) {
-        return constructor(nbt.getString("name"), nbt.getString("ip"),
-                ProtocolVersion.fromString(nbt.getString("version")));
-    }
+    ProtocolVersion multiproto_getVersion();
+
+    void multiproto_setVersion(ProtocolVersion version);
 }

@@ -1,8 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.network.packet.s2c.play.LivingEntitySpawnS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,11 +28,11 @@ public abstract class LivingEntitySpawnS2CPacketMixin {
     @Redirect(method = "write", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;writeAllEntries(Ljava/io/DataOutputStream;)V"))
     private void redirectWriteAllEntries(DataTracker tracker, DataOutputStream stream) {
-        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) tracker.writeAllEntries(stream);
+        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) tracker.writeAllEntries(stream);
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(19);
+        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(19);
     }
 }

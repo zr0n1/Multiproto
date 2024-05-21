@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ToolItemAccessor {
     @Accessor
     ToolMaterial getToolMaterial();
+
     @Accessor
     void setMiningSpeed(float f);
 }

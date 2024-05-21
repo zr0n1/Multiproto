@@ -1,10 +1,10 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -29,38 +29,38 @@ public class BlockParityHelper {
         removed.clear();
         applyTextureParity();
         // reset cobweb fields
-        ((BlockAccessor)Block.COBWEB).setMaterial(Material.COBWEB);
+        ((BlockAccessor) Block.COBWEB).setMaterial(Material.COBWEB);
         Block.COBWEB.setHardness(4F);
         Block.COBWEB.setOpacity(1);
         Block.BLOCKS_OPAQUE[Block.COBWEB.id] = Block.COBWEB.isOpaque();
         // reset glowstone fields
-        ((BlockAccessor)Block.GLOWSTONE).setMaterial(Material.STONE);
+        ((BlockAccessor) Block.GLOWSTONE).setMaterial(Material.STONE);
         Block.GLOWSTONE.setHardness(0.3F);
         ProtocolVersion version = ProtocolVersionManager.getVersion();
         // < b1.7
-        if(version.compareTo(ProtocolVersion.BETA_14) < 0) {
-            ((BlockAccessor)Block.COBWEB).setMaterial(Material.WOOL);
+        if (version.compareTo(ProtocolVersion.BETA_14) < 0) {
+            ((BlockAccessor) Block.COBWEB).setMaterial(Material.WOOL);
             Block.COBWEB.setHardness(0F);
             Block.COBWEB.setOpacity(0);
             Block.BLOCKS_OPAQUE[Block.COBWEB.id] = false;
         }
         // < b1.6
-        if(version.compareTo(ProtocolVersion.BETA_13) < 0) {
-            ((BlockAccessor)Block.GLOWSTONE).setMaterial(Material.GLASS);
+        if (version.compareTo(ProtocolVersion.BETA_13) < 0) {
+            ((BlockAccessor) Block.GLOWSTONE).setMaterial(Material.GLASS);
             // No Idea Why Vanilla Hardness Doesnt Work Since It Didnt Change But Okay
             Block.GLOWSTONE.setHardness(0.1F);
             Multiproto.LOGGER.info(Block.GLOWSTONE.material.isHandHarvestable());
         }
         Multiproto.LOGGER.info("Applied version block parity");
-        if(MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
+        if (MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
     }
 
     public static void applyTextureParity() {
         Block.COBBLESTONE.textureId = 16;
         Block.BRICKS.textureId = 7;
         // < b1.7
-        if(!Multiproto.config.textureParity) return;
-        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {
+        if (!Multiproto.config.textureParity) return;
+        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_14) < 0) {
             Block.COBBLESTONE.textureId = BlockParityHelper.cobblestoneTexture;
             Block.BRICKS.textureId = BlockParityHelper.bricksTexture;
         }
@@ -94,6 +94,6 @@ public class BlockParityHelper {
     }
 
     public static void removeBefore(Block block, ProtocolVersion version) {
-        if(ProtocolVersionManager.getVersion().compareTo(version) < 0) removed.add(Item.ITEMS[block.id]);
+        if (ProtocolVersionManager.getVersion().compareTo(version) < 0) removed.add(Item.ITEMS[block.id]);
     }
 }

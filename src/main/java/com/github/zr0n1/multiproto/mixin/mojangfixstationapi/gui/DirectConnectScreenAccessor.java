@@ -10,6 +10,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.DirectConnectScre
 public interface DirectConnectScreenAccessor {
     @Accessor(remap = false)
     TextFieldWidget getAddressField();
+
     @Accessor(remap = false)
     CallbackButtonWidget getConnectButton();
 }

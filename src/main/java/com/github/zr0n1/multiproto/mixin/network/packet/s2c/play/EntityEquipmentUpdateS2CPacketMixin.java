@@ -1,8 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.network.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +16,8 @@ import java.io.IOException;
 @Mixin(EntityEquipmentUpdateS2CPacket.class)
 public abstract class EntityEquipmentUpdateS2CPacketMixin {
 
-    @Shadow public int itemDamage;
+    @Shadow
+    public int itemDamage;
 
     @Redirect(method = "read", at = @At(value = "INVOKE",
             target = "Ljava/io/DataInputStream;readShort()S", ordinal = 2))
@@ -29,6 +29,6 @@ public abstract class EntityEquipmentUpdateS2CPacketMixin {
             slice = @Slice(from = @At(value = "FIELD",
                     target = "Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;itemRawId:I")))
     private void redirectWriteDamage(DataOutputStream stream, int i) throws IOException {
-        if(ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeShort(itemDamage);
+        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeShort(itemDamage);
     }
 }

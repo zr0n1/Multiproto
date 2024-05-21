@@ -11,8 +11,11 @@ import java.util.ArrayList;
 public interface UtilsAccessor {
 
     @Accessor
-    static ArrayList<ItemStack> getAllItems() { return null; }
+    static ArrayList<ItemStack> getAllItems() {
+        return null;
+    }
 
     @Accessor
-    static void setAllItems(ArrayList<ItemStack> allItems) { }
+    static void setAllItems(ArrayList<ItemStack> allItems) {
+    }
 }

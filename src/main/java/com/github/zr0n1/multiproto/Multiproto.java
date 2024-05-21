@@ -1,4 +1,5 @@
 package com.github.zr0n1.multiproto;
+
 import com.github.zr0n1.multiproto.parity.BlockParityHelper;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
 import com.github.zr0n1.multiproto.parity.player.PlayerOnLadderHandler;
@@ -38,7 +39,7 @@ public class Multiproto {
         BlockParityHelper.cobblestoneTexture = terrain.addTexture(NAMESPACE.id("block/cobblestone")).index;
         BlockParityHelper.bricksTexture = terrain.addTexture(NAMESPACE.id("block/bricks")).index;
         // slab side textures
-        BlockParityHelper.slabSideTextures = new int[] {
+        BlockParityHelper.slabSideTextures = new int[]{
                 terrain.addTexture(NAMESPACE.id("block/stone_slab_side")).index,
                 terrain.addTexture(NAMESPACE.id("block/sandstone_slab_side")).index,
                 terrain.addTexture(NAMESPACE.id("block/planks_slab_side")).index,
@@ -52,14 +53,14 @@ public class Multiproto {
         terrain.addTexture(NAMESPACE.id("block/redstone_wire_line_powered"));
         // apply parity
         BlockParityHelper.applyTextureParity();
-        Minecraft mc = (Minecraft)FabricLoader.getInstance().getGameInstance();
-        if(mc.worldRenderer != null) mc.worldRenderer.method_1537();
+        Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
+        if (mc.worldRenderer != null) mc.worldRenderer.method_1537();
         LOGGER.info("Registered version parity textures");
     }
 
     @EventListener
     public void registerPlayerHandlers(PlayerEvent.HandlerRegister event) {
-        if(event.player instanceof MultiplayerClientPlayerEntity player) {
+        if (event.player instanceof MultiplayerClientPlayerEntity player) {
             event.playerHandlers.add(new PlayerOnLadderHandler(event.player));
         }
     }

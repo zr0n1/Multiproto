@@ -1,8 +1,8 @@
 package com.github.zr0n1.multiproto.mixin.parity.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.world.BlockView;
@@ -16,7 +16,7 @@ public abstract class FurnaceBlockTextureMixin {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void applyTextureParity(int side, CallbackInfoReturnable<Integer> cir) {
-        if(side == 1 || side == 0 && ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
+        if (side == 1 || side == 0 && ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
                 Multiproto.config.textureParity) {
             cir.setReturnValue(Block.STONE.textureId);
         }
@@ -24,7 +24,7 @@ public abstract class FurnaceBlockTextureMixin {
 
     @Inject(method = "getTextureId", at = @At("HEAD"), cancellable = true)
     private void applyTextureParityId(BlockView bv, int x, int y, int z, int side, CallbackInfoReturnable<Integer> cir) {
-        if(side == 1 || side == 0 && ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
+        if (side == 1 || side == 0 && ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0 &&
                 Multiproto.config.textureParity) {
             cir.setReturnValue(Block.STONE.textureId);
         }
