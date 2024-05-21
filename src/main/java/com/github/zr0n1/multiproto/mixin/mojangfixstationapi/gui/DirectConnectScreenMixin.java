@@ -15,12 +15,12 @@ public abstract class DirectConnectScreenMixin extends Screen {
 
     @Inject(method = "lambda$init$0", at = @At(value = "INVOKE",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;" +
-                    "connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"))
+                    "connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"), remap = false)
     private void setVersionOnConnect(CallbackButtonWidget button, CallbackInfo ci) {
         ProtocolVersionManager.setVersion(ProtocolVersionManager.getLastVersion());
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
+    @Inject(method = "init", at = @At("TAIL"), remap = false)
     private void addCustomButton(CallbackInfo ci) {
         ProtocolVersionManager.getLastVersion();
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,

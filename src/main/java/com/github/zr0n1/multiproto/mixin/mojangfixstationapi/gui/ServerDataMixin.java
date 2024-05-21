@@ -18,7 +18,8 @@ public abstract class ServerDataMixin implements MultiprotoServerData {
     @Unique
     private ProtocolVersion multiproto_version;
 
-    @Redirect(method = "load", at = @At(value = "NEW", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;"))
+    @Redirect(method = "load", at = @At(value = "NEW", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;",
+            remap = false), remap = false)
     private static ServerData load(NbtCompound nbt) {
         return MultiprotoServerData.create(nbt);
     }

@@ -24,7 +24,8 @@ public abstract class EditServerScreenMixin extends Screen {
     @Shadow(remap = false)
     private @Final MultiplayerScreen parent;
 
-    @Redirect(method = "lambda$init$0", at = @At(value = "NEW", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;"))
+    @Redirect(method = "lambda$init$0", at = @At(value = "NEW",
+            target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;", remap = false), remap = false)
     private ServerData redirectMultiprotoServerData(String name, String ip) {
         return MultiprotoServerData.create(name, ip, ProtocolVersionScreen.getLastServerVersion());
     }
