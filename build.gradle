@@ -92,7 +92,7 @@ dependencies {
 	modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.howmanyitems_version}") {
 		transitive false
 	}
-	modImplementation("maven.modrinth:mojangfix-stationapi-edition:${project.mojangfix_stapi_version}") {
+	modImplementation("maven.modrinth:mojangfix-stationapi-edition:${project.mojangfixstationapi_version}") {
 		transitive false
 	}
 	implementation("com.github.GeyserMC:MCAuthLib:d9d773e5d50327c33898c65cd545a4f6ef3ba1b5") {

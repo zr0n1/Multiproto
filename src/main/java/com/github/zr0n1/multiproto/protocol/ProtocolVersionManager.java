@@ -1,10 +1,12 @@
 package com.github.zr0n1.multiproto.protocol;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.parity.BlockParityHelper;
 import com.github.zr0n1.multiproto.parity.ItemParityHelper;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
 import com.github.zr0n1.multiproto.parity.TextureParityHelper;
+import com.github.zr0n1.multiproto.parity.hmifabric.HMIFabricIntegrationHelper;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
@@ -25,6 +27,7 @@ public final class ProtocolVersionManager {
             ItemParityHelper.applyParity();
             RecipeParityHelper.applyParity();
             TextureParityHelper.applyParity();
+            if(MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) HMIFabricIntegrationHelper.applyParity();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.network;
+package com.github.zr0n1.multiproto.mixin.network.player;
 
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
@@ -52,7 +52,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     public abstract void method_1707(int i, int j, int k, int l);
 
     @Inject(method = "clickSlot", at = @At("HEAD"))
-    private void modifyShiftClickSlot(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
+    private void disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) shift.set(false);
     }
 
@@ -64,7 +64,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     }
 
     @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
-    private void mineBlock(int i, int j, int k, int l, CallbackInfo ci) {
+    private void startMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
@@ -80,16 +80,15 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     }
 
     @Inject(method = "method_1705", at = @At("HEAD"))
-    private void resetBlockMining(CallbackInfo ci) {
+    private void stopMining(CallbackInfo ci) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && field_2615) {
-            field_2615 = false;
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
             field_2614 = 0;
         }
     }
 
     @Inject(method = "method_1721", at = @At("HEAD"))
-    private void sendBlockMining(int i, int j, int k, int l, CallbackInfo ci) {
+    private void sendMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(1, i, j, k, l));
@@ -106,12 +105,12 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
-    private void redirectSendResetBlockMiningPacket(ClientNetworkHandler handler, Packet packet) {
+    private void redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
-    private void redirectMineBlockInSendBlockMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
+    private void redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
         if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) {
             method_1707(i, j, k, l);
         } else {

@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.network;
+package com.github.zr0n1.multiproto.mixin.network.player;
 
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MultiplayerClientPlayerEntity.class)
-public abstract class MultiplayerClientPlayerEntityMixin extends ClientPlayerEntity {
+public abstract class MultiplayerClientPlayerEntitySneakingMixin extends ClientPlayerEntity {
 
-    public MultiplayerClientPlayerEntityMixin(Minecraft minecraft, World world, Session session, int dimensionId) {
+    public MultiplayerClientPlayerEntitySneakingMixin(Minecraft minecraft, World world, Session session, int dimensionId) {
         super(minecraft, world, session, dimensionId);
     }
 

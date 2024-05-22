@@ -29,7 +29,7 @@
       "com.github.zr0n1.multiproto.Config"
     ],
     "hmifabric:item_list_refresh": [
-      "com.github.zr0n1.multiproto.parity.hmifabric.HMIItemListRefreshListener"
+      "com.github.zr0n1.multiproto.parity.hmifabric.HMIFabricIntegrationHelper"
     ]
   },
   "mixins": [
@@ -37,7 +37,12 @@
   ],
 
   "depends": {
-    "minecraft": "1.0.0-beta.7.3"
+    "minecraft": "1.0.0-beta.7.3",
+    "station-api-base": "^${stapi_version}",
+    "gcapi": "^${gcapi_version}"
+  },
+  "recommends": {
+    "modmenu": "^${modmenu_version}"
   },
   "custom": {
     "loom:injected_interfaces": {

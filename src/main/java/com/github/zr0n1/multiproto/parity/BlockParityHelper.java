@@ -13,10 +13,7 @@ import java.util.ArrayList;
 
 public class BlockParityHelper {
 
-    public static ArrayList<Item> removed = new ArrayList<>();
-
     public static void applyParity() {
-        removed.clear();
         // reset cobweb fields
         ((BlockAccessor) Block.COBWEB).setMaterial(Material.COBWEB);
         Block.COBWEB.setHardness(4F);
@@ -40,37 +37,5 @@ public class BlockParityHelper {
             Block.GLOWSTONE.setHardness(0.1F);
         }
         Multiproto.LOGGER.info("Applied version block parity");
-        if (MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) applyHMIFabricIntegration();
-    }
-
-    public static void applyHMIFabricIntegration() {
-        // < b1.7
-        removeBefore(Block.PISTON, ProtocolVersion.BETA_14);
-        removeBefore(Block.STICKY_PISTON, ProtocolVersion.BETA_14);
-        removeBefore(Block.PISTON_HEAD, ProtocolVersion.BETA_14);
-        removeBefore(Block.MOVING_PISTON, ProtocolVersion.BETA_14);
-        // < b1.6
-        removeBefore(Block.DEAD_BUSH, ProtocolVersion.BETA_13);
-        removeBefore(Block.GRASS, ProtocolVersion.BETA_13);
-        removeBefore(Block.TRAPDOOR, ProtocolVersion.BETA_13);
-        // < b1.5
-        removeBefore(Block.COBWEB, ProtocolVersion.BETA_11);
-        removeBefore(Block.DETECTOR_RAIL, ProtocolVersion.BETA_11);
-        removeBefore(Block.POWERED_RAIL, ProtocolVersion.BETA_11);
-        // < b1.3
-        removeBefore(Block.BED, ProtocolVersion.BETA_9);
-        removeBefore(Block.REPEATER, ProtocolVersion.BETA_9);
-        removeBefore(Block.POWERED_REPEATER, ProtocolVersion.BETA_9);
-        // < b1.2
-        removeBefore(Block.CAKE, ProtocolVersion.BETA_8);
-        removeBefore(Block.DISPENSER, ProtocolVersion.BETA_8);
-        removeBefore(Block.LAPIS_BLOCK, ProtocolVersion.BETA_8);
-        removeBefore(Block.LAPIS_ORE, ProtocolVersion.BETA_8);
-        removeBefore(Block.NOTE_BLOCK, ProtocolVersion.BETA_8);
-        removeBefore(Block.SANDSTONE, ProtocolVersion.BETA_8);
-    }
-
-    public static void removeBefore(Block block, ProtocolVersion version) {
-        if (ProtocolVersionManager.getVersion().compareTo(version) < 0) removed.add(Item.ITEMS[block.id]);
     }
 }
