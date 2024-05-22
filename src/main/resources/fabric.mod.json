@@ -20,7 +20,7 @@
   "entrypoints": {
     "stationapi:event_bus_client": [
       "com.github.zr0n1.multiproto.Multiproto",
-      "com.github.zr0n1.multiproto.parity.TextureParityHelper"
+      "com.github.zr0n1.multiproto.parity.optional.TextureParityHelper"
     ],
     "gcapi": [
       "com.github.zr0n1.multiproto.Multiproto"
@@ -29,7 +29,7 @@
       "com.github.zr0n1.multiproto.Config"
     ],
     "hmifabric:item_list_refresh": [
-      "com.github.zr0n1.multiproto.parity.hmifabric.HMIFabricIntegrationHelper"
+      "com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper"
     ]
   },
   "mixins": [
@@ -37,12 +37,16 @@
   ],
 
   "depends": {
-    "minecraft": "1.0.0-beta.7.3",
-    "station-api-base": "^${stapi_version}",
-    "gcapi": "^${gcapi_version}"
+    "minecraft": "*",
+    "station-api-base": "*",
+    "gcapi": "*"
   },
   "recommends": {
-    "modmenu": "^${modmenu_version}"
+    "modmenu": "*"
+  },
+  "suggests": {
+    "mojangfixstationapi": "*",
+    "hmifabric": "*"
   },
   "custom": {
     "loom:injected_interfaces": {
