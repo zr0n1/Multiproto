@@ -20,7 +20,7 @@ public abstract class DirectConnectScreenMixin extends Screen {
         ProtocolVersionManager.setVersion(ProtocolVersionManager.getLastVersion());
     }
 
-    @Inject(method = "init", at = @At("TAIL"), remap = false)
+    @Inject(method = "init", at = @At("TAIL"))
     private void addCustomButton(CallbackInfo ci) {
         ProtocolVersionManager.getLastVersion();
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
