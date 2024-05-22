@@ -3,15 +3,16 @@ package com.github.zr0n1.multiproto.parity;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.minecraft.block.Block;
+import net.minecraft.client.network.MultiplayerClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 
-public class PlayerOnLadderHandler implements PlayerHandler {
+public class MultiplayerClientPlayerOnLadderHandler implements PlayerHandler {
 
     private final PlayerEntity player;
 
-    public PlayerOnLadderHandler(PlayerEntity player) {
+    public MultiplayerClientPlayerOnLadderHandler(MultiplayerClientPlayerEntity player) {
         this.player = player;
     }
 
