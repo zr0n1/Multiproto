@@ -22,13 +22,13 @@ public abstract class EntityEquipmentUpdateS2CPacketMixin {
     @Redirect(method = "read", at = @At(value = "INVOKE",
             target = "Ljava/io/DataInputStream;readShort()S", ordinal = 2))
     private short redirectReadDamage(DataInputStream stream) throws IOException {
-        return (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) ? stream.readShort() : 0;
+        return ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ? 0 : stream.readShort();
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),
             slice = @Slice(from = @At(value = "FIELD",
                     target = "Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;itemRawId:I")))
     private void redirectWriteDamage(DataOutputStream stream, int i) throws IOException {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeShort(itemDamage);
+        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) stream.writeShort(itemDamage);
     }
 }

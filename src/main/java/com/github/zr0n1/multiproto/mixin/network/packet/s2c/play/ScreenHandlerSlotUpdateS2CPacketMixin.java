@@ -20,19 +20,18 @@ public abstract class ScreenHandlerSlotUpdateS2CPacketMixin {
     @Redirect(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readShort()S"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1)))
     private short redirectReadDamage(DataInputStream stream) throws IOException {
-        return ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0 ?
-                stream.readShort() : stream.readByte();
+        return ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ? stream.readByte() : stream.readShort();
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeByte(I)V", ordinal = 1)))
     private void redirectWriteDamage(DataOutputStream stream, int i) throws IOException {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) stream.writeByte(i);
-        else stream.writeShort(i);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) stream.writeShort(i);
+        else stream.writeByte(i);
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(7);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) cir.setReturnValue(7);
     }
 }

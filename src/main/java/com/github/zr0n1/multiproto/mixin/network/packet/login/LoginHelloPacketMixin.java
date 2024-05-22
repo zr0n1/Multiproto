@@ -37,14 +37,14 @@ public abstract class LoginHelloPacketMixin extends Packet {
             target = "Lnet/minecraft/network/packet/login/LoginHelloPacket;readString(Ljava/io/DataInputStream;I)Ljava/lang/String;",
             shift = At.Shift.AFTER))
     private void injectReadPassword(DataInputStream stream, CallbackInfo ci) throws IOException {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) password = stream.readUTF();
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) password = stream.readUTF();
     }
 
     @Inject(method = "write", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/network/packet/login/LoginHelloPacket;writeString(Ljava/lang/String;Ljava/io/DataOutputStream;)V",
             shift = At.Shift.AFTER))
     private void injectWritePassword(DataOutputStream stream, CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) writeString(password, stream);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) writeString(password, stream);
     }
 
     @Inject(method = "write", at = @At("TAIL"))
@@ -54,10 +54,9 @@ public abstract class LoginHelloPacketMixin extends Packet {
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        ProtocolVersion v = ProtocolVersionManager.getVersion();
-        if (v.compareTo(ProtocolVersion.BETA_11) < 0) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
             cir.setReturnValue(4 + username.length() + password.length() + 4 + 5);
-            //cir.setReturnValue(4 + username.length() + password.length() + 4 + (v.compareTo(ProtocolVersion.ALPHA_LATER_3) >= 0 ? 5 : 0));
+            //cir.setReturnValue(4 + username.length() + password.length() + 4 + (v.isBefore(ProtocolVersion.ALPHA_LATER_3) ? 0 : 5));
         }
     }
 }

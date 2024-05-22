@@ -35,40 +35,36 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                     shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
                     !shouldApplyMojangFixStAPIServerListIntegration();
-            case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.GuiOverlayAccessor",
-                 "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
+            case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
                     shouldApplyHMIFabricIntegration();
             default -> true;
         };
     }
 
-    // Boilerplate
+    // boiled plate
     @Override
     public void onLoad(String mixinPackage) {
     }
 
     @Override
     public String getRefMapperConfig() {
-        return "";
+        return null;
     }
 
     @Override
     public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-
     }
 
     @Override
     public List<String> getMixins() {
-        return List.of();
+        return null;
     }
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 }

@@ -17,7 +17,7 @@ public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
 
     @ModifyVariable(method = "method_818(Lnet/minecraft/entity/LivingEntity;Ljava/lang/String;DDDI)V", at = @At("STORE"), ordinal = 1)
     private float applyNameRenderParity(float scale, @Local(ordinal = 0) float distance, @Local(argsOnly = true) LivingEntity e) {
-        return (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 &&
+        return (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) &&
                 Multiproto.config.nameRenderParity && e instanceof PlayerEntity) ?
                 (float) ((double) scale * (Math.sqrt(distance) / 2.0D)) : scale;
     }

@@ -23,7 +23,7 @@ public class MinecraftMixin {
     @Inject(method = "method_2148", at = @At("HEAD"), cancellable = true)
     private static void applyLightingParity(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(!(Multiproto.config.lightingParity &&
-                ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) &&
+                ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) &&
                 INSTANCE != null && INSTANCE.options.ao);
     }
 
@@ -35,7 +35,7 @@ public class MinecraftMixin {
     @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;fancyGraphics:Z"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V")))
     private boolean applyFancyGrassParity(GameOptions options) {
-        return !(Multiproto.config.textureParity && ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) &&
+        return !(Multiproto.config.textureParity && ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) &&
                 options.fancyGraphics;
     }
 }

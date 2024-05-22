@@ -21,7 +21,7 @@ public abstract class PlayerEntityNameRendererMixin extends LivingEntityRenderer
 
     @ModifyVariable(method = "method_821(Lnet/minecraft/entity/player/PlayerEntity;DDD)V", at = @At("STORE"), ordinal = 1)
     private float applyNameRenderParity(float f, @Local(argsOnly = true) PlayerEntity e) {
-        return (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && Multiproto.config.nameRenderParity) ?
+        return (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && Multiproto.config.nameRenderParity) ?
                 (float) ((double) f * (Math.sqrt(e.getDistance(dispatcher.field_2496)) / 2.0D)) : f;
     }
 }

@@ -2,6 +2,8 @@ package com.github.zr0n1.multiproto;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
+import com.github.zr0n1.multiproto.parity.optional.TranslationParityHelper;
+import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
@@ -10,28 +12,28 @@ import net.minecraft.client.Minecraft;
 
 public class Config implements PreConfigSavedListener {
 
-    @ConfigName("Show version name")
-    @Comment("Shows version name on in-game HUD")
+    @ConfigName("Version name parity")
+    @Comment("Shows version name on HUD < Beta 1.6")
     public Boolean showVersion = true;
 
-    @ConfigName("Texture parity")
-    @Comment("Changes textures to match chosen version")
+    @ConfigName("\u200BTexture parity")
+    @Comment("Changes textures to match version")
     public Boolean textureParity = true;
 
-    @ConfigName("Lighting parity")
-    @Comment("Toggles smooth lighting to match chosen version")
+    @ConfigName("\u200B\u200BLighting parity")
+    @Comment("Toggles smooth lighting to match version")
     public Boolean lightingParity = true;
 
-    @ConfigName("Name rendering parity")
+    @ConfigName("\u200B\u200B\u200BName rendering parity")
     @Comment("Renders player names larger < Beta 1.3")
     public Boolean nameRenderParity = true;
 
-    @ConfigName("Block item rendering parity")
-    @Comment("Renders block items without color multipliers < Beta 1.6")
-    public Boolean blockItemRenderParity = true;
+    @ConfigName("\u200B\u200B\u200B\u200BTooltip name parity")
+    @Comment("Changes tooltip names to match version")
+    public Boolean translationParity = true;
 
-    @ConfigName("Custom version name")
-    @Comment("Custom version name on in-game HUD")
+    @ConfigName("\u200B\u200B\u200B\u200B\u200BCustom version name")
+    @Comment("Shows custom version name on HUD")
     public String customVersionName = "";
 
 
@@ -41,15 +43,21 @@ public class Config implements PreConfigSavedListener {
         boolean textureParityB = jsonB.getBoolean("textureParity", false);
         boolean lightingParityA = jsonA.getBoolean("lightingParity", true);
         boolean lightingParityB = jsonB.getBoolean("lightingParity", false);
+        boolean translationParityA = jsonA.getBoolean("translationParity", true);
+        boolean translationParityB = jsonB.getBoolean("translationParity", false);
         if (source == EventStorage.EventSource.USER_SAVE) {
             Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
             if (textureParityA != textureParityB) {
                 textureParity = textureParityB;
                 mc.textureManager.method_1096();
             }
-            if (lightingParityA != lightingParityB) {
+            if (lightingParityA != lightingParityB && mc.isWorldRemote()) {
                 lightingParity = lightingParityB;
                 mc.worldRenderer.method_1537();
+            }
+            if(translationParityA != translationParityB) {
+                translationParity = translationParityB;
+                TranslationParityHelper.applyParity();
             }
         }
     }

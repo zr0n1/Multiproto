@@ -21,18 +21,18 @@ public abstract class LivingEntitySpawnS2CPacketMixin {
     @Redirect(method = "read", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;readEntries(Ljava/io/DataInputStream;)Ljava/util/List;"))
     private List redirectReadEntries(DataInputStream stream) {
-        return ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0 ?
-                DataTracker.readEntries(stream) : new ArrayList();
+        return ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ?
+                new ArrayList() : DataTracker.readEntries(stream);
     }
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target =
             "Lnet/minecraft/entity/data/DataTracker;writeAllEntries(Ljava/io/DataOutputStream;)V"))
     private void redirectWriteAllEntries(DataTracker tracker, DataOutputStream stream) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) >= 0) tracker.writeAllEntries(stream);
+        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) tracker.writeAllEntries(stream);
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_8) < 0) cir.setReturnValue(19);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) cir.setReturnValue(19);
     }
 }

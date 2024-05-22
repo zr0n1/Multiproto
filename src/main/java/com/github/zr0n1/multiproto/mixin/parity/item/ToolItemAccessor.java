@@ -8,8 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ToolItem.class)
 public interface ToolItemAccessor {
     @Accessor
-    ToolMaterial getToolMaterial();
-
-    @Accessor
     void setMiningSpeed(float f);
 }

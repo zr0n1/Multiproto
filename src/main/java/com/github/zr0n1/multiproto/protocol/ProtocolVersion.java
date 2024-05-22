@@ -1,7 +1,5 @@
 package com.github.zr0n1.multiproto.protocol;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -101,7 +99,7 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
 //    public static final ProtocolVersion ALPHA_INITIAL_13 = new ProtocolVersion(13, Type.ALPHA_INITIAL, "1.0.15");
 
     /**
-     * Protocol version int.
+     * Protocol version number.
      * (Example: {@code 14} for Beta 1.7 - Beta 1.7.3.)
      */
     public final int version;
@@ -141,12 +139,12 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
     }
 
     /**
-     * @param s {@link String} representing a protocol's type and version.
+     * @param s {@link String} representing a protocol versions's type and version number.
      * @return {@link ProtocolVersion} which matches the given string or {@link #BETA_14}.
      * @see #toString()
      */
     public static ProtocolVersion fromString(String s) {
-        if (s == null) return BETA_14;
+        if (s == null || s.isBlank()) return BETA_14;
         String s1 = s.replaceAll("\\s", "");
         return PROTOCOL_VERSIONS.stream().filter(p -> p.toString().equalsIgnoreCase(s1)).findFirst().orElse(BETA_14);
     }
@@ -173,17 +171,21 @@ public class ProtocolVersion implements Comparable<ProtocolVersion> {
         return String.join("_", type.toString(), String.valueOf(version)).toLowerCase();
     }
 
-    /**
-     * Compares by sequential protocol order.
-     */
-    @Override
-    public int compareTo(@NotNull ProtocolVersion v) {
-        if (this.type != v.type) return this.type.compareTo(v.type);
-        return Integer.compare(this.version, v.version);
+    public boolean isBefore(ProtocolVersion target) {
+        return this.compareTo(target) < 0;
     }
 
     /**
-     * Enum representing protocol type.
+     * Compares release order via type and version number.
+     */
+    @Override
+    public int compareTo(ProtocolVersion version) {
+        if (this.type != version.type) return this.type.compareTo(version.type);
+        return Integer.compare(this.version, version.version);
+    }
+
+    /**
+     * Enum representing protocol version type.
      */
     public enum Type {
         /**

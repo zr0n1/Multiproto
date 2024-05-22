@@ -18,17 +18,17 @@ public abstract class EntitySpawnS2CPacketMixin {
     @Inject(method = "read", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;z:I",
             shift = At.Shift.AFTER), cancellable = true)
     private void cancelReadEntityData(DataInputStream stream, CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_13)) ci.cancel();
     }
 
     @Inject(method = "write", at = @At(value = "FIELD", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;z:I",
             shift = At.Shift.AFTER), cancellable = true)
     private void cancelWriteEntityData(DataOutputStream stream, CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) ci.cancel();
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_13)) ci.cancel();
     }
 
     @Inject(method = "size", at = @At("HEAD"), cancellable = true)
     private void size(CallbackInfoReturnable<Integer> cir) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_13) < 0) cir.setReturnValue(17);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_13)) cir.setReturnValue(17);
     }
 }

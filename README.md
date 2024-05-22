@@ -14,5 +14,5 @@ Screenshot taken on [AlphaPlace](https://alphaplace.net)
 ![Version List](img/version_list.png)
 ![Server List](img/server_list.png)
 MojangFixStationAPI integration
-![Item List from Beta 1.1_02 to Beta 1.7.3](img/item_list.png)
+![Item List from Beta 1.0 to Beta 1.7.3](img/item_list.png)
 HowManyItems Fabric integration

@@ -53,19 +53,19 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "clickSlot", at = @At("HEAD"))
     private void disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_11) < 0) shift.set(false);
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) shift.set(false);
     }
 
     @Inject(method = "method_1716", at = @At("HEAD"))
     private void sendBlockMined(int i, int j, int k, int l, CallbackInfoReturnable<Boolean> cir) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(3, i, j, k, l));
         }
     }
 
     @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
     private void startMining(int i, int j, int k, int l, CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
             int id = minecraft.world.getBlockId(i, j, k);
@@ -81,7 +81,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "method_1705", at = @At("HEAD"))
     private void stopMining(CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0 && field_2615) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && field_2615) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
             field_2614 = 0;
         }
@@ -89,7 +89,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "method_1721", at = @At("HEAD"))
     private void sendMining(int i, int j, int k, int l, CallbackInfo ci) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) < 0) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(1, i, j, k, l));
         }
@@ -98,7 +98,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     @Redirect(method = "method_1721", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
             opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
     private void redirectPutField_2615(MultiplayerInteractionManager instance, boolean b) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) field_2615 = b;
+        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) field_2615 = b;
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE",
@@ -106,20 +106,20 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
     private void redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) handler.sendPacket(packet);
+        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
     private void redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
-        if (ProtocolVersionManager.getVersion().compareTo(ProtocolVersion.BETA_9) >= 0) {
-            method_1707(i, j, k, l);
-        } else {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
             field_2611 = 0.0F;
             field_2612 = 0.0F;
             field_2613 = 0.0F;
             field_2608 = i;
             field_2609 = j;
             field_2610 = k;
+        } else {
+            method_1707(i, j, k, l);
         }
     }
 }

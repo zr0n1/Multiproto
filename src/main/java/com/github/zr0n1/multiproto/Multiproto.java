@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto;
 
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
-import com.github.zr0n1.multiproto.parity.player.PlayerOnLadderHandler;
+import com.github.zr0n1.multiproto.parity.PlayerOnLadderHandler;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.network.MultiplayerClientPlayerEntity;
@@ -21,7 +21,7 @@ public class Multiproto {
 
     @Entrypoint.Namespace
     public static final Namespace NAMESPACE = Null.get();
-    @Entrypoint.Logger("multiproto")
+    @Entrypoint.Logger("Multiproto")
     public static final Logger LOGGER = Null.get();
     @GConfig(value = "config", visibleName = "Multiproto Config")
     public static final Config config = new Config();
