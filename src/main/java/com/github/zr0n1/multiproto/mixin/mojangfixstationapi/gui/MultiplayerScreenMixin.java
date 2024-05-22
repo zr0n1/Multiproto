@@ -14,8 +14,8 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 public abstract class MultiplayerScreenMixin extends Screen {
 
     @Inject(method = "joinServer", at = @At(value = "INVOKE",
-            target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V",
-            remap = false), remap = false)
+            target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"),
+            remap = false)
     private void setVersionOnConnect(ServerData server, CallbackInfo ci) {
         ProtocolVersionManager.setVersion(((MultiprotoServerData) server).multiproto_getVersion());
     }

@@ -24,7 +24,7 @@ public abstract class ServerDataMixin implements MultiprotoServerData {
         return MultiprotoServerData.create(nbt);
     }
 
-    @Inject(method = "save()Lnet/minecraft/nbt/NbtCompound;", at = @At(value = "TAIL"), remap = false)
+    @Inject(method = "save()Lnet/minecraft/nbt/NbtCompound;", at = @At(value = "TAIL"))
     private void save(CallbackInfoReturnable<NbtCompound> cir, @Local NbtCompound nbt) {
         nbt.putString("version", multiproto_version.toString());
     }
