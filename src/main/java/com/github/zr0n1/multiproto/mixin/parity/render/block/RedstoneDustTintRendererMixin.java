@@ -17,8 +17,10 @@ public abstract class RedstoneDustTintRendererMixin {
             target = "Lnet/minecraft/client/render/Tessellator;color(FFF)V", ordinal = 0))
     private void applyTintParity(Tessellator t, float r, float g, float b, @Local(name = "var8") float luminance,
                                  @Local(name = "var6") int meta) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11) && meta == 0 && Multiproto.config.textureParity) r = 0F;
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && Multiproto.config.textureParity) r = g = b = luminance;
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11) && meta == 0 && Multiproto.config.textureParity)
+            r = 0F;
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && Multiproto.config.textureParity)
+            r = g = b = luminance;
         t.color(r, g, b);
     }
 }

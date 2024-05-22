@@ -17,14 +17,14 @@
     "network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacketMixin",
     "parity.block.BlockAccessor",
     "parity.block.CobwebBlockBehaviorMixin",
-    "parity.optional.block.FurnaceBlockTextureMixin",
     "parity.block.LeavesBlockParityMixin",
-    "parity.optional.block.RedstoneWireBlockTextureMixin",
     "parity.block.SaplingBlockTextureMixin",
-    "parity.optional.block.SlabBlockTextureMixin",
     "parity.entity.EntityAccessor",
     "parity.hmifabric.UtilsAccessor",
-    "parity.item.ToolItemAccessor"
+    "parity.item.ToolItemAccessor",
+    "parity.optional.block.FurnaceBlockTextureMixin",
+    "parity.optional.block.RedstoneWireBlockTextureMixin",
+    "parity.optional.block.SlabBlockTextureMixin"
   ],
   "client": [
     "gui.MultiplayerScreenMixin",
@@ -37,9 +37,9 @@
     "mojangfixstationapi.gui.ServerDataMixin",
     "network.player.MultiplayerClientPlayerEntitySneakingMixin",
     "network.player.MultiplayerInteractionManagerMixin",
-    "parity.optional.gui.InGameHudVersionTextMixin",
     "parity.misc.MinecraftMixin",
     "parity.network.ClientNetworkHandlerEntityAnimationMixin",
+    "parity.optional.gui.InGameHudVersionTextMixin",
     "parity.render.block.RedstoneDustTintRendererMixin",
     "parity.render.entity.LivingEntityNameRendererMixin",
     "parity.render.entity.PlayerEntityNameRendererMixin"

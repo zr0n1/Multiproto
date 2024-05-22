@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "multiproto",
   "version": "${version}",
-
   "name": "Multiproto",
   "description": "Protocol translation mod allowing Minecraft Beta 1.7.3 clients to connect to earlier Beta server versions.",
   "authors": [
@@ -12,10 +11,8 @@
     "homepage": "https://github.com/zr0n1/Multiproto",
     "sources": "https://github.com/zr0n1/Multiproto"
   },
-
   "license": "LGPLv3",
   "icon": "assets/multiproto/icon.png",
-
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
@@ -35,7 +32,6 @@
   "mixins": [
     "multiproto.mixins.json"
   ],
-
   "depends": {
     "minecraft": "*",
     "station-api-base": "*",

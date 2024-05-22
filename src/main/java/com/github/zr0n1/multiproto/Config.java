@@ -3,7 +3,6 @@ package com.github.zr0n1.multiproto;
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
 import com.github.zr0n1.multiproto.parity.optional.TranslationParityHelper;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
@@ -55,7 +54,7 @@ public class Config implements PreConfigSavedListener {
                 lightingParity = lightingParityB;
                 mc.worldRenderer.method_1537();
             }
-            if(translationParityA != translationParityB) {
+            if (translationParityA != translationParityB) {
                 translationParity = translationParityB;
                 TranslationParityHelper.applyParity();
             }

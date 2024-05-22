@@ -40,7 +40,7 @@ public abstract class LeavesBlockParityMixin extends Block {
 
     @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
     private void applyItemColorParity(int meta, CallbackInfoReturnable<Integer> cir) {
-        if(ProtocolVersionManager.isBefore(ProtocolVersion.BETA_14) && Multiproto.config.textureParity) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_14) && Multiproto.config.textureParity) {
             cir.setReturnValue(super.getColor(meta));
         }
     }

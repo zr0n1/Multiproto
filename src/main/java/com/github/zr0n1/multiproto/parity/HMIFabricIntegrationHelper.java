@@ -17,13 +17,6 @@ public class HMIFabricIntegrationHelper implements HMIItemListRefreshEvent {
 
     public static ArrayList<Item> removed = new ArrayList<>();
 
-    @Override
-    public void refreshItemList(ArrayList<ItemStack> stacks) {
-        Multiproto.LOGGER.info("baclonksty");
-        stacks.removeIf(stack -> removed.contains(stack.getItem()) ||
-                (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) && stack.getDamage() > 0));
-    }
-
     public static void applyParity() {
         removed.clear();
         // < b1.7
@@ -67,5 +60,12 @@ public class HMIFabricIntegrationHelper implements HMIItemListRefreshEvent {
         for (ItemConvertible item : items) {
             if (ProtocolVersionManager.isBefore(target)) removed.add(item.asItem());
         }
+    }
+
+    @Override
+    public void refreshItemList(ArrayList<ItemStack> stacks) {
+        Multiproto.LOGGER.info("baclonksty");
+        stacks.removeIf(stack -> removed.contains(stack.getItem()) ||
+                (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) && stack.getDamage() > 0));
     }
 }

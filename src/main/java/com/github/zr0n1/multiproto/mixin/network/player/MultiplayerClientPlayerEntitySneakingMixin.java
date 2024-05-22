@@ -25,7 +25,8 @@ public abstract class MultiplayerClientPlayerEntitySneakingMixin extends ClientP
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 0))
     private void redirectSendStartSneakingPacket(ClientNetworkHandler handler, Packet packet) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) handler.sendPacket(new EntityAnimationPacket(this, 104));
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8))
+            handler.sendPacket(new EntityAnimationPacket(this, 104));
         else handler.sendPacket(packet);
     }
 
@@ -33,7 +34,8 @@ public abstract class MultiplayerClientPlayerEntitySneakingMixin extends ClientP
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
             ordinal = 1))
     private void redirectSendStopSneakingPacket(ClientNetworkHandler handler, Packet packet) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) handler.sendPacket(new EntityAnimationPacket(this, 105));
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8))
+            handler.sendPacket(new EntityAnimationPacket(this, 105));
         else handler.sendPacket(packet);
     }
 }

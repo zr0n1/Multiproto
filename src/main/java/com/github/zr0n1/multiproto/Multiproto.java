@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto;
 
+import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
-import com.github.zr0n1.multiproto.parity.PlayerOnLadderHandler;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.network.MultiplayerClientPlayerEntity;
@@ -29,7 +29,7 @@ public class Multiproto {
     @EventListener
     void registerPlayerHandlers(PlayerEvent.HandlerRegister event) {
         if (event.player instanceof MultiplayerClientPlayerEntity player) {
-            event.playerHandlers.add(new PlayerOnLadderHandler(event.player));
+            event.playerHandlers.add(new MultiplayerClientPlayerOnLadderHandler(player));
         }
     }
 

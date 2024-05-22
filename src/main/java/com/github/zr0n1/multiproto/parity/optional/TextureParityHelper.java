@@ -40,7 +40,7 @@ public class TextureParityHelper {
             Block.BRICKS.textureId = 7;
             Block.COBBLESTONE.textureId = 16;
         }
-        if(ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && Multiproto.config.textureParity) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && Multiproto.config.textureParity) {
             Block.REDSTONE_WIRE.textureId = redstoneWireTextures[0] = terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_cross")).index;
             terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_line"));
             redstoneWireTextures[1] = terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_cross_on")).index;
