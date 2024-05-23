@@ -6,18 +6,18 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EmptyPacketHandler extends PacketHandler<Packet> {
+public class EmptyPacketHandler<T extends Packet> extends PacketHandler<T> {
 
     @Override
-    public void readPacket(Packet packet, DataInputStream stream) throws IOException {
+    public void read(T packet, DataInputStream stream) throws IOException {
     }
 
     @Override
-    public void write(Packet packet, DataOutputStream stream) throws IOException {
+    public void write(T packet, DataOutputStream stream) throws IOException {
     }
 
     @Override
-    public int size(Packet packet) {
+    public int size(T packet) {
         return 0;
     }
 }

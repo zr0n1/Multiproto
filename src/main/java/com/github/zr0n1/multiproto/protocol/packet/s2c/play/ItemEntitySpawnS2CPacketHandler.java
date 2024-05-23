@@ -14,7 +14,6 @@ public class ItemEntitySpawnS2CPacketHandler extends PacketHandler<ItemEntitySpa
         packet.id = stream.readInt();
         packet.itemRawId = stream.readShort();
         packet.itemCount = stream.readByte();
-        packet.itemDamage = stream.readByte();
         packet.x = stream.readInt();
         packet.y = stream.readInt();
         packet.z = stream.readInt();
@@ -28,7 +27,6 @@ public class ItemEntitySpawnS2CPacketHandler extends PacketHandler<ItemEntitySpa
         stream.writeInt(packet.id);
         stream.writeShort(packet.itemRawId);
         stream.writeByte(packet.itemCount);
-        stream.writeByte(packet.itemDamage);
         stream.writeInt(packet.x);
         stream.writeInt(packet.y);
         stream.writeInt(packet.z);

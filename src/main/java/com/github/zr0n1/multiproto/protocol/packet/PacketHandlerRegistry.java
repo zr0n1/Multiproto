@@ -24,37 +24,49 @@ import java.util.Map;
 
 public final class PacketHandlerRegistry {
 
-    public static final Map<Class<? extends Packet>, PacketHandler<? extends Packet>> HANDLERS = new HashMap<>();
+    public static final Map<Integer, PacketHandler<? extends Packet>> HANDLERS = new HashMap<>();
 
     public static void read(Packet packet, DataInputStream stream) throws IOException {
-        if (HANDLERS.containsKey(packet.getClass())) HANDLERS.get(packet.getClass()).readPacket(packet, stream);
+        if (HANDLERS.containsKey(packet.getRawId())) {
+            Multiproto.LOGGER.info("reading id: {}, name: {} with handler", packet.getRawId(), packet.getClass().getName());
+            HANDLERS.get(packet.getRawId()).readPacket(packet, stream);
+        }
         else packet.read(stream);
     }
 
     public static void write(Packet packet, DataOutputStream stream) throws IOException {
-        if (HANDLERS.containsKey(packet.getClass())) HANDLERS.get(packet.getClass()).writePacket(packet, stream);
+        if (HANDLERS.containsKey(packet.getRawId())) {
+            Multiproto.LOGGER.info("writing id: {}, name: {} with handler", packet.getRawId(), packet.getClass().getName());
+            HANDLERS.get(packet.getRawId()).writePacket(packet, stream);
+        }
         else packet.write(stream);
     }
 
     public static int size(Packet packet) {
-        return (HANDLERS.containsKey(packet.getClass())) ? HANDLERS.get(packet.getClass()).packetSize(packet) : packet.size();
+        return (HANDLERS.containsKey(packet.getRawId())) ? HANDLERS.get(packet.getRawId()).packetSize(packet) : packet.size();
     }
 
     public static void registerHandlers() {
-        registerBefore(Version.BETA_14, LoginHelloPacket.class, new LoginHelloPacketHandler());
-        registerBefore(Version.BETA_13, EntitySpawnS2CPacket.class, new EntitySpawnS2CPacketHandler());
-        registerBefore(Version.BETA_13, PlayerRespawnPacket.class, new EmptyPacketHandler());
-        registerBefore(Version.BETA_11, ClickSlotC2SPacket.class, new ClickSlotC2SPacketHandler());
-        registerBefore(Version.BETA_8, EntityEquipmentUpdateS2CPacket.class, new EntityEquipmentUpdateS2CPacketHandler());
-        registerBefore(Version.BETA_8, ItemEntitySpawnS2CPacket.class, new ItemEntitySpawnS2CPacketHandler());
-        registerBefore(Version.BETA_8, LivingEntitySpawnS2CPacket.class, new LivingEntitySpawnS2CPacketHandler());
-        registerBefore(Version.BETA_8, PlayerInteractBlockC2SPacket.class, new PlayerInteractBlockC2SPacketHandler());
-        registerBefore(Version.BETA_8, ScreenHandlerSlotUpdateS2CPacket.class, new ScreenHandlerSlotUpdateS2CPacketHandler());
-        FabricLoader.getInstance().getEntrypointContainers("multiproto:register_versions", RegisterPacketHandlersListener.class)
+        HANDLERS.clear();
+        // < b1.7
+        registerBefore(Version.BETA_14, 1, new LoginHelloPacketHandler());
+        // < b1.6
+        registerBefore(Version.BETA_13, 9, new EmptyPacketHandler<PlayerRespawnPacket>());
+        registerBefore(Version.BETA_13, 23, new EntitySpawnS2CPacketHandler());
+        // < b1.5
+        registerBefore(Version.BETA_11, 102, new ClickSlotC2SPacketHandler());
+        // < b1.2
+        registerBefore(Version.BETA_8, 5, new EntityEquipmentUpdateS2CPacketHandler());
+        registerBefore(Version.BETA_8, 15, new PlayerInteractBlockC2SPacketHandler());
+        registerBefore(Version.BETA_8, 21, new ItemEntitySpawnS2CPacketHandler());
+        registerBefore(Version.BETA_8, 24, new LivingEntitySpawnS2CPacketHandler());
+        registerBefore(Version.BETA_8, 103, new ScreenHandlerSlotUpdateS2CPacketHandler());
+        // custom packet handlers
+        FabricLoader.getInstance().getEntrypointContainers("multiproto:register_packet_handlers", RegisterPacketHandlersListener.class)
                 .forEach(listener -> listener.getEntrypoint().registerHandlers());
     }
 
-    public static void registerBefore(Version version, Class<? extends Packet> plass, PacketHandler<? extends Packet> handler) {
-        if (VersionManager.isBefore(version)) HANDLERS.put(plass, handler);
+    public static void registerBefore(Version version, int id, PacketHandler<? extends Packet> handler) {
+        if (VersionManager.isBefore(version)) HANDLERS.put(id, handler);
     }
 }
