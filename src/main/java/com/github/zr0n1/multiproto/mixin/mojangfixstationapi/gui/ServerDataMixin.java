@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
+import com.github.zr0n1.multiproto.protocol.Version;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +16,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 public abstract class ServerDataMixin implements MultiprotoServerData {
 
     @Unique
-    private ProtocolVersion multiproto_version;
+    private Version multiproto_version;
 
     @Redirect(method = "load", at = @At(value = "NEW", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;",
             remap = false), remap = false)
@@ -31,13 +31,13 @@ public abstract class ServerDataMixin implements MultiprotoServerData {
 
     @Override
     @Unique
-    public ProtocolVersion multiproto_getVersion() {
+    public Version multiproto_getVersion() {
         return multiproto_version;
     }
 
     @Override
     @Unique
-    public void multiproto_setVersion(ProtocolVersion version) {
+    public void multiproto_setVersion(Version version) {
         this.multiproto_version = version;
     }
 }

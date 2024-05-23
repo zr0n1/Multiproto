@@ -2,6 +2,9 @@ package com.github.zr0n1.multiproto;
 
 import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
+import com.github.zr0n1.multiproto.protocol.VersionRegistry;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.network.MultiplayerClientPlayerEntity;
@@ -34,9 +37,9 @@ public class Multiproto {
     }
 
     @EventListener
-    void registerVanillaRecipes(PacketRegisterEvent event) {
+    void registerProtocolAndRecipeStuff(PacketRegisterEvent event) {
+        VersionRegistry.registerVersions();
         RecipeParityHelper.vanillaCraftingRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
         RecipeParityHelper.vanillaSmeltingRecipes = Map.copyOf(SmeltingRecipeManager.getInstance().getRecipes());
     }
-
 }

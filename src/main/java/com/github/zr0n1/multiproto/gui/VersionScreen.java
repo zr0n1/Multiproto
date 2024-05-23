@@ -4,8 +4,9 @@ import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor;
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
+import com.github.zr0n1.multiproto.protocol.VersionRegistry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -16,29 +17,29 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 import java.util.Comparator;
 import java.util.List;
 
-public class ProtocolVersionScreen extends Screen {
+public class VersionScreen extends Screen {
 
-    private static ProtocolVersion lastServerVersion;
+    private static Version lastServerVersion;
     private final Screen parent;
     private final ServerData server;
-    private final List<ProtocolVersion> versions;
+    private final List<Version> versions;
     //private final List<ProtocolVersion> alphaVersions;
     //private final List<ProtocolVersion> betaVersions;
 
-    public ProtocolVersionScreen(Screen parent, ServerData server) {
+    public VersionScreen(Screen parent, ServerData server) {
         this.parent = parent;
         this.server = server;
-        this.versions = ProtocolVersion.PROTOCOL_VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
+        this.versions = VersionRegistry.VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
         //this.alphaVersions = ProtocolVersion.ALPHA_PROTOCOL_VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
         //this.betaVersions = ProtocolVersion.BETA_PROTOCOL_VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
     }
 
-    public ProtocolVersionScreen(Screen parent) {
+    public VersionScreen(Screen parent) {
         this(parent, null);
     }
 
-    public static ProtocolVersion getLastServerVersion() {
-        return lastServerVersion != null ? lastServerVersion : ProtocolVersionManager.getLastVersion();
+    public static Version getLastServerVersion() {
+        return lastServerVersion != null ? lastServerVersion : VersionManager.getLastVersion();
     }
 
     public void init() {
@@ -53,7 +54,7 @@ public class ProtocolVersionScreen extends Screen {
             buttons.add(button);
         }
          */
-        for (ProtocolVersion version : versions) {
+        for (Version version : versions) {
             int i = versions.indexOf(version);
             int size = versions.size();
             boolean side = i < size / 2;
@@ -79,12 +80,12 @@ public class ProtocolVersionScreen extends Screen {
                 b.visible = !b.visible;
             }
         } else if (button.id <= versions.size()) {
-            ProtocolVersion version = versions.get(button.id);
+            Version version = versions.get(button.id);
             if (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIServerListIntegration()) {
                 if (parent instanceof DirectConnectScreen) {
                     String address = ((DirectConnectScreenAccessor) parent).getAddressField().getText();
                     boolean active = ((DirectConnectScreenAccessor) parent).getConnectButton().active;
-                    ProtocolVersionManager.setLastVersion(version);
+                    VersionManager.setLastVersion(version);
                     minecraft.setScreen(parent);
                     ((DirectConnectScreenAccessor) parent).getAddressField().setText(address);
                     ((DirectConnectScreenAccessor) parent).getConnectButton().active = active;
@@ -100,7 +101,7 @@ public class ProtocolVersionScreen extends Screen {
                     ((EditServerScreenAccessor) parent).getButton().active = active;
                 }
             } else {
-                ProtocolVersionManager.setLastVersion(version);
+                VersionManager.setLastVersion(version);
                 minecraft.setScreen(parent);
             }
         }

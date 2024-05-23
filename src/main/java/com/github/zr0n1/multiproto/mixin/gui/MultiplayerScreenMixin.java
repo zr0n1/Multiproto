@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.gui;
 
-import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.gui.VersionScreen;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -18,13 +18,13 @@ public abstract class MultiplayerScreenMixin extends Screen {
     private void addCustomButton(CallbackInfo ci) {
         ButtonWidget b = (ButtonWidget) buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
-                "Protocol version: " + ProtocolVersionManager.getLastVersion().nameRange(true)));
+                "Protocol version: " + VersionManager.getLastVersion().nameRange(true)));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)
     private void onCustomButtonClicked(ButtonWidget b, CallbackInfo ci) {
         if (b.id == 100) {
-            minecraft.setScreen(new ProtocolVersionScreen(this));
+            minecraft.setScreen(new VersionScreen(this));
             ci.cancel();
         }
     }
@@ -33,6 +33,6 @@ public abstract class MultiplayerScreenMixin extends Screen {
             target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;save()V")))
     private void setVersionOnConnect(ButtonWidget button, CallbackInfo ci) {
-        ProtocolVersionManager.setVersion(ProtocolVersionManager.getLastVersion());
+        VersionManager.setVersion(VersionManager.getLastVersion());
     }
 }

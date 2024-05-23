@@ -1,8 +1,8 @@
 package com.github.zr0n1.multiproto.parity;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,54 +30,54 @@ public class RecipeParityHelper {
         SmeltingRecipeManager.getInstance().getRecipes().clear();
         SmeltingRecipeManager.getInstance().getRecipes().putAll(vanillaSmeltingRecipes);
         // < b1.7
-        removeBefore(ProtocolVersion.BETA_14,
+        removeBefore(Version.BETA_14,
                 new ItemStack(Block.PISTON), new ItemStack(Block.STICKY_PISTON),
                 new ItemStack(Item.SHEARS));
         // < b1.6
-        removeBefore(ProtocolVersion.BETA_13,
+        removeBefore(Version.BETA_13,
                 new ItemStack(Block.TRAPDOOR, 2),
                 new ItemStack(Item.MAP, 1));
         // < b1.5
-        removeBefore(ProtocolVersion.BETA_11,
+        removeBefore(Version.BETA_11,
                 new ItemStack(Block.POWERED_RAIL, 6), new ItemStack(Block.DETECTOR_RAIL, 6));
-        replaceBefore(ProtocolVersion.BETA_11,
+        replaceBefore(Version.BETA_11,
                 new ItemStack(Block.LADDER, 2), new ItemStack(Block.LADDER, 1), "# #", "###", "# #", '#', Item.STICK);
         // < b1.4
-        removeBefore(ProtocolVersion.BETA_10, new ItemStack(Item.COOKIE, 8));
+        removeBefore(Version.BETA_10, new ItemStack(Item.COOKIE, 8));
         // < b1.3
-        removeBefore(ProtocolVersion.BETA_9,
+        removeBefore(Version.BETA_9,
                 new ItemStack(Item.BED),
                 new ItemStack(Item.REPEATER),
                 new ItemStack(Block.SLAB, 3, 3),
                 new ItemStack(Block.SLAB, 3, 2),
                 new ItemStack(Block.SLAB, 3, 1));
-        replaceBefore(ProtocolVersion.BETA_9, new ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE);
-        replaceBefore(ProtocolVersion.BETA_9, new ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE);
-        replaceBefore(ProtocolVersion.BETA_9, new ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS);
+        replaceBefore(Version.BETA_9, new ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE);
+        replaceBefore(Version.BETA_9, new ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE);
+        replaceBefore(Version.BETA_9, new ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS);
         // < b1.2
-        removeBefore(ProtocolVersion.BETA_8, new ItemStack(Item.CAKE), new ItemStack(Block.DISPENSER), new ItemStack(Block.NOTE_BLOCK),
+        removeBefore(Version.BETA_8, new ItemStack(Item.CAKE), new ItemStack(Block.DISPENSER), new ItemStack(Block.NOTE_BLOCK),
                 new ItemStack(Block.SANDSTONE), new ItemStack(Item.SUGAR));
         for (int i = 0; i < 16; i++) {
-            removeBefore(ProtocolVersion.BETA_8, new ItemStack(Block.WOOL, 1, ~i & 15), new ItemStack(Item.DYE, 1, i));
+            removeBefore(Version.BETA_8, new ItemStack(Block.WOOL, 1, ~i & 15), new ItemStack(Item.DYE, 1, i));
         }
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8)) {
+        if (VersionManager.isBefore(Version.BETA_8)) {
             SmeltingRecipeManager.getInstance().getRecipes().remove(Block.CACTUS.id);
             SmeltingRecipeManager.getInstance().getRecipes().remove(Block.LOG.id);
         }
         Multiproto.LOGGER.info("Applied version recipe parity");
     }
 
-    public static void replaceBefore(ProtocolVersion target, ItemStack output, Object... recipe) {
+    public static void replaceBefore(Version target, ItemStack output, Object... recipe) {
         replaceBefore(target, output, output, recipe);
     }
 
-    public static void replaceBefore(ProtocolVersion target, ItemStack oldOutput, ItemStack output, Object... recipe) {
+    public static void replaceBefore(Version target, ItemStack oldOutput, ItemStack output, Object... recipe) {
         removeBefore(target, oldOutput);
         CraftingRegistry.addShapedRecipe(output, recipe);
     }
 
-    public static void removeBefore(ProtocolVersion target, ItemStack... outputs) {
-        if (ProtocolVersionManager.isBefore(target)) {
+    public static void removeBefore(Version target, ItemStack... outputs) {
+        if (VersionManager.isBefore(target)) {
             for (ItemStack output : outputs) {
                 CraftingRecipeManager.getInstance().getRecipes().removeIf(r -> ((CraftingRecipe) r).getOutput().equals(output));
             }

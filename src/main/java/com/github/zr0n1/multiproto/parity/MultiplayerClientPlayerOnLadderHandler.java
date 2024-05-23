@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.parity;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.network.MultiplayerClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +18,7 @@ public class MultiplayerClientPlayerOnLadderHandler implements PlayerHandler {
 
     @Override
     public boolean isOnLadder(boolean onLadder) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
+        if (VersionManager.isBefore(Version.BETA_11)) {
             int x = MathHelper.floor(player.x);
             int y = MathHelper.floor(player.boundingBox.minY);
             int z = MathHelper.floor(player.z);

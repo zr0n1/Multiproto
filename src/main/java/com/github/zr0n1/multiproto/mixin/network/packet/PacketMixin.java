@@ -1,11 +1,13 @@
 package com.github.zr0n1.multiproto.mixin.network.packet;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
+import com.github.zr0n1.multiproto.protocol.packet.PacketHandlerRegistry;
 import net.minecraft.network.packet.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -16,21 +18,35 @@ import java.io.IOException;
 @Mixin(Packet.class)
 public class PacketMixin {
 
+    @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;size()I"))
+    private static int handlerSize(Packet packet) {
+        return PacketHandlerRegistry.size(packet);
+    }
+
+    @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;read(Ljava/io/DataInputStream;)V"))
+    private static void handlerRead(Packet packet, DataInputStream stream) throws IOException {
+        PacketHandlerRegistry.read(packet, stream);
+    }
+
+    @Redirect(method = "write(Lnet/minecraft/network/packet/Packet;Ljava/io/DataOutputStream;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;write(Ljava/io/DataOutputStream;)V"))
+    private static void handlerWrite(Packet packet, DataOutputStream stream) throws IOException {
+        PacketHandlerRegistry.write(packet, stream);
+    }
+
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)
     private static void readUTFIfOldVersion(DataInputStream stream, int maxLength, CallbackInfoReturnable<String> cir)
             throws IOException {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
-            String s = stream.readUTF();
-            if (s.length() > maxLength) {
-                throw new IOException("Received string length longer than maximum allowed (" + s.length() + " > " + maxLength + ")");
-            }
-            cir.setReturnValue(s);
+        if (VersionManager.isBefore(Version.BETA_11)) {
+            cir.setReturnValue(stream.readUTF());
         }
     }
 
     @Inject(method = "writeString", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"), cancellable = true)
     private static void writeUTFIfOldVersion(String string, DataOutputStream stream, CallbackInfo ci) throws IOException {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
+        if (VersionManager.isBefore(Version.BETA_11)) {
             stream.writeUTF(string);
             ci.cancel();
         }

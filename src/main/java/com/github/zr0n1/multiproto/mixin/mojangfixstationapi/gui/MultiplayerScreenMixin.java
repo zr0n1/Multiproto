@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,6 +17,6 @@ public abstract class MultiplayerScreenMixin extends Screen {
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"),
             remap = false)
     private void setVersionOnConnect(ServerData server, CallbackInfo ci) {
-        ProtocolVersionManager.setVersion(((MultiprotoServerData) server).multiproto_getVersion());
+        VersionManager.setVersion(((MultiprotoServerData) server).multiproto_getVersion());
     }
 }

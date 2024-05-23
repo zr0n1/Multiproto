@@ -1,7 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.block;
 
-import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
-import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import com.github.zr0n1.multiproto.protocol.Version;
+import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.block.CobwebBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,6 +13,6 @@ public abstract class CobwebBlockBehaviorMixin {
 
     @Inject(method = "isFullCube", at = @At("HEAD"), cancellable = true)
     private void applyCobwebFullCubeParity(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(ProtocolVersionManager.getVersion() == ProtocolVersion.BETA_13);
+        cir.setReturnValue(VersionManager.getVersion() == Version.BETA_13);
     }
 }

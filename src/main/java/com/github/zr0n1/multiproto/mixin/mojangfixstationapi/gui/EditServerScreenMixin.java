@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
-import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
+import com.github.zr0n1.multiproto.gui.VersionScreen;
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Final;
@@ -23,7 +23,7 @@ public abstract class EditServerScreenMixin extends Screen {
     @Redirect(method = "lambda$init$0", at = @At(value = "NEW",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;", remap = false), remap = false)
     private ServerData redirectMultiprotoServerData(String name, String ip) {
-        return MultiprotoServerData.create(name, ip, ProtocolVersionScreen.getLastServerVersion());
+        return MultiprotoServerData.create(name, ip, VersionScreen.getLastServerVersion());
     }
 
     @Inject(method = "init", at = @At("TAIL"))
@@ -31,7 +31,7 @@ public abstract class EditServerScreenMixin extends Screen {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
                 "Protocol version: " + (server != null ?
                         ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true) :
-                        ProtocolVersionScreen.getLastServerVersion().nameRange(true)),
-                button -> minecraft.setScreen(new ProtocolVersionScreen(this, server))));
+                        VersionScreen.getLastServerVersion().nameRange(true)),
+                button -> minecraft.setScreen(new VersionScreen(this, server))));
     }
 }
