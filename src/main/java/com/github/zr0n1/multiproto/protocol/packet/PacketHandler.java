@@ -34,15 +34,15 @@ public abstract class PacketHandler<T extends Packet> {
     }
 
     public void readPacket(Packet packet, DataInputStream stream) throws IOException {
-        read((T)packet, stream);
+        read((T) packet, stream);
     }
 
     public void writePacket(Packet packet, DataOutputStream stream) throws IOException {
-        write((T)packet, stream);
+        write((T) packet, stream);
     }
 
     public int packetSize(Packet packet) {
-        return size((T)packet);
+        return size((T) packet);
     }
 
     public void read(T packet, DataInputStream stream) throws IOException {

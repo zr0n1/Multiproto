@@ -199,9 +199,9 @@ public class Version implements Comparable<Version> {
          */
         BETA("Beta", "b", false);
 
+        public final boolean alpha;
         private final String label;
         private final String abbreviated;
-        public final boolean alpha;
 
         Type(String label, String abbreviated, boolean alpha) {
             this.label = label;

@@ -1,7 +1,6 @@
 package com.github.zr0n1.multiproto.protocol;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.event.VersionChangedListener;
 import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
 import com.github.zr0n1.multiproto.parity.BlockParityHelper;
 import com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper;
@@ -9,6 +8,7 @@ import com.github.zr0n1.multiproto.parity.ItemParityHelper;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
 import com.github.zr0n1.multiproto.parity.optional.TextureParityHelper;
 import com.github.zr0n1.multiproto.parity.optional.TranslationParityHelper;
+import com.github.zr0n1.multiproto.protocol.event.VersionChangedListener;
 import com.github.zr0n1.multiproto.protocol.packet.PacketHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;

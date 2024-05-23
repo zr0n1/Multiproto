@@ -22,11 +22,6 @@ public class TextureParityHelper {
      */
     public static final int[] redstoneWireTextures = new int[2];
 
-    @EventListener
-    void registerTextures(TextureRegisterEvent event) {
-        applyParity();
-    }
-
     public static void applyParity() {
         ExpandableAtlas terrain = Atlases.getTerrain();
         if (VersionManager.isBefore(Version.BETA_14) && Multiproto.config.textureParity) {
@@ -51,5 +46,10 @@ public class TextureParityHelper {
         Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
         if (mc.worldRenderer != null) mc.worldRenderer.method_1537();
         Multiproto.LOGGER.info("Registered version parity textures");
+    }
+
+    @EventListener
+    void registerTextures(TextureRegisterEvent event) {
+        applyParity();
     }
 }

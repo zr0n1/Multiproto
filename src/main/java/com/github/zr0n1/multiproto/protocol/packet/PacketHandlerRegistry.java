@@ -10,11 +10,7 @@ import com.github.zr0n1.multiproto.protocol.packet.login.LoginHelloPacketHandler
 import com.github.zr0n1.multiproto.protocol.packet.s2c.play.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
-import net.minecraft.network.packet.login.LoginHelloPacket;
 import net.minecraft.network.packet.play.PlayerRespawnPacket;
-import net.minecraft.network.packet.s2c.play.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,16 +26,14 @@ public final class PacketHandlerRegistry {
         if (HANDLERS.containsKey(packet.getRawId())) {
             Multiproto.LOGGER.info("reading id: {}, name: {} with handler", packet.getRawId(), packet.getClass().getName());
             HANDLERS.get(packet.getRawId()).readPacket(packet, stream);
-        }
-        else packet.read(stream);
+        } else packet.read(stream);
     }
 
     public static void write(Packet packet, DataOutputStream stream) throws IOException {
         if (HANDLERS.containsKey(packet.getRawId())) {
             Multiproto.LOGGER.info("writing id: {}, name: {} with handler", packet.getRawId(), packet.getClass().getName());
             HANDLERS.get(packet.getRawId()).writePacket(packet, stream);
-        }
-        else packet.write(stream);
+        } else packet.write(stream);
     }
 
     public static int size(Packet packet) {

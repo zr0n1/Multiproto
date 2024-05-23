@@ -2,8 +2,6 @@ package com.github.zr0n1.multiproto;
 
 import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler;
 import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
 import com.github.zr0n1.multiproto.protocol.VersionRegistry;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.mine_diver.unsafeevents.listener.EventListener;

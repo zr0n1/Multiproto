@@ -4,14 +4,14 @@ import com.github.zr0n1.multiproto.protocol.event.RegisterVersionsListener;
 import com.google.common.collect.ImmutableSortedSet;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.util.*;
+import java.util.SortedSet;
 
 public final class VersionRegistry {
 
     public static SortedSet<Version> VERSIONS;
 
     public static void registerVersions() {
-        if(VERSIONS != null) throw new AssertionError("no");
+        if (VERSIONS != null) throw new AssertionError("no");
         ImmutableSortedSet.Builder<Version> builder = ImmutableSortedSet.naturalOrder();
         builder.add(
                 Version.BETA_14,
