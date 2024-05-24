@@ -36,7 +36,7 @@ public abstract class PacketHandler<T extends Packet> {
     }
 
     protected final Entity getEntity(int id, NetworkHandler handler) {
-        return ((ClientNetworkHandlerAccessor)handler).invokeMethod_1645(id);
+        return ((ClientNetworkHandlerAccessor) handler).invokeMethod_1645(id);
     }
 
     public final void readPacket(Packet packet, DataInputStream stream) throws IOException {

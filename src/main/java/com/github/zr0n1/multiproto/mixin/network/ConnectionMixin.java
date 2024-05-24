@@ -4,7 +4,6 @@ import com.github.zr0n1.multiproto.protocol.packet.PacketHelper;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.network.Connection;
-import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.protocol.packet;
 
-import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import com.github.zr0n1.multiproto.protocol.event.RegisterPacketChangesListener;
@@ -9,7 +8,6 @@ import com.github.zr0n1.multiproto.protocol.packet.c2s.play.PlayerInteractBlockC
 import com.github.zr0n1.multiproto.protocol.packet.login.LoginHelloPacketHandler;
 import com.github.zr0n1.multiproto.protocol.packet.s2c.play.*;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
