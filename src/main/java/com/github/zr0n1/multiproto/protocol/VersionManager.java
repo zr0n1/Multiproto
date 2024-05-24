@@ -9,7 +9,7 @@ import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
 import com.github.zr0n1.multiproto.parity.optional.TextureParityHelper;
 import com.github.zr0n1.multiproto.parity.optional.TranslationParityHelper;
 import com.github.zr0n1.multiproto.protocol.event.VersionChangedListener;
-import com.github.zr0n1.multiproto.protocol.packet.PacketHandlerRegistry;
+import com.github.zr0n1.multiproto.protocol.packet.PacketHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 
@@ -27,7 +27,7 @@ public final class VersionManager {
     public static void setVersion(Version version) {
         if (VersionManager.version != version) {
             VersionManager.version = version;
-            PacketHandlerRegistry.registerHandlers();
+            PacketHelper.register();
             BlockParityHelper.applyParity();
             ItemParityHelper.applyParity();
             RecipeParityHelper.applyParity();

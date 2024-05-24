@@ -6,7 +6,7 @@
   "plugin": "com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin",
   "mixins": [
     "network.ConnectionMixin",
-    "network.packet.PacketMixin",
+    "network.PacketMixin",
     "parity.block.BlockAccessor",
     "parity.block.CobwebBlockBehaviorMixin",
     "parity.block.LeavesBlockParityMixin",
@@ -27,8 +27,7 @@
     "mojangfixstationapi.gui.MultiplayerScreenMixin",
     "mojangfixstationapi.gui.MultiplayerServerListWidgetMixin",
     "mojangfixstationapi.gui.ServerDataMixin",
-    "network.player.MultiplayerClientPlayerEntitySneakingMixin",
-    "network.player.MultiplayerInteractionManagerMixin",
+    "network.MultiplayerInteractionManagerMixin",
     "parity.misc.MinecraftMixin",
     "parity.network.ClientNetworkHandlerEntityAnimationMixin",
     "parity.optional.gui.InGameHudVersionTextMixin",

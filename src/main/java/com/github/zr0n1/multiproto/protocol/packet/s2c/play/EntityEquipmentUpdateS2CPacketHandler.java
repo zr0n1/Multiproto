@@ -14,7 +14,6 @@ public class EntityEquipmentUpdateS2CPacketHandler extends PacketHandler<EntityE
         packet.id = stream.readInt();
         packet.slot = stream.readShort();
         packet.itemRawId = stream.readShort();
-        packet.itemDamage = stream.readByte();
     }
 
     @Override
@@ -22,6 +21,5 @@ public class EntityEquipmentUpdateS2CPacketHandler extends PacketHandler<EntityE
         stream.writeInt(packet.id);
         stream.writeShort(packet.slot);
         stream.writeShort(packet.itemRawId);
-        stream.writeByte(packet.itemDamage);
     }
 }

@@ -2,9 +2,11 @@ package com.github.zr0n1.multiproto.protocol.packet;
 
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
+import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +14,7 @@ import java.io.IOException;
 
 public abstract class PacketHandler<T extends Packet> {
 
-    protected static ItemStack readItemStack(DataInputStream stream) throws IOException {
+    protected ItemStack readItemStack(DataInputStream stream) throws IOException {
         short id = stream.readShort();
         if (id >= 0) {
             byte count = stream.readByte();
@@ -22,7 +24,7 @@ public abstract class PacketHandler<T extends Packet> {
         return null;
     }
 
-    protected static void writeItemStack(DataOutputStream stream, ItemStack stack) throws IOException {
+    protected void writeItemStack(DataOutputStream stream, ItemStack stack) throws IOException {
         if (stack == null) {
             stream.writeShort(-1);
         } else {
@@ -33,15 +35,19 @@ public abstract class PacketHandler<T extends Packet> {
         }
     }
 
-    public void readPacket(Packet packet, DataInputStream stream) throws IOException {
+    protected final Entity getEntity(int id, NetworkHandler handler) {
+        return ((ClientNetworkHandlerAccessor)handler).invokeMethod_1645(id);
+    }
+
+    public final void readPacket(Packet packet, DataInputStream stream) throws IOException {
         read((T) packet, stream);
     }
 
-    public void writePacket(Packet packet, DataOutputStream stream) throws IOException {
+    public final void writePacket(Packet packet, DataOutputStream stream) throws IOException {
         write((T) packet, stream);
     }
 
-    public int packetSize(Packet packet) {
+    public final int packetSize(Packet packet) {
         return size((T) packet);
     }
 
@@ -51,10 +57,6 @@ public abstract class PacketHandler<T extends Packet> {
 
     public void write(T packet, DataOutputStream stream) throws IOException {
         packet.write(stream);
-    }
-
-    public void apply(NetworkHandler handler, T packet) {
-        packet.apply(handler);
     }
 
     public int size(T packet) {
