@@ -37,21 +37,21 @@ public class FieldEntry<T> {
     }
 
     public static <T> FieldEntry<T> of(DataType<T> type, int fieldIndex, T value) {
-        return new FieldEntry<T>(type, false, fieldIndex, p -> value);
+        return new FieldEntry<>(type, false, fieldIndex, p -> value);
     }
 
     @SuppressWarnings("unchecked")
     public static <T, P extends Packet> FieldEntry<T> of(DataType<T> type, int fieldIndex, Function<P, T> valueFunc) {
-        return new FieldEntry<T>(type, false, fieldIndex, (Function<Packet, T>) valueFunc);
+        return new FieldEntry<>(type, false, fieldIndex, (Function<Packet, T>) valueFunc);
     }
 
     public static <T> FieldEntry<T> unique(DataType<T> type, T value) {
-        return new FieldEntry<T>(type, true, -1, p -> value);
+        return new FieldEntry<>(type, true, -1, p -> value);
     }
 
     @SuppressWarnings("unchecked")
     public static <T, P extends Packet> FieldEntry<T> unique(DataType<T> type, Function<P, T> valueFunc) {
-        return new FieldEntry<T>(type, true, -1, (Function<Packet, T>) valueFunc);
+        return new FieldEntry<>(type, true, -1, (Function<Packet, T>) valueFunc);
     }
 
     @SuppressWarnings("unchecked")
