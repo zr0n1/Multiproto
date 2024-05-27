@@ -28,8 +28,8 @@ import java.util.function.Function;
 
 public class PacketTranslator {
 
-    private static final Map<Integer, PacketData<? extends Packet>> HANDLERS = new HashMap<>();
     public static final Map<Integer, Function<Packet, Packet>> C2S_REDIRECTS = new HashMap<>();
+    private static final Map<Integer, PacketData<? extends Packet>> HANDLERS = new HashMap<>();
 
     public static void read(Packet packet, DataInputStream stream) throws IOException {
         if (HANDLERS.containsKey(packet.getRawId())) {

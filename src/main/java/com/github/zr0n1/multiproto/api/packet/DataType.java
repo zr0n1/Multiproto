@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.api.packet;
 
-import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.item.ItemStack;

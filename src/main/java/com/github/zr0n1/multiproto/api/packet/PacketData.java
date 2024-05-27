@@ -18,8 +18,10 @@ public final class PacketData<P extends Packet> {
 
     public final List<FieldEntry<?>> ENTRIES = new ArrayList<>();
     private BiConsumer<P, NetworkHandler> applyFunc = Packet::apply;
-    private Consumer<P> postReadFunc = p -> {};
-    private Consumer<P> postWriteFunc = p -> {};
+    private Consumer<P> postReadFunc = p -> {
+    };
+    private Consumer<P> postWriteFunc = p -> {
+    };
 
     public PacketData(FieldEntry<?>... entries) {
         this.ENTRIES.addAll(Arrays.asList(entries));
@@ -39,7 +41,8 @@ public final class PacketData<P extends Packet> {
                     fields[index].set(packet, obj);
                     if (entry.fieldIndex == -1) i++;
                 }
-            } catch (IllegalAccessException ignored) { }
+            } catch (IllegalAccessException ignored) {
+            }
         }
         postReadFunc.accept((P) packet);
     }
@@ -59,7 +62,8 @@ public final class PacketData<P extends Packet> {
                     if (entry.fieldIndex == -1) i++;
                 }
                 entry.type.write(stream, entry.onWrite(v));
-            } catch (IllegalAccessException ignored) { }
+            } catch (IllegalAccessException ignored) {
+            }
         }
         postWriteFunc.accept((P) packet);
     }
@@ -77,7 +81,8 @@ public final class PacketData<P extends Packet> {
 //                        entry.type.clazz.getName(), index, fields[index].toString());
                 size += entry.type.size(entry.value(packet) != null ? entry.value(packet) : fields[index].get(packet));
                 if (entry.fieldIndex == -1 && !entry.unique) i++;
-            } catch (IllegalAccessException ignored) { }
+            } catch (IllegalAccessException ignored) {
+            }
         }
         return size;
     }

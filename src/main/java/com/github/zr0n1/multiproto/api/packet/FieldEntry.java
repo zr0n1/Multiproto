@@ -11,8 +11,10 @@ public class FieldEntry<T> {
     public final boolean unique;
     public final int fieldIndex;
     private final Function<Packet, T> valueFunc;
-    private Consumer<T> onReadFunc = t -> {};
-    private Consumer<T> onWriteFunc = t -> {};
+    private Consumer<T> onReadFunc = t -> {
+    };
+    private Consumer<T> onWriteFunc = t -> {
+    };
 
 
     private FieldEntry(DataType<T> type, boolean unique, int fieldIndex, Function<Packet, T> valueFunc) {

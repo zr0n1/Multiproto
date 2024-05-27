@@ -21,17 +21,20 @@ import java.util.List;
 public abstract class ConnectionMixin {
 
     @SuppressWarnings("rawtypes")
-    @Shadow private List field_1286;
+    @Shadow
+    private List field_1286;
 
-    @Shadow private NetworkHandler field_1289;
+    @Shadow
+    private NetworkHandler field_1289;
+    @Shadow
+    private boolean field_1293;
+    @Shadow
+    private String field_1294;
+    @Shadow
+    private Object[] field_1295;
 
-    @Shadow public abstract void method_1122();
-
-    @Shadow private boolean field_1293;
-
-    @Shadow private String field_1294;
-
-    @Shadow private Object[] field_1295;
+    @Shadow
+    public abstract void method_1122();
 
     @Inject(method = "sendPacket", at = @At("HEAD"))
     private void redirectPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> local) {
@@ -41,8 +44,8 @@ public abstract class ConnectionMixin {
     @Inject(method = "method_1129", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1),
             cancellable = true)
     private void translateApply(CallbackInfo ci, @Local int var1) {
-        while(!this.field_1286.isEmpty() && var1-- >= 0) {
-            Packet packet = (Packet)this.field_1286.remove(0);
+        while (!this.field_1286.isEmpty() && var1-- >= 0) {
+            Packet packet = (Packet) this.field_1286.remove(0);
             // stapi momento
             PacketTranslator.apply(packet, packet instanceof IdentifiablePacket identifiablePacket ?
                     IdentifiablePacketImpl.HANDLERS.getOrDefault(identifiablePacket.getId(), field_1289) : field_1289);
