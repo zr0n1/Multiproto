@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.protocol.packet;
+package com.github.zr0n1.multiproto.api;
 
 import net.minecraft.network.packet.Packet;
 

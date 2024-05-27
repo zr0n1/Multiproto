@@ -7,9 +7,9 @@ import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
-public class BlockParityHelper {
+public class BlockHelper {
 
-    public static void applyParity() {
+    public static void applyChanges() {
         // set cobweb fields
         ((BlockAccessor) Block.COBWEB).setMaterial(VersionManager.isBefore(Version.BETA_14) ? Material.WOOL : Material.COBWEB);
         Block.COBWEB.setHardness(VersionManager.isBefore(Version.BETA_14) ? 0F : 4F);

@@ -6,7 +6,7 @@ import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScree
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
-import com.github.zr0n1.multiproto.protocol.VersionRegistry;
+import com.github.zr0n1.multiproto.protocol.Versions;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -29,7 +29,7 @@ public class VersionScreen extends Screen {
     public VersionScreen(Screen parent, ServerData server) {
         this.parent = parent;
         this.server = server;
-        this.versions = VersionRegistry.VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
+        this.versions = Versions.VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
         //this.alphaVersions = ProtocolVersion.ALPHA_PROTOCOL_VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
         //this.betaVersions = ProtocolVersion.BETA_PROTOCOL_VERSIONS.stream().sorted(Comparator.reverseOrder()).toList();
     }

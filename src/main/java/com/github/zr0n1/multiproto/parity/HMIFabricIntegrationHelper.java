@@ -17,7 +17,7 @@ public class HMIFabricIntegrationHelper implements HMIItemListRefreshEvent {
 
     public static ArrayList<Item> removed = new ArrayList<>();
 
-    public static void applyParity() {
+    public static void applyChanges() {
         removed.clear();
         // < b1.7
         removeBefore(Version.BETA_14,

@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.protocol.packet.s2c.play;
 
-import com.github.zr0n1.multiproto.protocol.packet.PacketHandler;
+import com.github.zr0n1.multiproto.api.PacketHandler;
 import net.minecraft.network.packet.s2c.play.ItemEntitySpawnS2CPacket;
 
 import java.io.DataInputStream;

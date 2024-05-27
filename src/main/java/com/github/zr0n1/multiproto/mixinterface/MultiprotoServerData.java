@@ -8,7 +8,7 @@ public interface MultiprotoServerData {
 
     static ServerData create(NbtCompound nbt) {
         return create(nbt.getString("name"), nbt.getString("ip"),
-                Version.fromString(nbt.getString("version")));
+                Version.parse(nbt.getString("version")));
     }
 
     static ServerData create(String name, String ip, Version protocol) {

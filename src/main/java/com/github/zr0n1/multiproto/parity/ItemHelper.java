@@ -6,9 +6,9 @@ import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.item.*;
 
-public class ItemParityHelper {
+public class ItemHelper {
 
-    public static void applyParity() {
+    public static void applyChanges() {
         // set tool durability and speed lower < b1.2
         for (Item item : Item.ITEMS) {
             if (item instanceof ToolItem tool) {

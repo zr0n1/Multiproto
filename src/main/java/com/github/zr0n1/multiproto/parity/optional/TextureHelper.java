@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.client.event.texture.TextureRegist
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 
-public class TextureParityHelper {
+public class TextureHelper {
 
     /**
      * smooth stone, sandstone, planks, cobblestone
@@ -22,7 +22,7 @@ public class TextureParityHelper {
      */
     public static final int[] redstoneWireTextures = new int[2];
 
-    public static void applyParity() {
+    public static void applyChanges() {
         ExpandableAtlas terrain = Atlases.getTerrain();
         if (VersionManager.isBefore(Version.BETA_14) && Multiproto.config.textureParity) {
             Block.BRICKS.textureId = terrain.addTexture(Multiproto.NAMESPACE.id("block/bricks")).index;
@@ -50,6 +50,6 @@ public class TextureParityHelper {
 
     @EventListener
     void registerTextures(TextureRegisterEvent event) {
-        applyParity();
+        applyChanges();
     }
 }

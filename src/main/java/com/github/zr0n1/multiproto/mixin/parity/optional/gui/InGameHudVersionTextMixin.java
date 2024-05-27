@@ -40,7 +40,7 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
         Version version = VersionManager.getVersion();
         if (minecraft.isWorldRemote()) {
             minecraft.textRenderer.drawWithShadow("Protocol version: " + version.nameRange(true)
-                            + " (" + version.version + ")",
+                            + " (" + version.protocol + ")",
                     2, (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIDebugScreenIntegration() ? 116 : 100), 14737632);
         }
     }

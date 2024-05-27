@@ -1,9 +1,9 @@
 package com.github.zr0n1.multiproto.protocol.packet.login;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.api.PacketHandler;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
-import com.github.zr0n1.multiproto.protocol.packet.PacketHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.login.LoginHelloPacket;
 
@@ -26,8 +26,8 @@ public class LoginHelloPacketHandler extends PacketHandler<LoginHelloPacket> {
 
     @Override
     public void write(LoginHelloPacket packet, DataOutputStream stream) throws IOException {
-        Multiproto.LOGGER.info("Logging in as {} with protocol version {}", packet.username, VersionManager.getVersion().version);
-        stream.writeInt(packet.protocolVersion = VersionManager.getVersion().version);
+        Multiproto.LOGGER.info("Logging in as {} with protocol version {}", packet.username, VersionManager.getVersion().protocol);
+        stream.writeInt(packet.protocolVersion = VersionManager.getVersion().protocol);
         Packet.writeString(packet.username, stream);
         if (VersionManager.isBefore(Version.BETA_11)) stream.writeUTF(password);
         stream.writeLong(packet.worldSeed);

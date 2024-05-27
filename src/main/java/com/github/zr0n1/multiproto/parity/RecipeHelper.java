@@ -11,20 +11,22 @@ import net.minecraft.recipe.CraftingRecipeManager;
 import net.minecraft.recipe.SmeltingRecipeManager;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeParityHelper {
+public class RecipeHelper {
 
-    public static List vanillaCraftingRecipes = new ArrayList();
-    public static Map vanillaSmeltingRecipes = new HashMap();
+    public static List vanillaCraftingRecipes;
+    public static Map vanillaSmeltingRecipes;
 
     /**
      * Handles recipe changes between versions.
      */
-    public static void applyParity() {
+    public static void applyChanges() {
+        if (vanillaCraftingRecipes == null)
+            vanillaCraftingRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
+        if (vanillaSmeltingRecipes == null)
+            vanillaSmeltingRecipes = Map.copyOf(SmeltingRecipeManager.getInstance().getRecipes());
         CraftingRecipeManager.getInstance().getRecipes().clear();
         CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaCraftingRecipes);
         SmeltingRecipeManager.getInstance().getRecipes().clear();

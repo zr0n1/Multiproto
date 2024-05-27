@@ -1,15 +1,16 @@
 package com.github.zr0n1.multiproto.protocol;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener;
 import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
-import com.github.zr0n1.multiproto.parity.BlockParityHelper;
+import com.github.zr0n1.multiproto.parity.BlockHelper;
 import com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper;
-import com.github.zr0n1.multiproto.parity.ItemParityHelper;
-import com.github.zr0n1.multiproto.parity.RecipeParityHelper;
-import com.github.zr0n1.multiproto.parity.optional.TextureParityHelper;
-import com.github.zr0n1.multiproto.parity.optional.TranslationParityHelper;
-import com.github.zr0n1.multiproto.protocol.event.VersionChangedListener;
-import com.github.zr0n1.multiproto.protocol.packet.PacketHelper;
+import com.github.zr0n1.multiproto.parity.ItemHelper;
+import com.github.zr0n1.multiproto.parity.RecipeHelper;
+import com.github.zr0n1.multiproto.parity.optional.TextureHelper;
+import com.github.zr0n1.multiproto.parity.optional.TranslationHelper;
+import com.github.zr0n1.multiproto.protocol.packet.PacketDataTranslator;
+import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 
@@ -27,15 +28,16 @@ public final class VersionManager {
     public static void setVersion(Version version) {
         if (VersionManager.version != version) {
             VersionManager.version = version;
-            PacketHelper.register();
-            BlockParityHelper.applyParity();
-            ItemParityHelper.applyParity();
-            RecipeParityHelper.applyParity();
-            TextureParityHelper.applyParity();
-            TranslationParityHelper.applyParity();
-            if (MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) HMIFabricIntegrationHelper.applyParity();
+            PacketTranslator.applyChanges();
+            PacketDataTranslator.applyChanges();
+            BlockHelper.applyChanges();
+            ItemHelper.applyChanges();
+            RecipeHelper.applyChanges();
+            TextureHelper.applyChanges();
+            TranslationHelper.applyChanges();
+            if (MultiprotoMixinPlugin.shouldApplyHMIFabricIntegration()) HMIFabricIntegrationHelper.applyChanges();
             FabricLoader.getInstance().getEntrypointContainers("multiproto:version_changed", VersionChangedListener.class)
-                    .forEach(listener -> listener.getEntrypoint().onVersionChanged());
+                    .forEach(listener -> listener.getEntrypoint().applyChanges());
 
         }
     }
@@ -52,7 +54,7 @@ public final class VersionManager {
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     String s = br.readLine();
                     br.close();
-                    lastVersion = Version.fromString(s);
+                    lastVersion = Version.parse(s);
                 } catch (Exception e) {
                     Multiproto.LOGGER.error("Error loading last protocol version");
                     e.printStackTrace();

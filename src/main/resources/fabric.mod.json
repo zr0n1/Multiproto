@@ -17,7 +17,7 @@
   "entrypoints": {
     "stationapi:event_bus_client": [
       "com.github.zr0n1.multiproto.Multiproto",
-      "com.github.zr0n1.multiproto.parity.optional.TextureParityHelper"
+      "com.github.zr0n1.multiproto.parity.optional.TextureHelper"
     ],
     "gcapi": [
       "com.github.zr0n1.multiproto.Multiproto"

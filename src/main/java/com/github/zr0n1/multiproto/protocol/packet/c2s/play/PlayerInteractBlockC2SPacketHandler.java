@@ -1,6 +1,6 @@
 package com.github.zr0n1.multiproto.protocol.packet.c2s.play;
 
-import com.github.zr0n1.multiproto.protocol.packet.PacketHandler;
+import com.github.zr0n1.multiproto.api.PacketHandler;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 
 import java.io.DataInputStream;

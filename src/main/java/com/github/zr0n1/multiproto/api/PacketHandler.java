@@ -1,12 +1,9 @@
-package com.github.zr0n1.multiproto.protocol.packet;
+package com.github.zr0n1.multiproto.api;
 
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -33,10 +30,6 @@ public abstract class PacketHandler<T extends Packet> {
             if (VersionManager.isBefore(Version.BETA_8)) stream.writeByte(stack.getDamage());
             else stream.writeShort(stack.getDamage());
         }
-    }
-
-    protected final Entity getEntity(int id, NetworkHandler handler) {
-        return ((ClientNetworkHandlerAccessor) handler).invokeMethod_1645(id);
     }
 
     public final void readPacket(Packet packet, DataInputStream stream) throws IOException {
