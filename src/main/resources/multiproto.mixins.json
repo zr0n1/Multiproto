@@ -29,7 +29,6 @@
     "mojangfixstationapi.gui.ServerDataMixin",
     "network.MultiplayerInteractionManagerMixin",
     "parity.misc.MinecraftMixin",
-    "parity.network.ClientNetworkHandlerEntityAnimationMixin",
     "parity.optional.gui.InGameHudVersionTextMixin",
     "parity.render.block.RedstoneDustTintRendererMixin",
     "parity.render.entity.LivingEntityNameRendererMixin",

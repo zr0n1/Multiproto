@@ -1,5 +1,6 @@
 package com.github.zr0n1.multiproto.api.packet;
 
+import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.item.ItemStack;
@@ -41,24 +42,25 @@ public class DataType<T> {
             if (VersionManager.isBefore(Version.BETA_8)) stream.writeByte(stack.getDamage());
             else stream.writeShort(stack.getDamage());
         }
-    }, stack -> Short.BYTES * 2 + Byte.BYTES + (VersionManager.isBefore(Version.BETA_8) ? Byte.BYTES : Short.BYTES));
+    }, stack -> (VersionManager.isBefore(Version.BETA_8) ? 6 : 7));
 
-    public final Class<T> type;
+    public final Class<T> clazz;
     private final Reader<T> reader;
     private final Writer<T> writer;
-    private final ToIntFunction<T> size;
+    private final ToIntFunction<T> sizeFunc;
 
-    public DataType(Class<T> type, Reader<T> reader, Writer<T> writer, int size) {
-        this.type = type;
+    public DataType(Class<T> clazz, Reader<T> reader, Writer<T> writer, int size) {
+        this.clazz = clazz;
         this.reader = reader;
         this.writer = writer;
-        this.size = t -> size;
+        this.sizeFunc = t -> size;
     }
-    public DataType(Class<T> type, Reader<T> reader, Writer<T> writer, ToIntFunction<T> size) {
-        this.type = type;
+
+    public DataType(Class<T> clazz, Reader<T> reader, Writer<T> writer, ToIntFunction<T> sizeFunc) {
+        this.clazz = clazz;
         this.reader = reader;
         this.writer = writer;
-        this.size = size;
+        this.sizeFunc = sizeFunc;
     }
 
     public static DataType<String> string(int maxLength, int size) {
@@ -69,19 +71,20 @@ public class DataType<T> {
         return new DataType<>(String.class, stream -> Packet.readString(stream, maxLength), (stream, s) -> Packet.writeString(s, stream), String::length);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> DataType<T> dummy(T t) {
-        return new DataType<T>((Class<T>) t.getClass(), stream -> t, (stream, object) -> {
+        return new DataType<>((Class<T>) t.getClass(), stream -> t, (stream, object) -> {
         }, 0);
     }
 
-    public static DataType<?> of(Object obj) {
-        if (obj instanceof Integer) return INT;
-        if (obj instanceof Byte) return BYTE;
-        if (obj instanceof Short) return SHORT;
-        if (obj instanceof Long) return LONG;
-        if (obj instanceof Boolean) return BOOLEAN;
-        if (obj instanceof String) return VersionManager.isBefore(Version.BETA_11) ? UTF : string(32767);
-        if (obj instanceof ItemStack) return ITEM_STACK;
+    public static DataType<?> of(Class<?> clazz) {
+        if (clazz == Integer.class || clazz == int.class) return INT;
+        if (clazz == Byte.class || clazz == byte.class) return BYTE;
+        if (clazz == Short.class || clazz == short.class) return SHORT;
+        if (clazz == Long.class || clazz == long.class) return LONG;
+        if (clazz == Boolean.class || clazz == boolean.class) return BOOLEAN;
+        if (clazz == String.class) return VersionManager.isBefore(Version.BETA_11) ? UTF : string(32767);
+        if (clazz == ItemStack.class) return ITEM_STACK;
         return null;
     }
 
@@ -89,18 +92,30 @@ public class DataType<T> {
         return this.reader.read(stream);
     }
 
-    public void write(DataOutputStream stream, Object obj) throws IOException {
-        if (obj.getClass() != type && !(type.getSuperclass() == Number.class && obj instanceof Number)) {
+    public void write(DataOutputStream stream, Object v) throws IOException {
+        try {
+            this.writer.write(stream, cast(v));
+        } catch (ClassCastException e) {
             throw new IllegalArgumentException("dont do that");
         }
-        this.writer.write(stream, (T) obj);
     }
 
     public int size(Object obj) {
-        if (obj.getClass() != type && !(type.getSuperclass() == Number.class && obj instanceof Number)) {
+        try {
+            this.sizeFunc.applyAsInt(cast(obj));
+        } catch (ClassCastException e) {
             throw new IllegalArgumentException("dont do that");
         }
-        return size.applyAsInt((T) obj);
+        return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T cast(Object obj) throws ClassCastException {
+        if (obj == null) return null;
+        if (obj instanceof Integer i && clazz == Byte.class) return (T) Byte.valueOf(i.byteValue());
+        if (obj instanceof Integer i && clazz == Short.class) return (T) Short.valueOf(i.shortValue());
+        if (obj instanceof Integer i && clazz == Long.class) return (T) Long.valueOf(i.longValue());
+        return clazz.cast(obj);
     }
 
     @FunctionalInterface
@@ -110,6 +125,6 @@ public class DataType<T> {
 
     @FunctionalInterface
     public interface Writer<T> {
-        void write(DataOutputStream stream, T t) throws IOException;
+        void write(DataOutputStream stream, T v) throws IOException;
     }
 }

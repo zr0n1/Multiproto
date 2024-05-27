@@ -2,7 +2,7 @@ package com.github.zr0n1.multiproto.mixin.network;
 
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
-import com.github.zr0n1.multiproto.protocol.packet.PacketDataTranslator;
+import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
 import net.minecraft.network.packet.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,20 +20,20 @@ public class PacketMixin {
 
     @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;size()I"))
-    private static int handlerSize(Packet packet) {
-        return PacketDataTranslator.size(packet);
+    private static int translateSize(Packet packet) {
+        return PacketTranslator.size(packet);
     }
 
     @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;read(Ljava/io/DataInputStream;)V"))
-    private static void handlerRead(Packet packet, DataInputStream stream) throws IOException {
-        PacketDataTranslator.read(packet, stream);
+    private static void translateRead(Packet packet, DataInputStream stream) throws IOException {
+        PacketTranslator.read(packet, stream);
     }
 
     @Redirect(method = "write(Lnet/minecraft/network/packet/Packet;Ljava/io/DataOutputStream;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;write(Ljava/io/DataOutputStream;)V"))
-    private static void handlerWrite(Packet packet, DataOutputStream stream) throws IOException {
-        PacketDataTranslator.write(packet, stream);
+    private static void translateWrite(Packet packet, DataOutputStream stream) throws IOException {
+        PacketTranslator.write(packet, stream);
     }
 
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)

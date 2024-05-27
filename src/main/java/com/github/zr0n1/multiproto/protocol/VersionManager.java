@@ -9,7 +9,6 @@ import com.github.zr0n1.multiproto.parity.ItemHelper;
 import com.github.zr0n1.multiproto.parity.RecipeHelper;
 import com.github.zr0n1.multiproto.parity.optional.TextureHelper;
 import com.github.zr0n1.multiproto.parity.optional.TranslationHelper;
-import com.github.zr0n1.multiproto.protocol.packet.PacketDataTranslator;
 import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -29,7 +28,6 @@ public final class VersionManager {
         if (VersionManager.version != version) {
             VersionManager.version = version;
             PacketTranslator.applyChanges();
-            PacketDataTranslator.applyChanges();
             BlockHelper.applyChanges();
             ItemHelper.applyChanges();
             RecipeHelper.applyChanges();
