@@ -1,13 +1,16 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
+import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.api.packet.PacketWrapper;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.network.packet.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -15,25 +18,30 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-@Mixin(Packet.class)
-public class PacketMixin {
+@Mixin(value = Packet.class, priority = 1001)
+public abstract class PacketMixin {
 
-    @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;size()I"))
-    private static int translateSize(Packet packet) {
-        return PacketTranslator.size(packet);
+    @Inject(method = "create", at = @At("RETURN"), cancellable = true)
+    private static void wrapPacket(int id, CallbackInfoReturnable<Packet> cir) {
+        if (PacketTranslator.isWrapped(id)) cir.setReturnValue(PacketTranslator.wrap(cir.getReturnValue()));
     }
 
-    @Redirect(method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;read(Ljava/io/DataInputStream;)V"))
-    private static void translateRead(Packet packet, DataInputStream stream) throws IOException {
-        PacketTranslator.read(packet, stream);
+    @Inject(method = "create", at = @At("HEAD"), cancellable = true)
+    private static void replacePacket(int id, CallbackInfoReturnable<Packet> cir) {
+        if (PacketTranslator.isReplaced(id)) cir.setReturnValue(PacketTranslator.replace(id));
     }
 
-    @Redirect(method = "write(Lnet/minecraft/network/packet/Packet;Ljava/io/DataOutputStream;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;write(Ljava/io/DataOutputStream;)V"))
-    private static void translateWrite(Packet packet, DataOutputStream stream) throws IOException {
-        PacketTranslator.write(packet, stream);
+    @SuppressWarnings("unchecked")
+    @Inject(method = "getRawId", at = @At("HEAD"), cancellable = true)
+    private void getWrapperId(CallbackInfoReturnable<Integer> cir) {
+        Packet packet = (Packet)(Object) this;
+        if (PacketTranslator.isWrapped(packet)) cir.setReturnValue(((PacketWrapper<Packet>) packet).id);
+    }
+
+    @Inject(method = "getRawId", at = @At("HEAD"), cancellable = true)
+    private void getReplacementId(CallbackInfoReturnable<Integer> cir) {
+        Packet packet = (Packet)(Object) this;
+        if (PacketTranslator.isReplaced(packet)) cir.setReturnValue(PacketTranslator.getReplacementId(packet));
     }
 
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)

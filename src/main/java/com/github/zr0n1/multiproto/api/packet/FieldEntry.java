@@ -1,7 +1,5 @@
 package com.github.zr0n1.multiproto.api.packet;
 
-import net.minecraft.network.packet.Packet;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -10,14 +8,14 @@ public class FieldEntry<T> {
     public final DataType<T> type;
     public final boolean unique;
     public final int fieldIndex;
-    private final Function<Packet, T> valueFunc;
+    private final Function<Object, T> valueFunc;
     private Consumer<T> onReadFunc = t -> {
     };
     private Consumer<T> onWriteFunc = t -> {
     };
 
 
-    private FieldEntry(DataType<T> type, boolean unique, int fieldIndex, Function<Packet, T> valueFunc) {
+    private FieldEntry(DataType<T> type, boolean unique, int fieldIndex, Function<Object, T> valueFunc) {
         this.type = type;
         this.unique = unique;
         this.fieldIndex = fieldIndex;
@@ -32,7 +30,7 @@ public class FieldEntry<T> {
         return of(type, fieldIndex, (T) null);
     }
 
-    public static <T, P extends Packet> FieldEntry<T> of(DataType<T> type, Function<P, T> valueFunc) {
+    public static <T> FieldEntry<T> of(DataType<T> type, Function<Object, T> valueFunc) {
         return of(type, -1, valueFunc);
     }
 
@@ -41,8 +39,8 @@ public class FieldEntry<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, P extends Packet> FieldEntry<T> of(DataType<T> type, int fieldIndex, Function<P, T> valueFunc) {
-        return new FieldEntry<>(type, false, fieldIndex, (Function<Packet, T>) valueFunc);
+    public static <T> FieldEntry<T> of(DataType<T> type, int fieldIndex, Function<Object, T> valueFunc) {
+        return new FieldEntry<>(type, false, fieldIndex, valueFunc);
     }
 
     public static <T> FieldEntry<T> unique(DataType<T> type, T value) {
@@ -50,8 +48,8 @@ public class FieldEntry<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, P extends Packet> FieldEntry<T> unique(DataType<T> type, Function<P, T> valueFunc) {
-        return new FieldEntry<>(type, true, -1, (Function<Packet, T>) valueFunc);
+    public static <T> FieldEntry<T> unique(DataType<T> type, Function<Object, T> valueFunc) {
+        return new FieldEntry<>(type, true, -1, valueFunc);
     }
 
     @SuppressWarnings("unchecked")
@@ -76,7 +74,7 @@ public class FieldEntry<T> {
         return this;
     }
 
-    public Object value(Packet packet) {
-        return valueFunc.apply(packet);
+    public T value(Object obj) {
+        return valueFunc.apply(obj);
     }
 }
