@@ -38,7 +38,6 @@ public class FieldEntry<T> {
         return new FieldEntry<>(type, false, fieldIndex, p -> value);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> FieldEntry<T> of(DataType<T> type, int fieldIndex, Function<Object, T> valueFunc) {
         return new FieldEntry<>(type, false, fieldIndex, valueFunc);
     }
@@ -47,7 +46,6 @@ public class FieldEntry<T> {
         return new FieldEntry<>(type, true, -1, p -> value);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> FieldEntry<T> unique(DataType<T> type, Function<Object, T> valueFunc) {
         return new FieldEntry<>(type, true, -1, valueFunc);
     }

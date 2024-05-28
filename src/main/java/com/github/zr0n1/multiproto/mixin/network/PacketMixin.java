@@ -1,12 +1,9 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
-import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.api.packet.PacketWrapper;
 import com.github.zr0n1.multiproto.protocol.Version;
 import com.github.zr0n1.multiproto.protocol.VersionManager;
 import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.network.packet.Packet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,13 +31,13 @@ public abstract class PacketMixin {
     @SuppressWarnings("unchecked")
     @Inject(method = "getRawId", at = @At("HEAD"), cancellable = true)
     private void getWrapperId(CallbackInfoReturnable<Integer> cir) {
-        Packet packet = (Packet)(Object) this;
+        Packet packet = (Packet) (Object) this;
         if (PacketTranslator.isWrapped(packet)) cir.setReturnValue(((PacketWrapper<Packet>) packet).id);
     }
 
     @Inject(method = "getRawId", at = @At("HEAD"), cancellable = true)
     private void getReplacementId(CallbackInfoReturnable<Integer> cir) {
-        Packet packet = (Packet)(Object) this;
+        Packet packet = (Packet) (Object) this;
         if (PacketTranslator.isReplaced(packet)) cir.setReturnValue(PacketTranslator.getReplacementId(packet));
     }
 

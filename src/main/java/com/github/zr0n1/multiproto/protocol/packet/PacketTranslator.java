@@ -127,7 +127,7 @@ public class PacketTranslator {
                 FieldEntry.of(DataType.BYTE))
                 .apply((packet, handler) -> {
                     Entity e = ((ClientNetworkHandlerAccessor) handler).invokeMethod_1645(packet.id);
-                    if(e != null && (packet.animationId == 104 || packet.animationId == 105)) {
+                    if (e != null && (packet.animationId == 104 || packet.animationId == 105)) {
                         ((EntityAccessor) e).invokeSetFlag(1, packet.animationId == 104); // start/stop sneaking
                     } else packet.apply(handler);
                 }));
@@ -161,7 +161,8 @@ public class PacketTranslator {
 
     @SuppressWarnings("unchecked")
     public static void wrapBefore(Version target, PacketWrapper<? extends Packet> wrapper) {
-        if (VersionManager.isBefore(target)) WRAPPERS.put(wrapper.id, packet -> ((PacketWrapper<Packet>) wrapper).wrap(packet));
+        if (VersionManager.isBefore(target))
+            WRAPPERS.put(wrapper.id, packet -> ((PacketWrapper<Packet>) wrapper).wrap(packet));
     }
 
     @SuppressWarnings("unchecked")

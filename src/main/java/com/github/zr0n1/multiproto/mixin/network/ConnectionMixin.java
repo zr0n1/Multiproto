@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
-import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.packet.PacketTranslator;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;

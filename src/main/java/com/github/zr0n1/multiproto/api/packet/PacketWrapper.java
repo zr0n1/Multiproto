@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.api.packet;
 
-import com.github.zr0n1.multiproto.Multiproto;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 
@@ -20,8 +19,10 @@ public class PacketWrapper<T> extends Packet {
     public final List<FieldEntry<?>> ENTRIES = new ArrayList<>();
     public T holder;
     public Field[] fields;
-    protected BiConsumer<T, NetworkHandler> applyFunc = (t, handler) -> {};
-    protected Consumer<T> postWriteFunc = t -> {};
+    protected BiConsumer<T, NetworkHandler> applyFunc = (t, handler) -> {
+    };
+    protected Consumer<T> postWriteFunc = t -> {
+    };
 
     public PacketWrapper(int id, FieldEntry<?>... entries) {
         this.id = id;
@@ -40,7 +41,7 @@ public class PacketWrapper<T> extends Packet {
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())
                         && !Modifier.isFinal(field.getModifiers()))
                 .toArray(Field[]::new);
-        if(holder instanceof Packet) this.applyFunc = (packet, handler) -> ((Packet) packet).apply(handler);
+        if (holder instanceof Packet) this.applyFunc = (packet, handler) -> ((Packet) packet).apply(handler);
         return this;
     }
 
@@ -61,9 +62,8 @@ public class PacketWrapper<T> extends Packet {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void write(DataOutputStream stream){
+    public void write(DataOutputStream stream) {
         int i = 0;
         for (FieldEntry<?> entry : ENTRIES) {
             try {
@@ -96,7 +96,6 @@ public class PacketWrapper<T> extends Packet {
         return size;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void apply(NetworkHandler handler) {
         applyFunc.accept(holder, handler);
