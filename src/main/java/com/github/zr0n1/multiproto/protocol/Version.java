@@ -139,10 +139,6 @@ public class Version implements Comparable<Version> {
         return type.id + "_" + protocol;
     }
 
-    public boolean isBefore(Version target) {
-        return this.compareTo(target) < 0;
-    }
-
     /**
      * Compares release order via type and version number.
      */

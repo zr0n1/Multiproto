@@ -58,13 +58,13 @@ public class HMIFabricIntegrationHelper implements HMIItemListRefreshEvent {
 
     public static void removeBefore(Version target, ItemConvertible... items) {
         for (ItemConvertible item : items) {
-            if (VersionManager.isBefore(target)) removed.add(item.asItem());
+            if (VersionManager.isLT(target)) removed.add(item.asItem());
         }
     }
 
     @Override
     public void refreshItemList(ArrayList<ItemStack> stacks) {
         stacks.removeIf(stack -> removed.contains(stack.getItem()) ||
-                (VersionManager.isBefore(Version.BETA_8) && stack.getDamage() > 0));
+                (VersionManager.isLT(Version.BETA_8) && stack.getDamage() > 0));
     }
 }

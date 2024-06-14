@@ -25,7 +25,7 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     private void applyVersionNameParity(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
         if ((!custom.isBlank() ||
-                (VersionManager.isBefore(Version.BETA_13) && Multiproto.config.showVersion)) &&
+                (VersionManager.isLT(Version.BETA_13) && Multiproto.config.showVersion)) &&
                 !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +

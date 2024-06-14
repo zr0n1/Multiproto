@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.parity.entity;
+package com.github.zr0n1.multiproto.mixin.entity;
 
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

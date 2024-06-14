@@ -13,13 +13,13 @@ public class ItemHelper {
         for (Item item : Item.ITEMS) {
             if (item instanceof ToolItem tool) {
                 ToolMaterial material = tool.getMaterial(new ItemStack(item));
-                tool.setMaxDamage((VersionManager.isBefore(Version.BETA_8) ?
+                tool.setMaxDamage((VersionManager.isLT(Version.BETA_8) ?
                         (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
-                ((ToolItemAccessor) tool).setMiningSpeed(VersionManager.isBefore(Version.BETA_8) ?
+                ((ToolItemAccessor) tool).setMiningSpeed(VersionManager.isLT(Version.BETA_8) ?
                         (material.getMiningLevel() + 1) * 2 : material.getMiningSpeedMultiplier());
             } else if (item instanceof SwordItem sword) {
                 ToolMaterial material = sword.getMaterial(new ItemStack(item));
-                sword.setMaxDamage((VersionManager.isBefore(Version.BETA_8) ?
+                sword.setMaxDamage((VersionManager.isLT(Version.BETA_8) ?
                         (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
             }
         }

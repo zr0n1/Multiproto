@@ -9,6 +9,8 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.function.ToIntFunction;
 
 public class DataType<T> {
@@ -27,7 +29,7 @@ public class DataType<T> {
         short id = stream.readShort();
         if (id >= 0) {
             byte count = stream.readByte();
-            short damage = VersionManager.isBefore(Version.BETA_8) ? stream.readByte() : stream.readShort();
+            short damage = VersionManager.isLT(Version.BETA_8) ? stream.readByte() : stream.readShort();
             return new ItemStack(id, count, damage);
         }
         return null;
@@ -38,10 +40,10 @@ public class DataType<T> {
         } else {
             stream.writeShort(stack.itemId);
             stream.writeByte(stack.count);
-            if (VersionManager.isBefore(Version.BETA_8)) stream.writeByte(stack.getDamage());
+            if (VersionManager.isLT(Version.BETA_8)) stream.writeByte(stack.getDamage());
             else stream.writeShort(stack.getDamage());
         }
-    }, stack -> (VersionManager.isBefore(Version.BETA_8) ? 6 : 7));
+    }, stack -> (VersionManager.isLT(Version.BETA_8) ? 4 : 5));
 
     public final Class<T> clazz;
     private final Reader<T> reader;
@@ -76,13 +78,33 @@ public class DataType<T> {
         }, 0);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> DataType<Object[]> array(DataType<T> type) {
+        return type != null ? new DataType<>(Object[].class, stream -> {
+            T[] array = (T[]) Array.newInstance(type.clazz, stream.readShort());
+            for (int i = 0; i < array.length; i++) {
+                array[i] = type.read(stream);
+            }
+            return array;
+        }, (stream, v) -> {
+            stream.writeShort(v.length);
+            for (Object o : v) {
+                type.write(stream, o);
+            }
+        }, t -> 2 + (t.length + 1) * type.size(null)) : null;
+    }
+
+    public static DataType<?> of(Field field) {
+        return field.getType().isArray() ? array(of(field.getType().arrayType())) : of(field.getType());
+    }
+
     public static DataType<?> of(Class<?> clazz) {
         if (clazz == Integer.class || clazz == int.class) return INT;
         if (clazz == Byte.class || clazz == byte.class) return BYTE;
         if (clazz == Short.class || clazz == short.class) return SHORT;
         if (clazz == Long.class || clazz == long.class) return LONG;
         if (clazz == Boolean.class || clazz == boolean.class) return BOOLEAN;
-        if (clazz == String.class) return VersionManager.isBefore(Version.BETA_11) ? UTF : string(32767);
+        if (clazz == String.class) return VersionManager.isLT(Version.BETA_11) ? UTF : string(32767);
         if (clazz == ItemStack.class) return ITEM_STACK;
         return null;
     }

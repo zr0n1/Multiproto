@@ -40,8 +40,33 @@ public final class VersionManager {
         }
     }
 
-    public static boolean isBefore(Version target) {
-        return version.isBefore(target);
+    public static boolean isLT(Version target) {
+        return version.compareTo(target) < 0;
+    }
+
+    public static boolean isGT(Version target) {
+        return version.compareTo(target) > 0;
+    }
+
+    /**
+     * version <= target
+     */
+    public static boolean isLE(Version target) {
+        return version.compareTo(target) <= 0;
+    }
+
+    /**
+     * version >= target
+     */
+    public static boolean isGE(Version target) {
+        return version.compareTo(target) >= 0;
+    }
+
+    /**
+     * backwards, inclusive
+     */
+    public static boolean isWithin(Version max, Version min) {
+        return version.compareTo(max) <= 0 && version.compareTo(min) >= 0;
     }
 
     public static Version getLastVersion() {

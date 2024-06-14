@@ -5,13 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin",
   "mixins": [
+    "entity.EntityAccessor",
     "network.ConnectionMixin",
     "network.PacketMixin",
     "parity.block.BlockAccessor",
     "parity.block.CobwebBlockBehaviorMixin",
     "parity.block.LeavesBlockParityMixin",
     "parity.block.SaplingBlockTextureMixin",
-    "parity.entity.EntityAccessor",
     "parity.hmifabric.UtilsAccessor",
     "parity.item.ToolItemAccessor",
     "parity.optional.block.FurnaceBlockTextureMixin",
@@ -19,6 +19,7 @@
     "parity.optional.block.SlabBlockTextureMixin"
   ],
   "client": [
+    "entity.MultiplayerClientPlayerEntityMixin",
     "gui.MultiplayerScreenMixin",
     "mojangfixstationapi.gui.DirectConnectScreenAccessor",
     "mojangfixstationapi.gui.DirectConnectScreenMixin",
@@ -30,9 +31,9 @@
     "network.MultiplayerInteractionManagerMixin",
     "parity.misc.MinecraftMixin",
     "parity.optional.gui.InGameHudVersionTextMixin",
-    "parity.render.block.RedstoneDustTintRendererMixin",
-    "parity.render.entity.LivingEntityNameRendererMixin",
-    "parity.render.entity.PlayerEntityNameRendererMixin"
+    "parity.optional.render.block.RedstoneDustTintRendererMixin",
+    "parity.optional.render.entity.LivingEntityNameRendererMixin",
+    "parity.optional.render.entity.PlayerEntityNameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

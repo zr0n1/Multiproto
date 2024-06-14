@@ -7,19 +7,26 @@ public class FieldEntry<T> {
 
     public final DataType<T> type;
     public final boolean unique;
-    public final int fieldIndex;
+    public int fieldIndex;
     private final Function<Object, T> valueFunc;
     private Consumer<T> onReadFunc = t -> {
     };
     private Consumer<T> onWriteFunc = t -> {
     };
 
-
     private FieldEntry(DataType<T> type, boolean unique, int fieldIndex, Function<Object, T> valueFunc) {
         this.type = type;
         this.unique = unique;
         this.fieldIndex = fieldIndex;
         this.valueFunc = valueFunc;
+    }
+
+    public static <T> FieldEntry<T> dummy(T t) {
+        return of(DataType.dummy(t));
+    }
+
+    public static <T> FieldEntry<T> dummy(T t, int fieldIndex) {
+        return of(DataType.dummy(t), fieldIndex);
     }
 
     public static <T> FieldEntry<T> of(DataType<T> type) {

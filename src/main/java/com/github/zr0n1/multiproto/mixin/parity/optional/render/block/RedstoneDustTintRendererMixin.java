@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.parity.render.block;
+package com.github.zr0n1.multiproto.mixin.parity.optional.render.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.Version;
@@ -17,9 +17,9 @@ public abstract class RedstoneDustTintRendererMixin {
             target = "Lnet/minecraft/client/render/Tessellator;color(FFF)V", ordinal = 0))
     private void applyTintParity(Tessellator t, float r, float g, float b, @Local(name = "var8") float luminance,
                                  @Local(name = "var6") int meta) {
-        if (VersionManager.isBefore(Version.BETA_11) && meta == 0 && Multiproto.config.textureParity)
+        if (VersionManager.isLT(Version.BETA_11) && meta == 0 && Multiproto.config.textureParity)
             r = 0F;
-        if (VersionManager.isBefore(Version.BETA_9) && Multiproto.config.textureParity)
+        if (VersionManager.isLT(Version.BETA_9) && Multiproto.config.textureParity)
             r = g = b = luminance;
         t.color(r, g, b);
     }

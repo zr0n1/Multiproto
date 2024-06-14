@@ -16,7 +16,9 @@ import java.util.Map;
 
 public class RecipeHelper {
 
+    @SuppressWarnings("rawtypes")
     public static List vanillaCraftingRecipes;
+    @SuppressWarnings("rawtypes")
     public static Map vanillaSmeltingRecipes;
 
     /**
@@ -62,7 +64,7 @@ public class RecipeHelper {
         for (int i = 0; i < 16; i++) {
             removeBefore(Version.BETA_8, new ItemStack(Block.WOOL, 1, ~i & 15), new ItemStack(Item.DYE, 1, i));
         }
-        if (VersionManager.isBefore(Version.BETA_8)) {
+        if (VersionManager.isLT(Version.BETA_8)) {
             SmeltingRecipeManager.getInstance().getRecipes().remove(Block.CACTUS.id);
             SmeltingRecipeManager.getInstance().getRecipes().remove(Block.LOG.id);
         }
@@ -79,7 +81,7 @@ public class RecipeHelper {
     }
 
     public static void removeBefore(Version target, ItemStack... outputs) {
-        if (VersionManager.isBefore(target)) {
+        if (VersionManager.isLT(target)) {
             for (ItemStack output : outputs) {
                 CraftingRecipeManager.getInstance().getRecipes().removeIf(r -> ((CraftingRecipe) r).getOutput().equals(output));
             }

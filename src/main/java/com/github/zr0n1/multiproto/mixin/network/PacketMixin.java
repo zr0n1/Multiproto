@@ -44,12 +44,12 @@ public abstract class PacketMixin {
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)
     private static void readUTFBeforeBeta_11(DataInputStream stream, int maxLength, CallbackInfoReturnable<String> cir)
             throws IOException {
-        if (VersionManager.isBefore(Version.BETA_11)) cir.setReturnValue(stream.readUTF());
+        if (VersionManager.isLT(Version.BETA_11)) cir.setReturnValue(stream.readUTF());
     }
 
     @Inject(method = "writeString", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"), cancellable = true)
     private static void writeUTFBeforeBeta_11(String string, DataOutputStream stream, CallbackInfo ci) throws IOException {
-        if (VersionManager.isBefore(Version.BETA_11)) {
+        if (VersionManager.isLT(Version.BETA_11)) {
             stream.writeUTF(string);
             ci.cancel();
         }

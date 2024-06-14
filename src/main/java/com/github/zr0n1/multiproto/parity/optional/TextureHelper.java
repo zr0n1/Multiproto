@@ -24,7 +24,7 @@ public class TextureHelper {
 
     public static void applyChanges() {
         ExpandableAtlas terrain = Atlases.getTerrain();
-        if (VersionManager.isBefore(Version.BETA_14) && Multiproto.config.textureParity) {
+        if (VersionManager.isLT(Version.BETA_14) && Multiproto.config.textureParity) {
             Block.BRICKS.textureId = terrain.addTexture(Multiproto.NAMESPACE.id("block/bricks")).index;
             Block.COBBLESTONE.textureId = terrain.addTexture(Multiproto.NAMESPACE.id("block/cobblestone")).index;
             slabSideTextures[0] = terrain.addTexture(Multiproto.NAMESPACE.id("block/smooth_stone_slab_side")).index;
@@ -35,7 +35,7 @@ public class TextureHelper {
             Block.BRICKS.textureId = 7;
             Block.COBBLESTONE.textureId = 16;
         }
-        if (VersionManager.isBefore(Version.BETA_9) && Multiproto.config.textureParity) {
+        if (VersionManager.isLT(Version.BETA_9) && Multiproto.config.textureParity) {
             Block.REDSTONE_WIRE.textureId = redstoneWireTextures[0] = terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_cross")).index;
             terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_line"));
             redstoneWireTextures[1] = terrain.addTexture(Multiproto.NAMESPACE.id("block/redstone_dust_cross_on")).index;

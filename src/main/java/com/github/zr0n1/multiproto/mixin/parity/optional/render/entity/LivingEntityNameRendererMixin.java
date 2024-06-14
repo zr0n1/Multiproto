@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.mixin.parity.render.entity;
+package com.github.zr0n1.multiproto.mixin.parity.optional.render.entity;
 
 import com.github.zr0n1.multiproto.Multiproto;
 import com.github.zr0n1.multiproto.protocol.Version;
@@ -17,7 +17,7 @@ public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
 
     @ModifyVariable(method = "method_818(Lnet/minecraft/entity/LivingEntity;Ljava/lang/String;DDDI)V", at = @At("STORE"), ordinal = 1)
     private float applyNameRenderParity(float scale, @Local(ordinal = 0) float distance, @Local(argsOnly = true) LivingEntity e) {
-        return (VersionManager.isBefore(Version.BETA_9) &&
+        return (VersionManager.isLT(Version.BETA_9) &&
                 Multiproto.config.nameRenderParity && e instanceof PlayerEntity) ?
                 (float) ((double) scale * (Math.sqrt(distance) / 2.0D)) : scale;
     }

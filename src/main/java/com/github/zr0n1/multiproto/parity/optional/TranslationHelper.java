@@ -16,10 +16,10 @@ public class TranslationHelper {
     }
 
     public static void replaceBefore(Version target, Block block, String key) {
-        block.setTranslationKey((VersionManager.isBefore(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
+        block.setTranslationKey((VersionManager.isLT(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
     }
 
     public static void replaceBefore(Version target, Item item, String key) {
-        item.setTranslationKey((VersionManager.isBefore(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
+        item.setTranslationKey((VersionManager.isLT(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
     }
 }

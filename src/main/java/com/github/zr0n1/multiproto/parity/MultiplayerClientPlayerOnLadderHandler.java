@@ -18,12 +18,11 @@ public class MultiplayerClientPlayerOnLadderHandler implements PlayerHandler {
 
     @Override
     public boolean isOnLadder(boolean onLadder) {
-        if (VersionManager.isBefore(Version.BETA_11)) {
+        if (VersionManager.isLE(Version.BETA_10)) {
             int x = MathHelper.floor(player.x);
             int y = MathHelper.floor(player.boundingBox.minY);
             int z = MathHelper.floor(player.z);
             return onLadder || player.world.getBlockId(x, y + 1, z) == Block.LADDER.id;
-        }
-        return onLadder;
+        } else return onLadder;
     }
 }
