@@ -1,106 +1,75 @@
-package com.github.zr0n1.multiproto.protocol.packet;
+package com.github.zr0n1.multiproto.protocol.packet
 
-import com.github.zr0n1.multiproto.api.packet.PacketWrapper;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import net.minecraft.network.NetworkHandler;
-import net.minecraft.network.packet.Packet;
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener
+import com.github.zr0n1.multiproto.protocol.*
+import net.minecraft.network.packet.Packet
+import com.github.zr0n1.multiproto.api.packet.PacketWrapper
+import net.minecraft.network.NetworkHandler
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+@Suppress("unchecked_cast")
+object PacketTranslator : VersionChangedListener {
+    private val WRAPPERS: MutableMap<Int, (Packet) -> PacketWrapper<out Packet>> = HashMap()
+    private val C2S_REDIRECTS: MutableMap<Int, (Packet) -> Packet> = HashMap()
+    private val REPLACEMENTS: MutableMap<Int, () -> Packet> = HashMap()
+    private val APPLIERS: MutableMap<Int, (Packet, NetworkHandler) -> Unit> = HashMap()
 
-public class PacketTranslator {
+    @JvmStatic
+    fun wrap(packet: Packet): Packet? = WRAPPERS[packet.rawId]?.invoke(packet).also { it?.wrapperId = packet.rawId }
 
-    private static final Map<Integer, Function<Packet, PacketWrapper<Packet>>> WRAPPERS = new HashMap<>();
-    private static final Map<Integer, Function<Packet, Packet>> C2S_REDIRECTS = new HashMap<>();
-    private static final BiMap<Integer, Packet> REPLACEMENTS = HashBiMap.create();
-    private static final Map<Integer, BiConsumer<Packet, NetworkHandler>> APPLIERS = new HashMap<>();
+    @JvmStatic
+    fun redirect(packet: Packet) = C2S_REDIRECTS[packet.rawId]?.invoke(packet)
 
-    public static Packet wrap(Packet packet) {
-        return packet != null ? WRAPPERS.get(packet.getRawId()).apply(packet) : null;
+    @JvmStatic
+    fun replace(id: Int) = REPLACEMENTS[id]?.invoke()
+
+    @JvmStatic
+    fun apply(packet: Packet, handler: NetworkHandler) = APPLIERS[packet.rawId]?.invoke(packet, handler)
+
+    @JvmStatic
+    fun hasWrapper(id: Int) = id in WRAPPERS
+
+    @JvmStatic
+    fun hasRedirect(id: Int) = C2S_REDIRECTS.containsKey(id)
+
+    @JvmStatic
+    fun isReplaced(id: Int) = REPLACEMENTS.containsKey(id)
+
+    @JvmStatic
+    fun hasApplier(id: Int) = id in APPLIERS
+
+    override fun invoke() {
+        WRAPPERS.clear()
+        C2S_REDIRECTS.clear()
+        REPLACEMENTS.clear()
+        APPLIERS.clear()
+        BetaPackets.invoke()
+        BetalphaPackets.invoke()
+        AlphaPackets.invoke()
     }
 
-    public static Packet redirect(Packet packet) {
-        return C2S_REDIRECTS.containsKey(packet.getRawId()) ? C2S_REDIRECTS.get(packet.getRawId()).apply(packet) : packet;
+    @JvmStatic
+    fun <T : Packet> wrapLE(target: Version, id: Int, wrapper: (T) -> PacketWrapper<T>) {
+        if (currVer <= target) WRAPPERS[id] = wrapper as (Packet) -> PacketWrapper<out Packet>
     }
 
-    public static Packet replace(int id) {
-        return REPLACEMENTS.get(id);
+    @JvmStatic
+    @Suppress("unused")
+    fun <T : Packet> wrapFrom(min: Version, max: Version, id: Int, wrapper: (T) -> PacketWrapper<out Packet>) {
+        if (currVer in min..max) WRAPPERS[id] = wrapper as (Packet) -> PacketWrapper<out Packet>
     }
 
-    public static void apply(Packet packet, NetworkHandler handler) {
-        APPLIERS.get(packet.getRawId()).accept(packet, handler);
+    @JvmStatic
+    fun <T : Packet> redirectLE(target: Version, id: Int, redirect: (T) -> Packet) {
+        if (currVer <= target) C2S_REDIRECTS[id] = redirect as (Packet) -> Packet
     }
 
-    public static boolean isWrapped(int id) {
-        return WRAPPERS.containsKey(id);
+    @JvmStatic
+    fun replaceLE(target: Version, id: Int, replacement: () -> Packet) {
+        if (currVer <= target) REPLACEMENTS[id] = replacement
     }
 
-    public static boolean isWrapped(Packet packet) {
-        return packet instanceof PacketWrapper<?> wrapper && wrapper.holder instanceof Packet;
-    }
-
-    public static boolean isRedirected(int id) {
-        return C2S_REDIRECTS.containsKey(id);
-    }
-
-    public static boolean isReplaced(int id) {
-        return REPLACEMENTS.containsKey(id);
-    }
-
-    public static boolean isReplaced(Packet packet) {
-        return REPLACEMENTS.containsValue(packet);
-    }
-
-    public static boolean hasApplier(int id) {
-        return APPLIERS.containsKey(id);
-    }
-
-    public static int getReplacementId(Packet packet) {
-        return REPLACEMENTS.inverse().get(packet);
-    }
-
-    public static void applyChanges() {
-        WRAPPERS.clear();
-        C2S_REDIRECTS.clear();
-        REPLACEMENTS.clear();
-        APPLIERS.clear();
-        BetaPackets.applyChanges();
-        BetalphaPackets.applyChanges();
-        AlphaPackets.applyChanges();
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void wrapLE(Version target, PacketWrapper<? extends Packet> wrapper) {
-        if (VersionManager.isLE(target))
-            WRAPPERS.put(wrapper.id, packet -> ((PacketWrapper<Packet>) wrapper).wrap(packet));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void wrapFrom(Version max, Version min, PacketWrapper<? extends Packet> wrapper) {
-        if (VersionManager.isWithin(max, min))
-            WRAPPERS.put(wrapper.id, packet -> ((PacketWrapper<Packet>) wrapper).wrap(packet));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void redirectLE(Version target, int id, Function<? extends Packet, Packet> redirect) {
-        if (VersionManager.isLE(target)) C2S_REDIRECTS.put(id, (Function<Packet, Packet>) redirect);
-    }
-
-    public static void replaceLE(Version target, PacketWrapper<?> packet) {
-        replaceLE(target, packet.id, packet);
-    }
-
-    public static void replaceLE(Version target, int id, Packet packet) {
-        if (VersionManager.isLE(target)) REPLACEMENTS.put(id, packet);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void applyLE(Version target, int id, BiConsumer<? extends Packet, NetworkHandler> applier) {
-        if (VersionManager.isLE(target)) APPLIERS.put(id, (BiConsumer<Packet, NetworkHandler>) applier);
+    @JvmStatic
+    fun <T : Packet> applyLE(target: Version, id: Int, applier: (T, NetworkHandler) -> Unit) {
+        if (currVer <= target) APPLIERS[id] = applier as (Packet, NetworkHandler) -> Unit
     }
 }

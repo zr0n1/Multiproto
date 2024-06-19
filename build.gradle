@@ -1,10 +1,9 @@
 plugins {
     id 'babric-loom' version '1.4.2'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -75,13 +74,16 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.glasslauncher:biny:${project.mappings}:v2"
     modImplementation "babric:fabric-loader:${project.loader_version}"
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0") {
+        exclude module: "fabric-loader"
+    }
 
     implementation "org.slf4j:slf4j-api:1.8.0-beta4"
     implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
     implementation "blue.endless:jankson:1.2.1"
 
     modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
-    modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}")
+    modImplementation "net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}"
     // Optional dependencies
     modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
         transitive false
@@ -139,4 +141,7 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+kotlin {
+    jvmToolchain(17)
 }

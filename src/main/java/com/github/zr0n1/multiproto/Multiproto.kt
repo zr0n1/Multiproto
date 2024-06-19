@@ -1,35 +1,38 @@
-package com.github.zr0n1.multiproto;
+package com.github.zr0n1.multiproto
 
-import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler;
-import com.github.zr0n1.multiproto.protocol.Versions;
-import net.glasslauncher.mods.api.gcapi.api.GConfig;
-import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.client.network.MultiplayerClientPlayerEntity;
-import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
-import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
-import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
-import org.apache.logging.log4j.Logger;
+import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler
+import com.github.zr0n1.multiproto.protocol.VersionRegistry
+import net.glasslauncher.mods.api.gcapi.api.GConfig
+import net.mine_diver.unsafeevents.listener.EventListener
+import net.minecraft.client.network.MultiplayerClientPlayerEntity
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent.HandlerRegister
+import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint
+import net.modificationstation.stationapi.api.util.Namespace
+import org.apache.logging.log4j.Logger
 
-public class Multiproto {
-
+internal object Multiproto {
     @Entrypoint.Namespace
-    public static final Namespace NAMESPACE = Null.get();
+    @JvmSynthetic
+    internal lateinit var NAMESPACE: Namespace
+
     @Entrypoint.Logger("Multiproto")
-    public static final Logger LOGGER = Null.get();
+    @JvmSynthetic
+    internal lateinit var LOGGER: Logger
+
     @GConfig(value = "config", visibleName = "Multiproto Config")
-    public static final Config config = new Config();
+    @JvmField
+    val config = Config()
 
     @EventListener
-    void registerPlayerHandlers(PlayerEvent.HandlerRegister event) {
-        if (event.player instanceof MultiplayerClientPlayerEntity player) {
-            event.playerHandlers.add(new MultiplayerClientPlayerOnLadderHandler(player));
+    private fun registerPlayerHandlers(event: HandlerRegister) {
+        if (event.player is MultiplayerClientPlayerEntity) {
+            event.playerHandlers.add(MultiplayerClientPlayerOnLadderHandler(event.player as MultiplayerClientPlayerEntity))
         }
     }
 
     @EventListener
-    void registerProtocolVersions(PacketRegisterEvent event) {
-        Versions.registerVersions();
+    private fun registerProtocolVersions(event: PacketRegisterEvent) {
+        VersionRegistry.registerAll()
     }
 }

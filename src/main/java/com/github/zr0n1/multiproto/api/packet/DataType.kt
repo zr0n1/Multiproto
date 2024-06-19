@@ -1,151 +1,194 @@
-package com.github.zr0n1.multiproto.api.packet;
+package com.github.zr0n1.multiproto.api.packet
 
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet;
+import com.github.zr0n1.multiproto.protocol.BETALPHA_8
+import com.github.zr0n1.multiproto.protocol.currVer
+import net.minecraft.item.ItemStack
+import net.minecraft.network.packet.Packet
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.function.ToIntFunction;
+@Suppress("unchecked_cast")
+interface DataType<T> {
+    fun read(stream: DataInputStream): T
+    fun write(stream: DataOutputStream, t: Any?)
+    fun size(t: Any?): Int
 
-public class DataType<T> {
+    class Raw<T : Any> (
+        private val type: KClass<T>,
+        private val read: (DataInputStream) -> T,
+        private val write: (DataOutputStream, T) -> Unit,
+        private val size: (T) -> Int
+    ) : DataType<T> {
+        constructor(type: KClass<T>, read: (DataInputStream) -> T, write: (DataOutputStream, T) -> Unit, size: Int) :
+                this(type, read, write, { size })
 
-    public static final DataType<Byte> BYTE = new DataType<Byte>(Byte.class, DataInputStream::readByte, DataOutputStream::writeByte, Byte.BYTES);
-    public static final DataType<Short> SHORT = new DataType<Short>(Short.class, DataInputStream::readShort, DataOutputStream::writeShort, Short.BYTES);
-    public static final DataType<Integer> INT = new DataType<>(Integer.class, DataInputStream::readInt, DataOutputStream::writeInt, Integer.BYTES);
-    public static final DataType<Long> LONG = new DataType<>(Long.class, DataInputStream::readLong, DataOutputStream::writeLong, Long.BYTES);
-    public static final DataType<Float> FLOAT = new DataType<>(Float.class, DataInputStream::readFloat, DataOutputStream::writeFloat, Float.BYTES);
-    public static final DataType<Double> DOUBLE = new DataType<>(Double.class, DataInputStream::readDouble, DataOutputStream::writeDouble, Double.BYTES);
-    public static final DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class, DataInputStream::readBoolean, DataOutputStream::writeBoolean, 0);
-    public static final DataType<String> UTF = new DataType<>(String.class, DataInput::readUTF, DataOutputStream::writeUTF, String::length);
+        override fun read(stream: DataInputStream): T = read.invoke(stream)
+        override fun write(stream: DataOutputStream, t: Any?) { cast(t)?.let { write.invoke(stream, it) } }
+        override fun size(t: Any?) = cast(t)?.let { size.invoke(it) } ?: 0
 
-    public static final DataType<ItemStack> ITEM_STACK = new DataType<>(ItemStack.class, (stream) -> {
-        // read
-        short id = stream.readShort();
-        if (id >= 0) {
-            byte count = stream.readByte();
-            short damage = VersionManager.isLT(Version.BETA_8) ? stream.readByte() : stream.readShort();
-            return new ItemStack(id, count, damage);
+        private fun cast(obj: Any?): T? {
+            return if (obj is Number && type.isSubclassOf(Number::class)) {
+                when(type) {
+                    Byte::class -> obj.toByte() as T
+                    Short::class -> obj.toShort() as T
+                    Int::class -> obj.toInt() as T
+                    Long::class -> obj.toLong() as T
+                    Float::class-> obj.toFloat() as T
+                    Double::class -> obj.toDouble() as T
+                    else -> obj as? T
+                }
+            } else obj as? T
         }
-        return null;
-    }, (stream, stack) -> {
-        // write
-        if (stack == null) {
-            stream.writeShort(-1);
-        } else {
-            stream.writeShort(stack.itemId);
-            stream.writeByte(stack.count);
-            if (VersionManager.isLT(Version.BETA_8)) stream.writeByte(stack.getDamage());
-            else stream.writeShort(stack.getDamage());
-        }
-    }, stack -> (VersionManager.isLT(Version.BETA_8) ? 4 : 5));
-
-    public final Class<T> clazz;
-    private final Reader<T> reader;
-    private final Writer<T> writer;
-    private final ToIntFunction<T> sizeFunc;
-
-    public DataType(Class<T> clazz, Reader<T> reader, Writer<T> writer, int size) {
-        this.clazz = clazz;
-        this.reader = reader;
-        this.writer = writer;
-        this.sizeFunc = t -> size;
     }
 
-    public DataType(Class<T> clazz, Reader<T> reader, Writer<T> writer, ToIntFunction<T> sizeFunc) {
-        this.clazz = clazz;
-        this.reader = reader;
-        this.writer = writer;
-        this.sizeFunc = sizeFunc;
-    }
+    companion object {
+        @JvmField
+        val BYTE: DataType<Byte> = Raw(
+            Byte::class,
+            DataInputStream::readByte,
+            { stream: DataOutputStream, v: Byte -> stream.writeByte(v.toInt()) },
+            Byte.SIZE_BYTES
+        )
 
-    public static DataType<String> string(int maxLength, int size) {
-        return new DataType<>(String.class, stream -> Packet.readString(stream, maxLength), (stream, s) -> Packet.writeString(s, stream), size);
-    }
+        @JvmField
+        val SHORT: DataType<Short> = Raw(
+            Short::class,
+            DataInputStream::readShort,
+            { stream: DataOutputStream, v: Short -> stream.writeShort(v.toInt()) },
+            Short.SIZE_BYTES
+        )
 
-    public static DataType<String> string(int maxLength) {
-        return new DataType<>(String.class, stream -> Packet.readString(stream, maxLength), (stream, s) -> Packet.writeString(s, stream), String::length);
-    }
+        @JvmField
+        val INT: DataType<Int> = Raw(
+            Int::class,
+            DataInputStream::readInt,
+            DataOutputStream::writeInt,
+            Int.SIZE_BYTES
+        )
 
-    @SuppressWarnings("unchecked")
-    public static <T> DataType<T> dummy(T t) {
-        return new DataType<>((Class<T>) t.getClass(), stream -> t, (stream, object) -> {
-        }, 0);
-    }
+        @JvmField
+        val LONG: DataType<Long> = Raw(
+            Long::class,
+            DataInputStream::readLong,
+            DataOutputStream::writeLong,
+            Long.SIZE_BYTES
+        )
 
-    @SuppressWarnings("unchecked")
-    public static <T> DataType<Object[]> array(DataType<T> type) {
-        return type != null ? new DataType<>(Object[].class, stream -> {
-            T[] array = (T[]) Array.newInstance(type.clazz, stream.readShort());
-            for (int i = 0; i < array.length; i++) {
-                array[i] = type.read(stream);
+        @JvmField
+        val FLOAT: DataType<Float> = Raw(
+            Float::class,
+            DataInputStream::readFloat,
+            DataOutputStream::writeFloat,
+            Float.SIZE_BYTES
+        )
+
+        @JvmField
+        val DOUBLE: DataType<Double> = Raw(
+            Double::class,
+            DataInputStream::readDouble,
+            DataOutputStream::writeDouble,
+            java.lang.Double.BYTES
+        )
+
+        @JvmField
+        val BOOLEAN: DataType<Boolean> = Raw(
+            Boolean::class,
+            DataInputStream::readBoolean,
+            DataOutputStream::writeBoolean,
+            0
+        )
+
+        @JvmField
+        val UTF: DataType<String> = Raw(
+            String::class,
+            DataInputStream::readUTF,
+            DataOutputStream::writeUTF
+        ) { it.length }
+
+        @JvmField
+        val ITEM_STACK = object : DataType<ItemStack?> {
+            override fun read(stream: DataInputStream): ItemStack? {
+                val id = stream.readShort()
+                if (id >= 0) {
+                    val count = stream.readByte()
+                    val damage = if (currVer <= BETALPHA_8) stream.readByte().toShort() else stream.readShort()
+                    return ItemStack(id.toInt(), count.toInt(), damage.toInt())
+                } else return null
             }
-            return array;
-        }, (stream, v) -> {
-            stream.writeShort(v.length);
-            for (Object o : v) {
-                type.write(stream, o);
+
+            override fun write(stream: DataOutputStream, t: Any?) {
+                if (t == null) {
+                    stream.writeShort(-1)
+                } else if (t is ItemStack) {
+                    stream.writeShort(t.itemId)
+                    stream.writeByte(t.count)
+                    if (currVer <= BETALPHA_8) stream.writeByte(t.damage) else stream.writeShort(t.damage)
+                }
             }
-        }, t -> 2 + (t.length + 1) * type.size(null)) : null;
-    }
 
-    public static DataType<?> of(Field field) {
-        return field.getType().isArray() ? array(of(field.getType().arrayType())) : of(field.getType());
-    }
-
-    public static DataType<?> of(Class<?> clazz) {
-        if (clazz == Integer.class || clazz == int.class) return INT;
-        if (clazz == Byte.class || clazz == byte.class) return BYTE;
-        if (clazz == Short.class || clazz == short.class) return SHORT;
-        if (clazz == Long.class || clazz == long.class) return LONG;
-        if (clazz == Boolean.class || clazz == boolean.class) return BOOLEAN;
-        if (clazz == String.class) return VersionManager.isLT(Version.BETA_11) ? UTF : string(32767);
-        if (clazz == ItemStack.class) return ITEM_STACK;
-        return null;
-    }
-
-    public T read(DataInputStream stream) throws IOException {
-        return this.reader.read(stream);
-    }
-
-    public void write(DataOutputStream stream, Object v) throws IOException {
-        try {
-            this.writer.write(stream, cast(v));
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("dont do that");
+            override fun size(t: Any?): Int = if (currVer <= BETALPHA_8) 4 else 5
         }
-    }
 
-    public int size(Object obj) {
-        try {
-            this.sizeFunc.applyAsInt(cast(obj));
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("dont do that");
+        @JvmStatic
+        fun string(maxLength: Int, size: Int) = Raw(
+            String::class,
+            { Packet.readString(it, maxLength) },
+            { stream, s -> Packet.writeString(s, stream) },
+            size
+        )
+
+        @JvmStatic
+        fun string(maxLength: Int) = Raw(
+            String::class,
+            { Packet.readString(it, maxLength) },
+            { stream, s -> Packet.writeString(s, stream) }
+        ) { it.length }
+
+        @JvmStatic
+        fun <T : Any> dummy(t: T): DataType<T> = object : DataType<T> {
+            override fun read(stream: DataInputStream) = t
+            override fun write(stream: DataOutputStream, t: Any?) { }
+            override fun size(t: Any?): Int = 0
         }
-        return 0;
-    }
 
-    @SuppressWarnings("unchecked")
-    private T cast(Object obj) throws ClassCastException {
-        if (obj == null) return null;
-        if (obj instanceof Integer i && clazz == Byte.class) return (T) Byte.valueOf(i.byteValue());
-        if (obj instanceof Integer i && clazz == Short.class) return (T) Short.valueOf(i.shortValue());
-        if (obj instanceof Integer i && clazz == Long.class) return (T) Long.valueOf(i.longValue());
-        return clazz.cast(obj);
-    }
+        @JvmField
+        val TYPES = mapOf(
+            Byte::class.java to BYTE,
+            Short::class.java to SHORT,
+            Int::class.java to INT,
+            Long::class.java to LONG,
+            Float::class.java to FLOAT,
+            Boolean::class.java to BOOLEAN,
+            Double::class.java to DOUBLE,
+            String::class.java to string(Int.MAX_VALUE),
+            ItemStack::class.java to ITEM_STACK
+        )
 
-    @FunctionalInterface
-    public interface Reader<T> {
-        T read(DataInputStream stream) throws IOException;
-    }
+        @JvmStatic
+        inline fun <reified T : Any> array(type: Raw<T>): DataType<Array<T>> {
+            return Raw(
+                Array<T>::class,
+                { stream: DataInputStream -> Array(stream.readShort().toInt()) { type.read(stream) } },
+                { stream: DataOutputStream, v: Array<T> ->
+                    stream.writeShort(v.size)
+                    v.forEach { type.write(stream, it) }
+                }, {
+                    2 + run {
+                        var size = 0
+                        it.forEach { entry -> size += type.size(entry) }
+                        size
+                    }
+                }
+            )
+        }
 
-    @FunctionalInterface
-    public interface Writer<T> {
-        void write(DataOutputStream stream, T v) throws IOException;
+        @JvmStatic
+        fun <T : Any> of(type: Class<T>): DataType<T>? {
+            return if (type.isArray) {
+                array(of(type.componentType) as Raw<Any>) as? Raw<T>
+            } else TYPES[type] as? DataType<T>
+        }
     }
 }

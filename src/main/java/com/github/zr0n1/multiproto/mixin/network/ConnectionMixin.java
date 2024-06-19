@@ -40,13 +40,13 @@ public abstract class ConnectionMixin {
     private Object[] field_1295;
 
     @Inject(method = "sendPacket", at = @At("HEAD"))
-    private void wrapPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
-        if (PacketTranslator.isWrapped(packet.getRawId())) packetRef.set(PacketTranslator.wrap(packet));
+    private void multiproto$wrapPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
+        if (PacketTranslator.hasWrapper(packet.getRawId())) packetRef.set(PacketTranslator.wrap(packet));
     }
 
     @Inject(method = "sendPacket", at = @At("HEAD"))
-    private void redirectPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
-        if (PacketTranslator.isRedirected(packet.getRawId())) packetRef.set(PacketTranslator.redirect(packet));
+    private void multiproto$redirectPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
+        if (PacketTranslator.hasRedirect(packet.getRawId())) packetRef.set(PacketTranslator.redirect(packet));
     }
 
     // this is so fucking stupid lmao

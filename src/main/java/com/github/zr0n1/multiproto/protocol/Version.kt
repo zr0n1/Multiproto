@@ -1,173 +1,108 @@
-package com.github.zr0n1.multiproto.protocol;
+package com.github.zr0n1.multiproto.protocol
+
+import com.github.zr0n1.multiproto.protocol.Version.Type
 
 /**
  * Represents a Minecraft multiplayer protocol version.
  */
-public class Version implements Comparable<Version> {
-
-    /**
-     * Beta 1.7 - Beta 1.7.3
-     */
-    public static final Version BETA_14 = new Version(14, Type.BETA, "1.7", "1.7.3");
-    /**
-     * Beta 1.6 - Beta 1.6.6
-     */
-    public static final Version BETA_13 = new Version(13, Type.BETA, "1.6", "1.6.6");
-
-    /**
-     * Beta 1.5 - Beta 1.5_01
-     */
-    public static final Version BETA_11 = new Version(11, Type.BETA, "1.5", "1.5_01");
-
-    /**
-     * Beta 1.4 - Beta 1.4_01
-     */
-    public static final Version BETA_10 = new Version(10, Type.BETA, "1.4", "1.4_01");
-
-    /**
-     * Beta 1.3 - Beta 1.3_01
-     */
-    public static final Version BETA_9 = new Version(9, Type.BETA, "1.3", "1.3_01");
-
-    /**
-     * Beta 1.2 - Beta 1.2_02
-     */
-    public static final Version BETA_8 = new Version(8, Type.BETA, "1.2", "1.2_02");
-
-    /**
-     * Beta 1.1_02
-     */
-    public static final Version BETALPHA_8 = new Version(8, Type.BETALPHA, "1.1_02");
-
-    /**
-     * Beta 1.0 - Beta 1.1_01
-     */
-    public static final Version BETALPHA_7 = new Version(7, Type.BETALPHA, "1.0", "1.1_01");
-
-    /**
-     * Alpha v1.2.3_05 - Alpha v1.2.6
-     */
-    public static final Version ALPHAWEEN_6 = new Version(6, Type.ALPHAWEEN,
-            "1.2.3_05", "1.2.6");
-
-    /**
-     * Alpha v1.2.3 - Alpha v1.2.3_04
-     */
-    public static final Version ALPHAWEEN_5 = new Version(5, Type.ALPHAWEEN,
-            "1.2.3", "1.2.3_04");
-
-    /**
-     * Alpha v1.2.2
-     */
-    public static final Version ALPHAWEEN_4 = new Version(4, Type.ALPHAWEEN,
-            "1.2.2");
-
-    /**
-     * Alpha v1.2.0 - Alpha v1.2.1_01
-     */
-    public static final Version ALPHAWEEN_3 = new Version(3, Type.ALPHAWEEN,
-            "1.20", "1.2.1_01");
-
-    /**
-     * Alpha v1.1.1 - Alpha v1.1.2_01
-     */
-    public static final Version ALPHA_2 = new Version(2, Type.ALPHA,
-            "1.1.1", "1.1.2_01");
-
+class Version(
     /**
      * Protocol version number.
-     * (Example: {@code 14} for Beta 1.7 - Beta 1.7.3.)
+     * (Example: `14` for Beta 1.7 - Beta 1.7.3.)
      */
-    public final int protocol;
+    @JvmField
+    val protocol: Int,
     /**
      * Version type.
      *
      * @see Type
      */
-    public final Type type;
+    @JvmField
+    val type: Type,
     /**
      * First client version number.
      */
-    public final String firstClient;
+    private val firstClient: String,
     /**
      * Last client version number.
      */
-    public final String lastClient;
+    private val lastClient: String = firstClient
+) : Comparable<Version> {
 
-
-    public Version(int protocol, Type type, String client) {
-        this(protocol, type, client, client);
+    fun nameRange(shorten: Boolean = false): String {
+        return if (firstClient == lastClient) name(firstClient, shorten)
+        else name(firstClient, shorten) + (if (shorten) "-" else " - ") + name(lastClient, shorten)
     }
 
-    public Version(int protocol, Type type, String firstClient, String lastClient) {
-        this.protocol = protocol;
-        this.type = type;
-        this.firstClient = firstClient;
-        this.lastClient = lastClient;
-    }
+    fun name(shorten: Boolean = false) = name(lastClient, shorten)
 
-    /**
-     * @param s {@link String} representing a protocol versions's type and version number.
-     * @return {@link Version} which matches the given string or {@link #BETA_14}.
-     * @see #toString()
-     */
-    public static Version parse(String s) {
-        if (s == null || s.isBlank()) return BETA_14;
-        String s1 = s.replaceAll("\\s", "").replace("beta_initial", "betalpha");
-        return Versions.VERSIONS.stream().filter(p -> p.toString().equalsIgnoreCase(s1)).findFirst().orElse(BETA_14);
-    }
-
-    public String nameRange(boolean abbreviate) {
-        return (firstClient.equals(lastClient) ? name(firstClient, abbreviate) :
-                String.join((abbreviate ? "-" : " - "), name(firstClient, abbreviate), name(lastClient, abbreviate)));
-    }
-
-    public String name(boolean abbreviate) {
-        return name(lastClient, abbreviate);
-    }
-
-    private String name(String s, boolean abbreviate) {
-        return type.getLabel(abbreviate) + (abbreviate ? "" : " ") + type.prefix + s;
+    private fun name(s: String, shorten: Boolean): String {
+        return type.getLabel(shorten) + (if (shorten) "" else " ") + (if (shorten) "" else type.prefix) + s
     }
 
     /**
-     * @return {@link String} representing the {@link Version} by {@link #type} and {@link #protocol}.<br>
-     * (Example: {@link #BETA_14} -> {@code "beta_14"})
+     * @return [String] representing the [Version] by [.type] and [.protocol].<br></br>
+     * (Example: [BETA_14] -> `"beta_14"`)
      */
-    @Override
-    public String toString() {
-        return type.id + "_" + protocol;
+    override fun toString(): String {
+        return type.id + "_" + protocol
     }
 
     /**
      * Compares release order via type and version number.
      */
-    @Override
-    public int compareTo(Version version) {
-        if (this.type != version.type) {
-            if (Versions.TYPES.contains(type) && Versions.TYPES.contains(version.type)) {
-                return Integer.compare(Versions.TYPES.indexOf(type), Versions.TYPES.indexOf(version.type));
-            } else throw new IllegalArgumentException("Version type: " + type.id + " is not registered!");
+    override fun compareTo(other: Version): Int {
+        if (this.type !== other.type) {
+            if (VersionRegistry.TYPES.contains(type) && VersionRegistry.TYPES.contains(other.type)) {
+                return VersionRegistry.TYPES.indexOf(type).compareTo(VersionRegistry.TYPES.indexOf(other.type))
+            } else throw IllegalArgumentException("Version type: " + type.id + " is not registered!")
         }
-        return Integer.compare(this.protocol, version.protocol);
+        return this.protocol.compareTo(other.protocol)
     }
 
-    public record Type(String id, String label, String abbreviation, String prefix) {
+    @Deprecated("JAVA UTIL")
+    fun isLE(other: Version) = this <= other
+    @Deprecated("JAVA UTIL")
+    fun isGE(other: Version) = this >= other
 
-        /**
-         * Alpha v1.0.15 - Alpha v1.0.17_04
-         */
-        public static final Type ALPHA = new Type("alpha", "Alpha", "a", "v");
-        public static final Type ALPHAWEEN = new Type("alphaween", "Alpha", "a", "v");
-        public static final Type BETALPHA = new Type("betalpha", "Beta", "b");
-        public static final Type BETA = new Type("beta", "Beta", "b");
-
-        public Type(String id, String label, String abbreviation) {
-            this(id, label, abbreviation, "");
+    data class Type(val id: String, private val label: String, private val abbreviation: String, val prefix: String = "") {
+        fun getLabel(shorten: Boolean): String {
+            return if (shorten) abbreviation else label
         }
 
-        public String getLabel(boolean abbreviated) {
-            return abbreviated ? abbreviation : label;
+        companion object {
+            /**
+             * Alpha v1.0.15 - Alpha v1.0.17_04
+             */
+            @JvmField
+            val ALPHA: Type = Type("alpha", "Alpha", "a", "v")
+
+            /**
+             * Beta 1.0 - Beta 1.1_02
+             */
+            @JvmField
+            val BETALPHA: Type = Type("betalpha", "Beta", "b")
+
+            /**
+             * Beta 1.2 - Beta 1.7.3
+             */
+            @JvmField
+            val BETA: Type = Type("beta", "Beta", "b")
+        }
+    }
+
+    companion object {
+        /**
+         * @param s [String] representing a protocol versions's type and version number.
+         * @return [Version] which matches the given string or [.BETA_14].
+         * @see Version.toString
+         */
+        @JvmStatic
+        fun parse(s: String?): Version {
+            if (s.isNullOrBlank()) return BETA_14
+            val s1 = s.replace("\\s".toRegex(), "").replace("beta_initial", "betalpha")
+            return VersionRegistry.VERSIONS.stream().filter { it.toString().equals(s1, ignoreCase = true) }
+                .findFirst().orElse(BETA_14)
         }
     }
 }

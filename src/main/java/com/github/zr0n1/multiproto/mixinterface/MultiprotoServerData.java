@@ -5,19 +5,17 @@ import net.minecraft.nbt.NbtCompound;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 public interface MultiprotoServerData {
+    Version multiproto_getVersion();
+    void multiproto_setVersion(Version version);
 
     static ServerData create(NbtCompound nbt) {
-        return create(nbt.getString("name"), nbt.getString("ip"),
-                Version.parse(nbt.getString("version")));
+        return create(nbt.getString("name"), nbt.getString("ip"), Version.parse(nbt.getString("version")));
     }
 
-    static ServerData create(String name, String ip, Version protocol) {
+    @SuppressWarnings("all")
+    static ServerData create(String name, String ip, Version version) {
         ServerData data = new ServerData(name, ip);
-        ((MultiprotoServerData) data).multiproto_setVersion(protocol);
+        ((MultiprotoServerData) data).multiproto_setVersion(version);
         return data;
     }
-
-    Version multiproto_getVersion();
-
-    void multiproto_setVersion(Version version);
 }

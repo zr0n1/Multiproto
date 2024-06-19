@@ -16,7 +16,7 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 public abstract class ServerDataMixin implements MultiprotoServerData {
 
     @Unique
-    private Version multiproto_version;
+    private Version multiproto$version;
 
     @Redirect(method = "load", at = @At(value = "NEW", target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;",
             remap = false), remap = false)
@@ -26,18 +26,18 @@ public abstract class ServerDataMixin implements MultiprotoServerData {
 
     @Inject(method = "save()Lnet/minecraft/nbt/NbtCompound;", at = @At(value = "TAIL"))
     private void save(CallbackInfoReturnable<NbtCompound> cir, @Local NbtCompound nbt) {
-        nbt.putString("version", multiproto_version.toString());
+        nbt.putString("version", multiproto$version.toString());
     }
 
     @Override
     @Unique
     public Version multiproto_getVersion() {
-        return multiproto_version;
+        return multiproto$version;
     }
 
     @Override
     @Unique
     public void multiproto_setVersion(Version version) {
-        this.multiproto_version = version;
+        this.multiproto$version = version;
     }
 }

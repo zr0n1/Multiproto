@@ -1,89 +1,95 @@
-package com.github.zr0n1.multiproto.parity;
+package com.github.zr0n1.multiproto.parity
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.CraftingRecipeManager;
-import net.minecraft.recipe.SmeltingRecipeManager;
-import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
+import com.github.zr0n1.multiproto.Multiproto
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener
+import com.github.zr0n1.multiproto.protocol.*
+import net.minecraft.block.Block
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.minecraft.recipe.CraftingRecipe
+import net.minecraft.recipe.CraftingRecipeManager
+import net.minecraft.recipe.SmeltingRecipeManager
+import net.modificationstation.stationapi.api.recipe.CraftingRegistry
 
-import java.util.List;
-import java.util.Map;
-
-public class RecipeHelper {
-
-    @SuppressWarnings("rawtypes")
-    public static List vanillaCraftingRecipes;
-    @SuppressWarnings("rawtypes")
-    public static Map vanillaSmeltingRecipes;
+object RecipeHelper : VersionChangedListener {
+    private var vanillaCraftingRecipes: List<*>? = null
+    private var vanillaSmeltingRecipes: Map<*, *>? = null
 
     /**
      * Handles recipe changes between versions.
      */
-    public static void applyChanges() {
-        if (vanillaCraftingRecipes == null)
-            vanillaCraftingRecipes = List.copyOf(CraftingRecipeManager.getInstance().getRecipes());
-        if (vanillaSmeltingRecipes == null)
-            vanillaSmeltingRecipes = Map.copyOf(SmeltingRecipeManager.getInstance().getRecipes());
-        CraftingRecipeManager.getInstance().getRecipes().clear();
-        CraftingRecipeManager.getInstance().getRecipes().addAll(vanillaCraftingRecipes);
-        SmeltingRecipeManager.getInstance().getRecipes().clear();
-        SmeltingRecipeManager.getInstance().getRecipes().putAll(vanillaSmeltingRecipes);
+    override fun invoke() {
+        if (vanillaCraftingRecipes == null) vanillaCraftingRecipes = CraftingRecipeManager.getInstance().recipes.toList()
+        if (vanillaSmeltingRecipes == null) vanillaSmeltingRecipes = SmeltingRecipeManager.getInstance().recipes.toMap()
+        CraftingRecipeManager.getInstance().recipes.clear()
+        CraftingRecipeManager.getInstance().recipes.addAll(vanillaCraftingRecipes!!)
+        SmeltingRecipeManager.getInstance().recipes.clear()
+        SmeltingRecipeManager.getInstance().recipes.putAll(vanillaSmeltingRecipes!!)
         // < b1.7
-        removeBefore(Version.BETA_14,
-                new ItemStack(Block.PISTON), new ItemStack(Block.STICKY_PISTON),
-                new ItemStack(Item.SHEARS));
+        addedIn(BETA_14,
+            ItemStack(Block.PISTON), ItemStack(Block.STICKY_PISTON),
+            ItemStack(Item.SHEARS)
+        )
         // < b1.6
-        removeBefore(Version.BETA_13,
-                new ItemStack(Block.TRAPDOOR, 2),
-                new ItemStack(Item.MAP, 1));
+        addedIn(BETA_13,
+            ItemStack(Block.TRAPDOOR, 2),
+            ItemStack(Item.MAP, 1)
+        )
         // < b1.5
-        removeBefore(Version.BETA_11,
-                new ItemStack(Block.POWERED_RAIL, 6), new ItemStack(Block.DETECTOR_RAIL, 6));
-        replaceBefore(Version.BETA_11,
-                new ItemStack(Block.LADDER, 2), new ItemStack(Block.LADDER, 1), "# #", "###", "# #", '#', Item.STICK);
+        addedIn(BETA_11,
+            ItemStack(Block.POWERED_RAIL, 6), ItemStack(Block.DETECTOR_RAIL, 6)
+        )
+        replaceLE(BETA_10,
+            ItemStack(Block.LADDER, 2), ItemStack(Block.LADDER, 1), "# #", "###", "# #", '#', Item.STICK
+        )
         // < b1.4
-        removeBefore(Version.BETA_10, new ItemStack(Item.COOKIE, 8));
+        addedIn(BETA_10, ItemStack(Item.COOKIE, 8))
         // < b1.3
-        removeBefore(Version.BETA_9,
-                new ItemStack(Item.BED),
-                new ItemStack(Item.REPEATER),
-                new ItemStack(Block.SLAB, 3, 3),
-                new ItemStack(Block.SLAB, 3, 2),
-                new ItemStack(Block.SLAB, 3, 1));
-        replaceBefore(Version.BETA_9, new ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE);
-        replaceBefore(Version.BETA_9, new ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE);
-        replaceBefore(Version.BETA_9, new ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS);
+        addedIn(
+            BETA_9,
+            ItemStack(Item.BED),
+            ItemStack(Item.REPEATER),
+            ItemStack(Block.SLAB, 3, 3),
+            ItemStack(Block.SLAB, 3, 2),
+            ItemStack(Block.SLAB, 3, 1)
+        )
+        replaceLE(BETA_9, ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE)
+        replaceLE(BETA_9, ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE)
+        replaceLE(BETA_9, ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS)
         // < b1.2
-        removeBefore(Version.BETA_8, new ItemStack(Item.CAKE), new ItemStack(Block.DISPENSER), new ItemStack(Block.NOTE_BLOCK),
-                new ItemStack(Block.SANDSTONE), new ItemStack(Item.SUGAR));
-        for (int i = 0; i < 16; i++) {
-            removeBefore(Version.BETA_8, new ItemStack(Block.WOOL, 1, ~i & 15), new ItemStack(Item.DYE, 1, i));
+        addedIn(BETA_8,
+            ItemStack(Item.CAKE),
+            ItemStack(Block.DISPENSER),
+            ItemStack(Block.NOTE_BLOCK),
+            ItemStack(Block.SANDSTONE),
+            ItemStack(Item.SUGAR)
+        )
+        for (i in 0..15) {
+            addedIn(BETA_8, ItemStack(Block.WOOL, 1, i.inv() and 15), ItemStack(Item.DYE, 1, i))
         }
-        if (VersionManager.isLT(Version.BETA_8)) {
-            SmeltingRecipeManager.getInstance().getRecipes().remove(Block.CACTUS.id);
-            SmeltingRecipeManager.getInstance().getRecipes().remove(Block.LOG.id);
+        if (currVer < BETA_8) {
+            SmeltingRecipeManager.getInstance().recipes.remove(Block.CACTUS.id)
+            SmeltingRecipeManager.getInstance().recipes.remove(Block.LOG.id)
         }
-        Multiproto.LOGGER.info("Applied version recipe parity");
+        Multiproto.LOGGER.info("Applied version recipe parity")
     }
 
-    public static void replaceBefore(Version target, ItemStack output, Object... recipe) {
-        replaceBefore(target, output, output, recipe);
+    @Suppress("SameParameterValue")
+    private fun replaceLE(target: Version, output: ItemStack, vararg recipe: Any) {
+        replaceLE(target, output, output, *recipe)
     }
 
-    public static void replaceBefore(Version target, ItemStack oldOutput, ItemStack output, Object... recipe) {
-        removeBefore(target, oldOutput);
-        CraftingRegistry.addShapedRecipe(output, recipe);
+    private fun replaceLE(target: Version, oldOutput: ItemStack, output: ItemStack = oldOutput, vararg recipe: Any) {
+        addedIn(target, oldOutput)
+        CraftingRegistry.addShapedRecipe(output, *recipe)
     }
 
-    public static void removeBefore(Version target, ItemStack... outputs) {
-        if (VersionManager.isLT(target)) {
-            for (ItemStack output : outputs) {
-                CraftingRecipeManager.getInstance().getRecipes().removeIf(r -> ((CraftingRecipe) r).getOutput().equals(output));
+    private fun addedIn(target: Version, vararg outputs: ItemStack) {
+        if (currVer < target) {
+            outputs.forEach {
+                CraftingRecipeManager.getInstance().recipes.removeIf {
+                    recipe -> (recipe as CraftingRecipe).output == it
+                }
             }
         }
     }

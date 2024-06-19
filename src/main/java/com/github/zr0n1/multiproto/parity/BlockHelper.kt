@@ -1,23 +1,24 @@
-package com.github.zr0n1.multiproto.parity;
+package com.github.zr0n1.multiproto.parity
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import com.github.zr0n1.multiproto.Multiproto
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener
+import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor
+import com.github.zr0n1.multiproto.protocol.BETA_11
+import com.github.zr0n1.multiproto.protocol.BETA_13
+import com.github.zr0n1.multiproto.protocol.currVer
+import net.minecraft.block.Block
+import net.minecraft.block.material.Material
 
-public class BlockHelper {
-
-    public static void applyChanges() {
+object BlockHelper : VersionChangedListener {
+    override fun invoke() {
         // set cobweb fields
-        ((BlockAccessor) Block.COBWEB).setMaterial(VersionManager.isLT(Version.BETA_14) ? Material.WOOL : Material.COBWEB);
-        Block.COBWEB.setHardness(VersionManager.isLT(Version.BETA_14) ? 0F : 4F);
-        Block.COBWEB.setOpacity(VersionManager.isLT(Version.BETA_14) ? 0 : 1);
-        Block.BLOCKS_OPAQUE[Block.COBWEB.id] = VersionManager.isLT(Version.BETA_14);
+        (Block.COBWEB as BlockAccessor).setMaterial(if (currVer <= BETA_13) Material.WOOL else Material.COBWEB)
+        Block.COBWEB.setHardness(if (currVer <= BETA_13) 0f else 4f)
+        Block.COBWEB.setOpacity(if (currVer <= BETA_13) 0 else 1)
+        Block.BLOCKS_OPAQUE[Block.COBWEB.id] = currVer <= BETA_13
         // set glowstone fields
-        ((BlockAccessor) Block.GLOWSTONE).setMaterial(VersionManager.isLT(Version.BETA_13) ? Material.GLASS : Material.STONE);
-        Block.GLOWSTONE.setHardness(VersionManager.isLT(Version.BETA_14) ? 0.1F : 0.3F);
-        Multiproto.LOGGER.info("Applied version block parity");
+        (Block.GLOWSTONE as BlockAccessor).setMaterial(if (currVer <= BETA_11) Material.GLASS else Material.STONE)
+        Block.GLOWSTONE.setHardness(if (currVer <= BETA_13) 0.1f else 0.3f)
+        Multiproto.LOGGER.info("Applied version block parity")
     }
 }

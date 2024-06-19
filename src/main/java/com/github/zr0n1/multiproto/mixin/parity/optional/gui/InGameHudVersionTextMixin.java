@@ -1,9 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.parity.optional.gui;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.mixin.MultiprotoMixinPlugin;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -14,6 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pl.telvarost.mojangfixstationapi.Config;
+
+import static com.github.zr0n1.multiproto.protocol.ProtocolKt.BETA_11;
+import static com.github.zr0n1.multiproto.protocol.ProtocolKt.getCurrVer;
+import static com.github.zr0n1.multiproto.util.UtilKt.getFabric;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudVersionTextMixin extends DrawContext {
@@ -24,12 +26,10 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     @Inject(method = "render", at = @At(value = "RETURN", shift = At.Shift.BY, by = -3))
     private void applyVersionNameParity(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
-        if ((!custom.isBlank() ||
-                (VersionManager.isLT(Version.BETA_13) && Multiproto.config.showVersion)) &&
-                !minecraft.options.debugHud) {
+        if ((!custom.isBlank() || (getCurrVer().isLE(BETA_11) && Multiproto.config.showVersion)) && !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +
-                    (custom.isBlank() ? VersionManager.getVersion().name(false) : custom), 2, 2, 16777215);
+                    (custom.isBlank() ? getCurrVer().name(false) : custom), 2, 2, 16777215);
             GL11.glPopMatrix();
         }
     }
@@ -37,11 +37,11 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPopMatrix()V", remap = false),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0)))
     private void addDebugText(CallbackInfo ci) {
-        Version version = VersionManager.getVersion();
-        if (minecraft.isWorldRemote()) {
-            minecraft.textRenderer.drawWithShadow("Protocol version: " + version.nameRange(true)
-                            + " (" + version.protocol + ")",
-                    2, (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIDebugScreenIntegration() ? 116 : 100), 14737632);
+        if (minecraft.isWorldRemote() && Multiproto.config.showDebug) {
+            minecraft.textRenderer.drawWithShadow("Protocol version: " + getCurrVer().nameRange(true) +
+                            " (" + getCurrVer().protocol + ")",
+                    2, (getFabric().isModLoaded("mojangfixstationapi") && Config.config.enableDebugMenuWorldSeed ? 116 : 100),
+                    14737632);
         }
     }
 }

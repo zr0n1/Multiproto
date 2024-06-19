@@ -20,7 +20,10 @@
   ],
   "client": [
     "entity.MultiplayerClientPlayerEntityMixin",
+    "gui.EntryListWidgetAccessor",
+    "gui.MultiplayerScreenAccessor",
     "gui.MultiplayerScreenMixin",
+    "gui.ScreenAccessor",
     "mojangfixstationapi.gui.DirectConnectScreenAccessor",
     "mojangfixstationapi.gui.DirectConnectScreenMixin",
     "mojangfixstationapi.gui.EditServerScreenAccessor",

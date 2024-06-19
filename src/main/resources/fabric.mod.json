@@ -16,17 +16,32 @@
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "com.github.zr0n1.multiproto.Multiproto",
-      "com.github.zr0n1.multiproto.parity.optional.TextureHelper"
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.Multiproto"
+      },
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.parity.optional.TextureHelper"
+      }
     ],
     "gcapi": [
-      "com.github.zr0n1.multiproto.Multiproto"
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.Multiproto"
+      }
     ],
     "gcapi:presave": [
-      "com.github.zr0n1.multiproto.Config"
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.Config"
+      }
     ],
     "hmifabric:item_list_refresh": [
-      "com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper"
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper"
+      }
     ]
   },
   "mixins": [
@@ -34,15 +49,16 @@
   ],
   "depends": {
     "minecraft": "1.0.0-beta.7.3",
-    "station-api-base": "*",
-    "gcapi": "*"
+    "fabric-language-kotlin": ">=1.11.0+kotlin.2.0.0",
+    "stationapi": ">=2.0-alpha.2.1",
+    "gcapi": ">=2.0.2"
   },
   "recommends": {
-    "modmenu": "*"
+    "modmenu": ">=1.8.5-beta.3"
   },
   "suggests": {
-    "mojangfixstationapi": "*",
-    "hmifabric": "*"
+    "mojangfixstationapi": ">=2.0.0",
+    "hmifabric": ">=5.2.1"
   },
   "custom": {
     "loom:injected_interfaces": {

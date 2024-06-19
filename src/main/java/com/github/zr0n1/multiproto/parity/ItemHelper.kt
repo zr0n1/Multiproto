@@ -1,28 +1,33 @@
-package com.github.zr0n1.multiproto.parity;
+package com.github.zr0n1.multiproto.parity
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.mixin.parity.item.ToolItemAccessor;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.minecraft.item.*;
+import com.github.zr0n1.multiproto.Multiproto
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener
+import com.github.zr0n1.multiproto.mixin.parity.item.ToolItemAccessor
+import com.github.zr0n1.multiproto.protocol.*
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.minecraft.item.ToolItem
+import net.minecraft.item.ToolMaterial
+import net.modificationstation.stationapi.api.item.tool.ToolLevel
 
-public class ItemHelper {
-
-    public static void applyChanges() {
-        // set tool durability and speed lower < b1.2
-        for (Item item : Item.ITEMS) {
-            if (item instanceof ToolItem tool) {
-                ToolMaterial material = tool.getMaterial(new ItemStack(item));
-                tool.setMaxDamage((VersionManager.isLT(Version.BETA_8) ?
-                        (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
-                ((ToolItemAccessor) tool).setMiningSpeed(VersionManager.isLT(Version.BETA_8) ?
-                        (material.getMiningLevel() + 1) * 2 : material.getMiningSpeedMultiplier());
-            } else if (item instanceof SwordItem sword) {
-                ToolMaterial material = sword.getMaterial(new ItemStack(item));
-                sword.setMaxDamage((VersionManager.isLT(Version.BETA_8) ?
-                        (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
+object ItemHelper : VersionChangedListener {
+    override fun invoke() {
+        // set tool durability and speed lower <= b1.1_02
+        Item.ITEMS.filter { it is ToolLevel }.forEach {
+            val material: ToolMaterial = (it as ToolLevel).getMaterial(ItemStack(it))
+            it.setMaxDamage(
+                if (currVer <= BETALPHA_8) {
+                    (32 shl material.miningLevel) * (if (material.miningLevel == 3) 4 else 1)
+                } else material.durability
+            )
+            if (it is ToolItem) {
+                (it as ToolItemAccessor).setMiningSpeed(
+                    if (currVer <= BETALPHA_8) {
+                        ((material.miningLevel + 1) * 2).toFloat()
+                    } else material.miningSpeedMultiplier
+                )
             }
         }
-        Multiproto.LOGGER.info("Applied version item parity");
+        Multiproto.LOGGER.info("Applied version item parity")
     }
 }

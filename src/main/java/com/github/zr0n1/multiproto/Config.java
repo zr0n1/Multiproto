@@ -3,11 +3,12 @@ package com.github.zr0n1.multiproto;
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
 import com.github.zr0n1.multiproto.parity.optional.TranslationHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
 import net.glasslauncher.mods.api.gcapi.impl.EventStorage;
 import net.minecraft.client.Minecraft;
+
+import static com.github.zr0n1.multiproto.util.UtilKt.getMinecraft;
 
 public class Config implements PreConfigSavedListener {
 
@@ -31,7 +32,11 @@ public class Config implements PreConfigSavedListener {
     @Comment("Changes tooltip names to match version")
     public Boolean translationParity = true;
 
-    @ConfigName("\u200B\u200B\u200B\u200B\u200BCustom version name")
+    @ConfigName("\u200B\u200B\u200B\u200B\u200BDebug HUD version")
+    @Comment("Shows protocol version on debug HUD")
+    public Boolean showDebug = false;
+
+    @ConfigName("\u200B\u200B\u200B\u200B\u200B\u200BCustom version name")
     @Comment("Shows custom version name on HUD")
     public String customVersionName = "";
 
@@ -45,7 +50,7 @@ public class Config implements PreConfigSavedListener {
         boolean translationParityA = jsonA.getBoolean("translationParity", true);
         boolean translationParityB = jsonB.getBoolean("translationParity", false);
         if (source == EventStorage.EventSource.USER_SAVE) {
-            Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
+            Minecraft mc = getMinecraft();
             if (textureParityA != textureParityB) {
                 textureParity = textureParityB;
                 mc.textureManager.method_1096();
@@ -56,7 +61,7 @@ public class Config implements PreConfigSavedListener {
             }
             if (translationParityA != translationParityB) {
                 translationParity = translationParityB;
-                TranslationHelper.applyChanges();
+                TranslationHelper.INSTANCE.invoke();
             }
         }
     }

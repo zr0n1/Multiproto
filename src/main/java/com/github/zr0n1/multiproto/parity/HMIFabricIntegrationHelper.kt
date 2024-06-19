@@ -1,70 +1,54 @@
-package com.github.zr0n1.multiproto.parity;
+package com.github.zr0n1.multiproto.parity
 
-import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor;
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
-import net.glasslauncher.hmifabric.GuiOverlay;
-import net.glasslauncher.hmifabric.event.HMIItemListRefreshEvent;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.modificationstation.stationapi.api.item.ItemConvertible;
+import com.github.zr0n1.multiproto.Multiproto
+import com.github.zr0n1.multiproto.api.event.VersionChangedListener
+import com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor
+import com.github.zr0n1.multiproto.protocol.*
+import net.glasslauncher.hmifabric.GuiOverlay
+import net.glasslauncher.hmifabric.event.HMIItemListRefreshEvent
+import net.minecraft.block.Block
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.modificationstation.stationapi.api.item.ItemConvertible
 
-import java.util.ArrayList;
+object HMIFabricIntegrationHelper : HMIItemListRefreshEvent, VersionChangedListener {
+    private val removed: ArrayList<Item> = ArrayList()
 
-public class HMIFabricIntegrationHelper implements HMIItemListRefreshEvent {
+    override fun refreshItemList(stacks: ArrayList<ItemStack>) {
+        stacks.removeIf { removed.contains(it.item) || (currVer <= BETALPHA_8 && it.damage > 0) }
+    }
 
-    public static ArrayList<Item> removed = new ArrayList<>();
-
-    public static void applyChanges() {
-        removed.clear();
+    override fun invoke() {
+        removed.clear()
         // < b1.7
-        removeBefore(Version.BETA_14,
-                Block.PISTON, Block.STICKY_PISTON,
-                Item.SHEARS);
+        addedIn(BETA_14, Block.PISTON, Block.STICKY_PISTON, Item.SHEARS)
         // < b1.6
-        removeBefore(Version.BETA_13,
-                Block.DEAD_BUSH,
-                Block.GRASS,
-                Block.TRAPDOOR,
-                Item.MAP);
+        addedIn(BETA_13, Block.DEAD_BUSH, Block.GRASS, Block.TRAPDOOR, Item.MAP)
         // < b1.5
-        removeBefore(Version.BETA_11,
-                Block.COBWEB,
-                Block.DETECTOR_RAIL, Block.POWERED_RAIL);
+        addedIn(BETA_11, Block.COBWEB, Block.DETECTOR_RAIL, Block.POWERED_RAIL)
         // < b1.4
-        removeBefore(Version.BETA_10, Item.COOKIE);
+        addedIn(BETA_10, Item.COOKIE)
         // < b1.3
-        removeBefore(Version.BETA_9,
-                Block.BED, Item.BED,
-                Block.REPEATER, Item.REPEATER);
+        addedIn(BETA_9, Block.BED, Item.BED, Block.REPEATER, Item.REPEATER)
         // < b1.2
-        removeBefore(Version.BETA_8,
-                Block.CAKE, Item.CAKE,
-                Block.DISPENSER,
-                Block.LAPIS_BLOCK, Block.LAPIS_ORE,
-                Block.NOTE_BLOCK,
-                Block.SANDSTONE,
-                Item.BONE,
-                Item.DYE,
-                Item.SUGAR);
+        addedIn(BETA_8,
+            Block.CAKE, Item.CAKE,
+            Block.DISPENSER,
+            Block.LAPIS_BLOCK, Block.LAPIS_ORE,
+            Block.NOTE_BLOCK,
+            Block.SANDSTONE,
+            Item.BONE,
+            Item.DYE,
+            Item.SUGAR
+        )
         if (UtilsAccessor.getAllItems() != null) {
-            UtilsAccessor.setAllItems(null);
-            GuiOverlay.resetItems();
+            UtilsAccessor.setAllItems(null)
+            GuiOverlay.resetItems()
         }
-        Multiproto.LOGGER.info("Removed {} entries from HowManyItems-Fabric", removed.size());
+        Multiproto.LOGGER.info("Removed ${removed.size} entries from HowManyItems-Fabric")
     }
 
-    public static void removeBefore(Version target, ItemConvertible... items) {
-        for (ItemConvertible item : items) {
-            if (VersionManager.isLT(target)) removed.add(item.asItem());
-        }
-    }
-
-    @Override
-    public void refreshItemList(ArrayList<ItemStack> stacks) {
-        stacks.removeIf(stack -> removed.contains(stack.getItem()) ||
-                (VersionManager.isLT(Version.BETA_8) && stack.getDamage() > 0));
+    private fun addedIn(target: Version, vararg items: ItemConvertible) = items.forEach {
+        if (currVer < target) removed.add(it.asItem())
     }
 }

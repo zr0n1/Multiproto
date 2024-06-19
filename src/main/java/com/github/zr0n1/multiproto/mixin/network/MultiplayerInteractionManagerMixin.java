@@ -1,7 +1,5 @@
 package com.github.zr0n1.multiproto.mixin.network;
 
-import com.github.zr0n1.multiproto.protocol.Version;
-import com.github.zr0n1.multiproto.protocol.VersionManager;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.MultiplayerInteractionManager;
@@ -21,8 +19,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import static com.github.zr0n1.multiproto.protocol.ProtocolKt.*;
 
 @Mixin(MultiplayerInteractionManager.class)
+@SuppressWarnings("deprecation")
 public abstract class MultiplayerInteractionManagerMixin extends InteractionManager {
 
     @Shadow
@@ -53,19 +53,19 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "clickSlot", at = @At("HEAD"))
     private void disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
-        if (VersionManager.isLT(Version.BETA_11)) shift.set(false);
+        if (getCurrVer().isLE(BETA_10)) shift.set(false);
     }
 
     @Inject(method = "method_1716", at = @At("HEAD"))
     private void sendBlockMined(int i, int j, int k, int l, CallbackInfoReturnable<Boolean> cir) {
-        if (VersionManager.isLT(Version.BETA_9)) {
+        if (getCurrVer().isLE(BETA_8)) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(3, i, j, k, l));
         }
     }
 
     @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
     private void startMining(int i, int j, int k, int l, CallbackInfo ci) {
-        if (VersionManager.isLT(Version.BETA_9)) {
+        if (getCurrVer().isLE(BETA_8)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
             int id = minecraft.world.getBlockId(i, j, k);
@@ -81,7 +81,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "method_1705", at = @At("HEAD"))
     private void stopMining(CallbackInfo ci) {
-        if (VersionManager.isLT(Version.BETA_9) && field_2615) {
+        if (getCurrVer().isLE(BETA_8) && field_2615) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
             field_2614 = 0;
         }
@@ -89,7 +89,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Inject(method = "method_1721", at = @At("HEAD"))
     private void sendMining(int i, int j, int k, int l, CallbackInfo ci) {
-        if (VersionManager.isLT(Version.BETA_9)) {
+        if (getCurrVer().isLE(BETA_8)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(1, i, j, k, l));
         }
@@ -98,7 +98,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     @Redirect(method = "method_1721", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
             opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
     private void redirectPutField_2615(MultiplayerInteractionManager instance, boolean b) {
-        if (!VersionManager.isLT(Version.BETA_9)) field_2615 = b;
+        if (getCurrVer().isGE(BETA_8)) field_2615 = b;
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE",
@@ -106,12 +106,12 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
     private void redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
-        if (!VersionManager.isLT(Version.BETA_9)) handler.sendPacket(packet);
+        if (getCurrVer().isGE(BETA_8)) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
     private void redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
-        if (VersionManager.isLT(Version.BETA_9)) {
+        if (getCurrVer().isLE(BETA_8)) {
             field_2611 = 0.0F;
             field_2612 = 0.0F;
             field_2613 = 0.0F;

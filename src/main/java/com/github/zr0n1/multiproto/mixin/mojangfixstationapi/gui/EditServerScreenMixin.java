@@ -23,15 +23,16 @@ public abstract class EditServerScreenMixin extends Screen {
     @Redirect(method = "lambda$init$0", at = @At(value = "NEW",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData;", remap = false), remap = false)
     private ServerData redirectMultiprotoServerData(String name, String ip) {
-        return MultiprotoServerData.create(name, ip, VersionScreen.getLastServerVersion());
+        return MultiprotoServerData.create(name, ip, VersionScreen.getLastSerVer());
     }
 
     @Inject(method = "init", at = @At("TAIL"))
+    @SuppressWarnings("unchecked")
     private void addCustomButton(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
                 "Protocol version: " + (server != null ?
                         ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true) :
-                        VersionScreen.getLastServerVersion().nameRange(true)),
-                button -> minecraft.setScreen(new VersionScreen(this, server))));
+                        VersionScreen.getLastSerVer().nameRange(true)),
+                button -> minecraft.setScreen(new VersionScreen(this))));
     }
 }
