@@ -14,11 +14,13 @@ import static com.github.zr0n1.multiproto.protocol.ProtocolKt.BETA_8;
 import static com.github.zr0n1.multiproto.protocol.ProtocolKt.getCurrVer;
 
 @Mixin(LivingEntityRenderer.class)
-@SuppressWarnings("deprecation")
 public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
 
-    @ModifyVariable(method = "method_818(Lnet/minecraft/entity/LivingEntity;Ljava/lang/String;DDDI)V", at = @At("STORE"), ordinal = 1)
-    private float applyNameRenderParity(float scale, @Local(ordinal = 0) float distance, @Local(argsOnly = true) LivingEntity e) {
+    @ModifyVariable(method = "method_818(Lnet/minecraft/entity/LivingEntity;Ljava/lang/String;DDDI)V",
+            at = @At("STORE"), ordinal = 1)
+    @SuppressWarnings("deprecation")
+    private float multiproto_applyNameRenderParity(float scale, @Local(ordinal = 0) float distance,
+                                                   @Local(argsOnly = true) LivingEntity e) {
         return (getCurrVer().isLE(BETA_8) && Multiproto.config.nameRenderParity && e instanceof PlayerEntity) ?
                 (float) ((double) scale * (Math.sqrt(distance) / 2.0D)) : scale;
     }

@@ -19,7 +19,7 @@ public abstract class SaplingBlockTextureMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     @SuppressWarnings("deprecation")
-    private void applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
+    private void multiproto_applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
         if (getCurrVer().isLE(BETA_10)) {
             cir.setReturnValue(textureId);
         }

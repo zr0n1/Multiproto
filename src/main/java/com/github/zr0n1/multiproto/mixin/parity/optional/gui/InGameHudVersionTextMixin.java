@@ -24,9 +24,11 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     private Minecraft minecraft;
 
     @Inject(method = "render", at = @At(value = "RETURN", shift = At.Shift.BY, by = -3))
-    private void applyVersionNameParity(CallbackInfo ci) {
+    @SuppressWarnings("deprecation")
+    private void multiproto_applyVersionNameParity(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
-        if ((!custom.isBlank() || (getCurrVer().isLE(BETA_11) && Multiproto.config.showVersion)) && !minecraft.options.debugHud) {
+        if ((!custom.isBlank() || (getCurrVer().isLE(BETA_11) && Multiproto.config.showVersion)) &&
+                !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +
                     (custom.isBlank() ? getCurrVer().name(false) : custom), 2, 2, 16777215);
@@ -36,12 +38,12 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPopMatrix()V", remap = false),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0)))
-    private void addDebugText(CallbackInfo ci) {
+    private void multiproto_addDebugText(CallbackInfo ci) {
         if (minecraft.isWorldRemote() && Multiproto.config.showDebug) {
             minecraft.textRenderer.drawWithShadow("Protocol version: " + getCurrVer().nameRange(true) +
                             " (" + getCurrVer().protocol + ")",
-                    2, (getFabric().isModLoaded("mojangfixstationapi") && Config.config.enableDebugMenuWorldSeed ? 116 : 100),
-                    14737632);
+                    2, (getFabric().isModLoaded("mojangfixstationapi") && Config.config.enableDebugMenuWorldSeed ?
+                            116 : 100), 14737632);
         }
     }
 }

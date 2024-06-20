@@ -20,7 +20,7 @@ public abstract class SlabBlockTextureMixin {
     public abstract boolean isFullCube();
 
     @Inject(method = "getTexture(II)I", at = @At("HEAD"), cancellable = true)
-    private void applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
+    private void multiproto_applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
         if (getCurrVer().isLE(BETA_13) && Multiproto.config.textureParity) {
             if (!isFullCube() && side > 1) cir.setReturnValue(TextureHelper.slabSideTextures[meta]);
             else if (meta == 3) cir.setReturnValue(Block.COBBLESTONE.textureId);

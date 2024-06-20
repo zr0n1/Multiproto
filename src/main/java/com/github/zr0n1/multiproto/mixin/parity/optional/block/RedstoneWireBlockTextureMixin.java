@@ -22,14 +22,15 @@ public abstract class RedstoneWireBlockTextureMixin extends Block {
     }
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
-    private void applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
+    private void multiproto_applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
         if (getCurrVer().isLE(BETA_8) && Multiproto.config.textureParity) {
             cir.setReturnValue(meta > 0 ? TextureHelper.redstoneWireTextures[1] : TextureHelper.redstoneWireTextures[0]);
         }
     }
 
     @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
-    private void applyTextureColorParity(BlockView blockView, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
+    private void multiproto_applyTextureColorParity(BlockView blockView, int x, int y, int z,
+                                                    CallbackInfoReturnable<Integer> cir) {
         if (getCurrVer().isLE(BETA_10) && Multiproto.config.textureParity) {
             cir.setReturnValue(super.getColorMultiplier(blockView, x, y, z));
         }

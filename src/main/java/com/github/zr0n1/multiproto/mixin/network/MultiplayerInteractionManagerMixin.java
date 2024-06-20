@@ -52,19 +52,19 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     public abstract void method_1707(int i, int j, int k, int l);
 
     @Inject(method = "clickSlot", at = @At("HEAD"))
-    private void disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
+    private void multiproto_disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
         if (getCurrVer().isLE(BETA_10)) shift.set(false);
     }
 
     @Inject(method = "method_1716", at = @At("HEAD"))
-    private void sendBlockMined(int i, int j, int k, int l, CallbackInfoReturnable<Boolean> cir) {
+    private void multiproto_sendBlockMined(int i, int j, int k, int l, CallbackInfoReturnable<Boolean> cir) {
         if (getCurrVer().isLE(BETA_8)) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(3, i, j, k, l));
         }
     }
 
     @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
-    private void startMining(int i, int j, int k, int l, CallbackInfo ci) {
+    private void multiproto_startMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (getCurrVer().isLE(BETA_8)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
@@ -80,7 +80,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     }
 
     @Inject(method = "method_1705", at = @At("HEAD"))
-    private void stopMining(CallbackInfo ci) {
+    private void multiproto_stopMining(CallbackInfo ci) {
         if (getCurrVer().isLE(BETA_8) && field_2615) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
             field_2614 = 0;
@@ -88,7 +88,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     }
 
     @Inject(method = "method_1721", at = @At("HEAD"))
-    private void sendMining(int i, int j, int k, int l, CallbackInfo ci) {
+    private void multiproto_sendMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (getCurrVer().isLE(BETA_8)) {
             field_2615 = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(1, i, j, k, l));
@@ -97,7 +97,7 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
 
     @Redirect(method = "method_1721", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
             opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
-    private void redirectPutField_2615(MultiplayerInteractionManager instance, boolean b) {
+    private void multiproto_redirectPutIsMining(MultiplayerInteractionManager instance, boolean b) {
         if (getCurrVer().isGE(BETA_8)) field_2615 = b;
     }
 
@@ -105,12 +105,12 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
-    private void redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
+    private void multiproto_redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if (getCurrVer().isGE(BETA_8)) handler.sendPacket(packet);
     }
 
     @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
-    private void redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
+    private void multiproto_redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
         if (getCurrVer().isLE(BETA_8)) {
             field_2611 = 0.0F;
             field_2612 = 0.0F;

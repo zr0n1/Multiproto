@@ -23,18 +23,19 @@ public class MinecraftMixin {
     private static Minecraft INSTANCE;
 
     @Inject(method = "method_2148", at = @At("HEAD"), cancellable = true)
-    private static void applyLightingParity(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(getCurrVer().isGE(BETA_9) || (!Multiproto.config.lightingParity && INSTANCE != null && INSTANCE.options.ao));
+    private static void multiproto_applyLightingParity(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue((getCurrVer().isGE(BETA_9) || !Multiproto.config.lightingParity) &&
+                INSTANCE != null && INSTANCE.options.ao);
     }
 
     @Inject(method = "method_2120", at = @At("HEAD"))
-    private void joinSinglePlayerWorld(CallbackInfo ci) {
+    private void multiproto_resetVersionOnSinglePlayer(CallbackInfo ci) {
         setCurrVer(VersionRegistry.INSTANCE.getVERSIONS$multiproto().last());
     }
 
     @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;fancyGraphics:Z"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V")))
-    private boolean applyFancyGrassParity(GameOptions options) {
+    private boolean multiproto_applyGrassSideParity(GameOptions options) {
         return getCurrVer().isGE(BETA_11) || (!Multiproto.config.textureParity && options.fancyGraphics);
     }
 }

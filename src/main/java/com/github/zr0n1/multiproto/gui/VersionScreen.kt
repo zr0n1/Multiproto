@@ -5,7 +5,7 @@ import com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreenAccessor
 import com.github.zr0n1.multiproto.mixin.gui.ScreenAccessor
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.DirectConnectScreenAccessor
 import com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui.EditServerScreenAccessor
-import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData
+import com.github.zr0n1.multiproto.mixinterface.MultiprotoEditServerScreen
 import com.github.zr0n1.multiproto.protocol.Version
 import com.github.zr0n1.multiproto.protocol.VersionRegistry
 import com.github.zr0n1.multiproto.protocol.lastVer
@@ -69,9 +69,8 @@ class VersionScreen(private val parent: Screen) : Screen() {
     }
 
     private fun selectVersion() {
-        if (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIMixins() && parent is EditServerScreenAccessor) {
-            lastSerVer = versions[listWidget.selectedIndex]
-            (parent.server as? MultiprotoServerData)?.multiproto_setVersion(lastSerVer)
+        if (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIMixins() && parent is MultiprotoEditServerScreen) {
+            parent.multiproto_setVersion(versions[listWidget.selectedIndex])
         } else lastVer = versions[listWidget.selectedIndex]
         closeScreen()
     }
@@ -101,10 +100,11 @@ class VersionScreen(private val parent: Screen) : Screen() {
         }
     }
 
-    private inner class VersionListWidget : EntryListWidget(minecraft, width, height, 32, height - 64, 24) {
+    private inner class VersionListWidget : EntryListWidget(minecraft, width, height,
+        32, height - 64, 24) {
         var selectedIndex = versions.indexOf(
-            if (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIMixins() && parent is EditServerScreenAccessor) {
-                (parent.server as? MultiprotoServerData)?.multiproto_getVersion()
+            if (MultiprotoMixinPlugin.shouldApplyMojangFixStAPIMixins() && parent is MultiprotoEditServerScreen) {
+                parent.multiproto_getVersion()
             } else lastVer
         )
 
@@ -128,19 +128,5 @@ class VersionScreen(private val parent: Screen) : Screen() {
         override fun getEntriesHeight() = versions.size * 24
         override fun isSelectedEntry(index: Int) = selectedIndex == index
         override fun renderBackground() = this@VersionScreen.renderBackground()
-    }
-
-    companion object {
-        @JvmStatic
-        private var _lastSerVer: Version? = null
-
-        @JvmStatic
-        var lastSerVer: Version
-            get() {
-                return _lastSerVer ?: lastVer
-            }
-            set(ver) {
-                _lastSerVer = ver
-            }
     }
 }

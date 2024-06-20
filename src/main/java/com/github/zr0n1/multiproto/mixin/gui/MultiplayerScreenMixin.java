@@ -16,14 +16,14 @@ public abstract class MultiplayerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     @SuppressWarnings("unchecked")
-    private void addCustomButton(CallbackInfo ci) {
+    private void multiproto_button(CallbackInfo ci) {
         ButtonWidget b = (ButtonWidget) buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
                 "Protocol version: " + getLastVer().nameRange(true)));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)
-    private void onCustomButtonClicked(ButtonWidget b, CallbackInfo ci) {
+    private void multiproto_buttonClicked(ButtonWidget b, CallbackInfo ci) {
         if (b.id == 100) {
             minecraft.setScreen(new VersionScreen(this));
             ci.cancel();
@@ -33,7 +33,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Inject(method = "buttonClicked", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V"),
             slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;save()V")))
-    private void setVersionOnConnect(ButtonWidget button, CallbackInfo ci) {
+    private void multiproto_setVersionOnConnect(ButtonWidget button, CallbackInfo ci) {
         setCurrVer(getLastVer());
     }
 }

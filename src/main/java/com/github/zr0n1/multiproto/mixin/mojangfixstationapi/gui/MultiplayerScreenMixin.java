@@ -17,7 +17,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
     @Inject(method = "joinServer", at = @At(value = "INVOKE",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"),
             remap = false)
-    private void setVersionOnConnect(ServerData server, CallbackInfo ci) {
+    private void multiproto_setVersionOnConnect(ServerData server, CallbackInfo ci) {
         setCurrVer(((MultiprotoServerData) server).multiproto_getVersion());
     }
 }

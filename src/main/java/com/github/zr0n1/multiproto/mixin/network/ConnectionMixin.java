@@ -40,18 +40,21 @@ public abstract class ConnectionMixin {
     private Object[] field_1295;
 
     @Inject(method = "sendPacket", at = @At("HEAD"))
-    private void multiproto$wrapPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
+    private void multiproto_wrapPacket(Packet packet, CallbackInfo ci,
+                                       @Local(argsOnly = true) LocalRef<Packet> packetRef) {
         if (PacketTranslator.hasWrapper(packet.getRawId())) packetRef.set(PacketTranslator.wrap(packet));
     }
 
     @Inject(method = "sendPacket", at = @At("HEAD"))
-    private void multiproto$redirectPacket(Packet packet, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Packet> packetRef) {
+    private void multiproto_redirectPacket(Packet packet, CallbackInfo ci,
+                                           @Local(argsOnly = true) LocalRef<Packet> packetRef) {
         if (PacketTranslator.hasRedirect(packet.getRawId())) packetRef.set(PacketTranslator.redirect(packet));
     }
 
     // this is so fucking stupid lmao
-    @Inject(method = "method_1129", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1), cancellable = true)
-    private void applyPackets(CallbackInfo ci, @Local int var1) {
+    @Inject(method = "method_1129", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1),
+            cancellable = true)
+    private void multiproto_applyPackets(CallbackInfo ci, @Local int var1) {
         while (!this.field_1286.isEmpty() && var1-- >= 0) {
             Packet packet = (Packet) this.field_1286.remove(0);
             if (PacketTranslator.hasApplier(packet.getRawId())) {

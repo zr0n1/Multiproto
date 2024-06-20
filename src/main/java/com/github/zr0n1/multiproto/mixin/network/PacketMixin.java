@@ -36,13 +36,15 @@ public abstract class PacketMixin {
     }
 
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)
-    private static void multiproto_readUTFLEBeta_10(DataInputStream stream, int maxLength, CallbackInfoReturnable<String> cir)
+    private static void multiproto_readString(DataInputStream stream, int maxLength, CallbackInfoReturnable<String> cir)
             throws IOException {
         if (getCurrVer().isLE(BETA_10)) cir.setReturnValue(stream.readUTF());
     }
 
-    @Inject(method = "writeString", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"), cancellable = true)
-    private static void multiproto_writeUTFLEBeta_10(String string, DataOutputStream stream, CallbackInfo ci) throws IOException {
+    @Inject(method = "writeString", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),
+            cancellable = true)
+    private static void multiproto_writeString(String string, DataOutputStream stream, CallbackInfo ci)
+            throws IOException {
         if (getCurrVer().isLE(BETA_10)) {
             stream.writeUTF(string);
             ci.cancel();

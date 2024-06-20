@@ -12,7 +12,7 @@ import static com.github.zr0n1.multiproto.protocol.ProtocolKt.*;
 public abstract class CobwebBlockBehaviorMixin {
 
     @Inject(method = "isFullCube", at = @At("HEAD"), cancellable = true)
-    private void applyCobwebFullCubeParity(CallbackInfoReturnable<Boolean> cir) {
+    private void multiproto_applyIsFullCubeParity(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(getCurrVer() == BETA_13);
     }
 }

@@ -13,6 +13,13 @@ import static com.github.zr0n1.multiproto.protocol.ProtocolKt.*;
 
 @Mixin(DirectConnectScreen.class)
 public abstract class DirectConnectScreenMixin extends Screen {
+    @Inject(method = "init", at = @At("TAIL"))
+    @SuppressWarnings("unchecked")
+    private void multiproto_button(CallbackInfo ci) {
+        buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
+                "Protocol version: " + getLastVer().nameRange(true),
+                button -> minecraft.setScreen(new VersionScreen(this))));
+    }
 
     @Inject(method = "lambda$init$0", at = @At(value = "INVOKE",
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;" +
@@ -20,13 +27,4 @@ public abstract class DirectConnectScreenMixin extends Screen {
     private void multiproto_setVersionOnConnect(CallbackButtonWidget button, CallbackInfo ci) {
         setCurrVer(ProtocolKt.getLastVer());
     }
-
-    @Inject(method = "init", at = @At("TAIL"))
-    @SuppressWarnings("unchecked")
-    private void multiproto_addVersionButton(CallbackInfo ci) {
-        buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-                "Protocol version: " + getLastVer().nameRange(true),
-                button -> minecraft.setScreen(new VersionScreen(this))));
-    }
-
 }

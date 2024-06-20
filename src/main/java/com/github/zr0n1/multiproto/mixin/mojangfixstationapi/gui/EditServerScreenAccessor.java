@@ -9,15 +9,15 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
 @Mixin(EditServerScreen.class)
 public interface EditServerScreenAccessor {
-    @Accessor
+    @Accessor(remap = false)
     ServerData getServer();
 
-    @Accessor
+    @Accessor(remap = false)
     ButtonWidget getButton();
 
-    @Accessor
+    @Accessor(remap = false)
     TextFieldWidget getNameTextField();
 
-    @Accessor
+    @Accessor(remap = false)
     TextFieldWidget getIpTextField();
 }

@@ -16,12 +16,14 @@ import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 @Mixin(MultiplayerServerListWidget.class)
 public abstract class MultiplayerServerListWidgetMixin {
 
-    @Shadow
+    @Shadow(remap = false)
     private @Final MultiplayerScreen parent;
 
     @Inject(method = "renderEntry", at = @At("TAIL"))
-    private void addVersionText(int i, int x, int y, int l, Tessellator arg, CallbackInfo ci, @Local ServerData server) {
+    private void multiproto_addVersionText(int i, int x, int y, int l, Tessellator arg, CallbackInfo ci,
+                                           @Local ServerData server) {
         this.parent.drawTextWithShadow(this.parent.getFontRenderer(),
-                ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true), x + 2, y + 23, 8421504);
+                ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true),
+                x + 2, y + 23, 8421504);
     }
 }

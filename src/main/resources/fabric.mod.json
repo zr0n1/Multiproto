@@ -64,6 +64,9 @@
     "loom:injected_interfaces": {
       "pl/telvarost/mojangfixstationapi/client/gui/multiplayer/ServerData": [
         "com/github/zr0n1/interfaces/MultiprotoServerData"
+      ],
+      "pl/telvarost/mojangfixstationapi/client/gui/multiplayer/EditServerScreen": [
+        "com/github/zr0n1/interfaces/MultiprotoEditServerScreen"
       ]
     }
   }
