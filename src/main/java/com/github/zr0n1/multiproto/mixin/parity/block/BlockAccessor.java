@@ -8,6 +8,17 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Block.class)
 public interface BlockAccessor {
+    @Accessor("resistance")
+    float getRawResistance();
+
+    @Accessor("resistance")
+    void setRawResistance(float f);
+
+    @Accessor("hardness")
+    void setRawHardness(float f);
+
+    @Accessor("translationKey")
+    void setRawTranslationKey(String key);
 
     @Accessor
     @Mutable

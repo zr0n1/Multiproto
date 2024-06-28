@@ -2,7 +2,7 @@ package com.github.zr0n1.multiproto;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
-import com.github.zr0n1.multiproto.parity.optional.TranslationHelper;
+import com.github.zr0n1.multiproto.protocol.Protocol;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
 import net.glasslauncher.mods.api.gcapi.impl.EventStorage;
@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import static com.github.zr0n1.multiproto.util.UtilKt.getMinecraft;
 
 public class Config implements PreConfigSavedListener {
-
     @ConfigName("Version name parity")
     @Comment("Shows version name on HUD < Beta 1.6")
     public Boolean showVersion = true;
@@ -61,7 +60,7 @@ public class Config implements PreConfigSavedListener {
             }
             if (translationParityA != translationParityB) {
                 translationParity = translationParityB;
-                TranslationHelper.INSTANCE.invoke();
+                if (translationParity) Protocol.getVer().translations(); else Protocol.resetTranslations();
             }
         }
     }

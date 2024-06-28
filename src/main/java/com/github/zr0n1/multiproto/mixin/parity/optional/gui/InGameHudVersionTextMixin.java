@@ -1,6 +1,8 @@
 package com.github.zr0n1.multiproto.mixin.parity.optional.gui;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.protocol.Protocol;
+import com.github.zr0n1.multiproto.protocol.Version;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -13,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.telvarost.mojangfixstationapi.Config;
 
-import static com.github.zr0n1.multiproto.protocol.ProtocolKt.BETA_11;
-import static com.github.zr0n1.multiproto.protocol.ProtocolKt.getCurrVer;
 import static com.github.zr0n1.multiproto.util.UtilKt.getFabric;
 
 @Mixin(InGameHud.class)
@@ -25,13 +25,13 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
 
     @Inject(method = "render", at = @At(value = "RETURN", shift = At.Shift.BY, by = -3))
     @SuppressWarnings("deprecation")
-    private void multiproto_applyVersionNameParity(CallbackInfo ci) {
+    private void multiproto_versionName(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
-        if ((!custom.isBlank() || (getCurrVer().isLE(BETA_11) && Multiproto.config.showVersion)) &&
+        if ((!custom.isBlank() || (Protocol.getVer().isLE(Version.B1_5_01) && Multiproto.config.showVersion)) &&
                 !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +
-                    (custom.isBlank() ? getCurrVer().name(false) : custom), 2, 2, 16777215);
+                    (custom.isBlank() ? Protocol.getVer().name() : custom), 2, 2, 16777215);
             GL11.glPopMatrix();
         }
     }
@@ -40,8 +40,8 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0)))
     private void multiproto_addDebugText(CallbackInfo ci) {
         if (minecraft.isWorldRemote() && Multiproto.config.showDebug) {
-            minecraft.textRenderer.drawWithShadow("Protocol version: " + getCurrVer().nameRange(true) +
-                            " (" + getCurrVer().protocol + ")",
+            minecraft.textRenderer.drawWithShadow("Protocol version: " +
+                            Protocol.getVer().name(true) + " (" + Protocol.getVer().version + ")",
                     2, (getFabric().isModLoaded("mojangfixstationapi") && Config.config.enableDebugMenuWorldSeed ?
                             116 : 100), 14737632);
         }

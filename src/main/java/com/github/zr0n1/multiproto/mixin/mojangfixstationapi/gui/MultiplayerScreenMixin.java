@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.mojangfixstationapi.gui;
 
 import com.github.zr0n1.multiproto.mixinterface.MultiprotoServerData;
+import com.github.zr0n1.multiproto.protocol.Protocol;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,8 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.MultiplayerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
-import static com.github.zr0n1.multiproto.protocol.ProtocolKt.*;
-
 @Mixin(MultiplayerScreen.class)
 public abstract class MultiplayerScreenMixin extends Screen {
 
@@ -18,6 +17,6 @@ public abstract class MultiplayerScreenMixin extends Screen {
             target = "Lpl/telvarost/mojangfixstationapi/client/gui/multiplayer/DirectConnectScreen;connect(Lnet/minecraft/client/Minecraft;Ljava/lang/String;)V"),
             remap = false)
     private void multiproto_setVersionOnConnect(ServerData server, CallbackInfo ci) {
-        setCurrVer(((MultiprotoServerData) server).multiproto_getVersion());
+        Protocol.setVer(((MultiprotoServerData) server).multiproto_getVersion());
     }
 }

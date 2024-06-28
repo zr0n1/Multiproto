@@ -17,15 +17,13 @@ import pl.telvarost.mojangfixstationapi.client.gui.CallbackButtonWidget;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.EditServerScreen;
 import pl.telvarost.mojangfixstationapi.client.gui.multiplayer.ServerData;
 
-import static com.github.zr0n1.multiproto.protocol.ProtocolKt.BETA_14;
-
 @Mixin(EditServerScreen.class)
 public abstract class EditServerScreenMixin extends Screen implements MultiprotoEditServerScreen {
     @Shadow(remap = false)
     private @Final ServerData server;
 
     @Unique
-    private Version multiproto$version = BETA_14;
+    private Version multiproto$version = Version.B1_7_3;
 
     @Override
     @Unique
@@ -43,7 +41,7 @@ public abstract class EditServerScreenMixin extends Screen implements Multiproto
     @SuppressWarnings("unchecked")
     private void multiproto_button(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-                "Protocol version: " + multiproto_getVersion().nameRange(true),
+                "Protocol version: " + multiproto_getVersion().name(true),
                 button -> minecraft.setScreen(new VersionScreen(this))));
     }
 
