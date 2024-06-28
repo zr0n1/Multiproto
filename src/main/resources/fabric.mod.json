@@ -27,12 +27,7 @@
         "value": "com.github.zr0n1.multiproto.Multiproto"
       }
     ],
-    "gcapi:presave": [
-      {
-        "adapter": "kotlin",
-        "value": "com.github.zr0n1.multiproto.Config"
-      }
-    ],
+    "gcapi:presave": ["com.github.zr0n1.multiproto.Config"],
     "hmifabric:item_list_refresh": [
       {
         "adapter": "kotlin",
