@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.protocol
 
-import com.github.zr0n1.multiproto.Multiproto
 import com.github.zr0n1.multiproto.event.RegisterVersionsListener
 import com.github.zr0n1.multiproto.mixin.entity.EntityAccessor
 import com.github.zr0n1.multiproto.protocol.Version.Type
@@ -59,12 +58,6 @@ abstract class Version(
     abstract fun packets()
 
     companion object {
-        private val _list: MutableList<Version> = ArrayList()
-        @JvmStatic
-        val LIST: List<Version> by lazy { _list.sorted() }
-
-        fun register(version: Version) = version.also { _list += it }
-
         /**
          * Beta 1.7.3 (Protocol version: 14)
          */
@@ -103,8 +96,8 @@ abstract class Version(
             override fun removals() = remove(Block.PISTON, Block.STICKY_PISTON, Item.SHEARS)
 
             override fun textures() {
-                Block.BRICKS.setTexture("block/bricks")
-                Block.COBBLESTONE.setTexture("block/cobblestone")
+                Block.BRICKS.setTexture("blocks/bricks")
+                Block.COBBLESTONE.setTexture("blocks/cobblestone")
                 slabSideTextures[0] = addBlockTexture("block/smooth_stone_slab_side").index
                 slabSideTextures[1] = addBlockTexture("block/sandstone_slab_side").index
                 slabSideTextures[2] = addBlockTexture("block/planks_slab_side").index
@@ -387,6 +380,12 @@ abstract class Version(
 //         */
 //        @JvmField
 //        val ALPHA_2 = register(Type.ALPHA, 2, "1.1.1", "1.1.2_01")
+
+        @JvmStatic
+        val LIST: List<Version> by lazy { _list.sorted() }
+        private val _list: MutableList<Version> = ArrayList()
+
+        fun register(version: Version) = version.also { _list += it }
 
         internal fun registerAll() {
             fabric.invokeEntrypoints("multiproto:register_versions", RegisterVersionsListener::class.java) { it() }

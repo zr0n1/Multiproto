@@ -19,6 +19,10 @@
       {
         "adapter": "kotlin",
         "value": "com.github.zr0n1.multiproto.Multiproto"
+      },
+      {
+        "adapter": "kotlin",
+        "value": "com.github.zr0n1.multiproto.parity.optional.TextureHelper"
       }
     ],
     "gcapi": [
@@ -36,7 +40,7 @@
     "hmifabric:item_list_refresh": [
       {
         "adapter": "kotlin",
-        "value": "com.github.zr0n1.multiproto.protocol.parity.HMIHelper"
+        "value": "com.github.zr0n1.multiproto.parity.HMIFabricIntegrationHelper"
       }
     ]
   },

@@ -3,7 +3,6 @@ package com.github.zr0n1.multiproto.protocol.parity
 import com.github.zr0n1.multiproto.Multiproto
 import com.github.zr0n1.multiproto.protocol.parity.BlockJuice.Companion.absorb
 import com.github.zr0n1.multiproto.protocol.parity.ItemJuice.Companion.absorb
-import com.github.zr0n1.multiproto.util.fabric
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -28,11 +27,10 @@ interface VersionParity {
     companion object {
         fun remove(vararg items: ItemConvertible) {
             removeCraftingRecipes(*items)
-            if (fabric.isModLoaded("hmifabric")) HMIHelper.removed += items.map(ItemConvertible::asItem)
-//            items.forEach {
-//                if (it is Block) Block.BLOCKS[it.id] = null
-//                Item.ITEMS[it.asItem().id] = null
-//            }
+            items.forEach {
+                if (it is Block) Block.BLOCKS[it.id] = null
+                Item.ITEMS[it.asItem().id] = null
+            }
         }
         
         fun replaceCraftingRecipe(output: ItemStack, vararg recipe: Any) =

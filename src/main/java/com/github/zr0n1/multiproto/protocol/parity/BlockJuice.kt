@@ -1,6 +1,5 @@
 package com.github.zr0n1.multiproto.protocol.parity
 
-import com.github.zr0n1.multiproto.Multiproto
 import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -10,7 +9,7 @@ import net.modificationstation.stationapi.api.util.Namespace
 class BlockJuice private constructor(val block: Block) {
     val accessor: BlockAccessor = block as BlockAccessor
     var textureId = block.textureId
-    var translationKey: String? = block.translationKey
+    var translationKey: String = block.translationKey
     var hardness
         get() = block.hardness
         set(value) {
@@ -61,7 +60,7 @@ class BlockJuice private constructor(val block: Block) {
         Block.BLOCKS_RANDOM_TICK[block.id] = this.tickRandomly
         Block.BLOCKS_LIGHT_OPACITY[block.id] = this.opacity
         Block.BLOCKS_WITH_ENTITY[block.id] = this.hasEntity
-        Block.BLOCKS_LIGHT_LUMINANCE[block.id] = this.luminance
+        Block.BLOCKS_LIGHT_LUMINANCE[block.id] = if (block.isOpaque && this.luminance == 0) 255 else this.luminance
         Block.BLOCKS_IGNORE_META_UPDATE[block.id] = this.ignoreMetaUpdates
         Block.BLOCKS_ALLOW_VISION[block.id] = !material.blocksVision()
         Block.BLOCKS_OPAQUE[block.id] = block.isOpaque

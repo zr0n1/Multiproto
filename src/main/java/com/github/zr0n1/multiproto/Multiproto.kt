@@ -34,7 +34,9 @@ internal object Multiproto {
     }
 
     @EventListener
-    private fun registerProtocolVersions(event: PacketRegisterEvent) = Version.registerAll()
+    private fun registerProtocolVersions(event: PacketRegisterEvent) {
+        Version.registerAll()
+    }
 
     @EventListener
     fun registerTextures(event: TextureRegisterEvent) {
