@@ -14,7 +14,7 @@ open class ItemJuice protected constructor(val item: Item) {
     var isHandheld: Boolean = item.isHandheld
     var hasSubtypes: Boolean = item.hasSubtypes()
     var craftingReturnItem: Item? = item.craftingReturnItem
-    var translationKey: String = item.translationKey
+    var translationKey: String? = item.translationKey
 
     @Suppress("unused")
     fun translate(prefix: String? = null) = translate(Multiproto.NAMESPACE, prefix)
@@ -30,7 +30,7 @@ open class ItemJuice protected constructor(val item: Item) {
         accessor.setRawTranslationKey(this.translationKey)
         accessor.setHandheld(this.isHandheld)
         item.setHasSubtypes(this.hasSubtypes)
-        item.craftingReturnItem = this.craftingReturnItem
+        if (item.maxCount == 1) item.craftingReturnItem = this.craftingReturnItem
     }
 
     companion object {

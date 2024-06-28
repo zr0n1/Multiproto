@@ -21,10 +21,9 @@ import kotlin.reflect.full.primaryConstructor
 
 @Suppress("unchecked_cast")
 object Protocol {
-    private val listeners: List<VersionChangedListener> =
-        fabric.getEntrypoints("multiproto:version_changed", VersionChangedListener::class.java).also {
-            if (fabric.isModLoaded("hmifabric")) it += HMIHelper
-        }.toList()
+    private val listeners =
+        fabric.getEntrypoints("multiproto:version_changed", VersionChangedListener::class.java).toMutableList()
+            .also { if (fabric.isModLoaded("hmifabric")) it += HMIHelper }.toList()
 
     /**
      * Current protocol version.
@@ -59,10 +58,8 @@ object Protocol {
 
     private val BASE_CRAFTING_RECIPES: List<*> by lazy { CraftingRecipeManager.getInstance().recipes.toList() }
     private val BASE_SMELTING_RECIPES: Map<*, *> by lazy { SmeltingRecipeManager.getInstance().recipes.toMap() }
-    private val BASE_BLOCKS = Block.BLOCKS.copyOf()
-    private val BASE_ITEMS = Item.ITEMS.copyOf()
-    private val BASE_BLOCK_JUICE = BASE_BLOCKS.mapNotNull { it?.squeeze() }.toSet()
-    private val BASE_ITEM_JUICE = BASE_ITEMS.mapNotNull { it?.squeeze() }.toSet()
+    private val BASE_BLOCK_JUICE by lazy { Block.BLOCKS.mapNotNull { it?.squeeze() }.toSet() }
+    private val BASE_ITEM_JUICE by lazy { Item.ITEMS.mapNotNull { it?.squeeze() }.toSet() }
 
     @JvmStatic
     fun wrap(packet: Packet): Packet? = wrappers[packet.rawId]?.invoke(packet).also { it?.wrapperId = packet.rawId }
@@ -99,14 +96,13 @@ object Protocol {
         CraftingRecipeManager.getInstance().recipes.addAll(BASE_CRAFTING_RECIPES)
         SmeltingRecipeManager.getInstance().recipes.clear()
         SmeltingRecipeManager.getInstance().recipes += BASE_SMELTING_RECIPES
-        BASE_BLOCKS.forEach { Block.BLOCKS[it.id] = it }
-        BASE_ITEMS.forEach { Item.ITEMS[it.id] = it }
         BASE_BLOCK_JUICE.forEach(BlockJuice::soak)
         BASE_ITEM_JUICE.forEach(ItemJuice::soak)
         resetTextures()
         resetTranslations()
     }
 
+    @JvmStatic
     fun resetTextures() {
         BASE_BLOCK_JUICE.forEach { it.block.textureId = it.textureId }
         BASE_ITEM_JUICE.forEach { it.item.setTextureId(it.textureId) }
