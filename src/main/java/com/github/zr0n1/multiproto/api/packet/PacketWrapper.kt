@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.protocol.packet
+package com.github.zr0n1.multiproto.api.packet
 
 import net.minecraft.network.NetworkHandler
 import net.minecraft.network.packet.Packet
@@ -6,9 +6,9 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.lang.reflect.Modifier
 
-class PacketWrapper<T : Any> (
+class PacketWrapper<T : Any>(
     private val holder: T,
-    vararg entries: FieldEntry<*>,
+    vararg entries: FieldEntry<*>?,
     private val apply: (T, NetworkHandler) -> Unit = if (holder is Packet) {
         { packet, handler -> (packet as Packet).apply(handler) }
     } else { _, _ -> },
@@ -16,7 +16,7 @@ class PacketWrapper<T : Any> (
     @JvmField
     var wrapperId: Int = -1
 ) : Packet() {
-    private var entries = entries.toMutableList().apply {
+    private var entries = entries.filterNotNull().toMutableList().apply {
         var i = 0
         forEach {
             if (!it.unique && it.fieldIndex == -1) {
@@ -33,7 +33,7 @@ class PacketWrapper<T : Any> (
         .toTypedArray()
 
     private val unique: Array<Any?> = Array(entries.size) {
-        if (entries[it].unique) entries[it].writeValue(holder) else null
+        if (entries[it]?.unique == true) entries[it]!!.writeValue(holder) else null
     }
 
     fun infer() = apply {

@@ -1,7 +1,7 @@
-package com.github.zr0n1.multiproto.protocol.packet
+package com.github.zr0n1.multiproto.api.packet
 
-import com.github.zr0n1.multiproto.protocol.Protocol
-import com.github.zr0n1.multiproto.protocol.Version
+import com.github.zr0n1.multiproto.protocol.BETALPHA_8
+import com.github.zr0n1.multiproto.protocol.currVer
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.Packet
 import java.io.DataInputStream
@@ -44,6 +44,7 @@ interface DataType<T> {
     }
 
     companion object {
+        @JvmField
         val BYTE: DataType<Byte> = Raw(
             Byte::class,
             DataInputStream::readByte,
@@ -51,6 +52,7 @@ interface DataType<T> {
             Byte.SIZE_BYTES
         )
 
+        @JvmField
         val SHORT: DataType<Short> = Raw(
             Short::class,
             DataInputStream::readShort,
@@ -58,6 +60,7 @@ interface DataType<T> {
             Short.SIZE_BYTES
         )
 
+        @JvmField
         val INT: DataType<Int> = Raw(
             Int::class,
             DataInputStream::readInt,
@@ -65,6 +68,7 @@ interface DataType<T> {
             Int.SIZE_BYTES
         )
 
+        @JvmField
         val LONG: DataType<Long> = Raw(
             Long::class,
             DataInputStream::readLong,
@@ -72,6 +76,7 @@ interface DataType<T> {
             Long.SIZE_BYTES
         )
 
+        @JvmField
         val FLOAT: DataType<Float> = Raw(
             Float::class,
             DataInputStream::readFloat,
@@ -79,6 +84,7 @@ interface DataType<T> {
             Float.SIZE_BYTES
         )
 
+        @JvmField
         val DOUBLE: DataType<Double> = Raw(
             Double::class,
             DataInputStream::readDouble,
@@ -86,6 +92,7 @@ interface DataType<T> {
             java.lang.Double.BYTES
         )
 
+        @JvmField
         val BOOLEAN: DataType<Boolean> = Raw(
             Boolean::class,
             DataInputStream::readBoolean,
@@ -93,19 +100,20 @@ interface DataType<T> {
             0
         )
 
+        @JvmField
         val UTF: DataType<String> = Raw(
             String::class,
             DataInputStream::readUTF,
             DataOutputStream::writeUTF
         ) { it.length }
 
-        val ITEM_STACK : DataType<ItemStack?> = object : DataType<ItemStack?> {
+        @JvmField
+        val ITEM_STACK = object : DataType<ItemStack?> {
             override fun read(stream: DataInputStream): ItemStack? {
                 val id = stream.readShort()
                 if (id >= 0) {
                     val count = stream.readByte()
-                    val damage = if (Protocol.version <= Version.B1_1_02) stream.readByte().toShort()
-                    else stream.readShort()
+                    val damage = if (currVer <= BETALPHA_8) stream.readByte().toShort() else stream.readShort()
                     return ItemStack(id.toInt(), count.toInt(), damage.toInt())
                 } else return null
             }
@@ -116,13 +124,14 @@ interface DataType<T> {
                 } else if (t is ItemStack) {
                     stream.writeShort(t.itemId)
                     stream.writeByte(t.count)
-                    if (Protocol.version <= Version.B1_1_02) stream.writeByte(t.damage) else stream.writeShort(t.damage)
+                    if (currVer <= BETALPHA_8) stream.writeByte(t.damage) else stream.writeShort(t.damage)
                 }
             }
 
-            override fun size(t: Any?): Int = if (Protocol.version <= Version.B1_1_02) 4 else 5
+            override fun size(t: Any?): Int = if (currVer <= BETALPHA_8) 4 else 5
         }
 
+        @JvmStatic
         fun string(maxLength: Int, size: Int) = Raw(
             String::class,
             { Packet.readString(it, maxLength) },
@@ -130,19 +139,22 @@ interface DataType<T> {
             size
         )
 
+        @JvmStatic
         fun string(maxLength: Int) = Raw(
             String::class,
             { Packet.readString(it, maxLength) },
             { stream, s -> Packet.writeString(s, stream) }
         ) { it.length }
 
+        @JvmStatic
         fun <T : Any> dummy(t: T): DataType<T> = object : DataType<T> {
             override fun read(stream: DataInputStream) = t
             override fun write(stream: DataOutputStream, t: Any?) { }
             override fun size(t: Any?): Int = 0
         }
 
-        private val TYPES = mapOf(
+        @JvmField
+        val TYPES = mapOf(
             Byte::class.java to BYTE,
             Short::class.java to SHORT,
             Int::class.java to INT,
@@ -154,6 +166,7 @@ interface DataType<T> {
             ItemStack::class.java to ITEM_STACK
         )
 
+        @JvmStatic
         inline fun <reified T : Any> array(type: Raw<T>): DataType<Array<T>> {
             return Raw(
                 Array<T>::class,
@@ -171,6 +184,7 @@ interface DataType<T> {
             )
         }
 
+        @JvmStatic
         fun <T : Any> of(type: Class<T>): DataType<T>? {
             return if (type.isArray) {
                 array(of(type.componentType) as Raw<Any>) as? Raw<T>

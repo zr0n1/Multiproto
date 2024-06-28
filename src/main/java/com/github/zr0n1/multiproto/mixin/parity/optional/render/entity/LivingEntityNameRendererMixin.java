@@ -1,8 +1,6 @@
 package com.github.zr0n1.multiproto.mixin.parity.optional.render.entity;
 
 import com.github.zr0n1.multiproto.Multiproto;
-import com.github.zr0n1.multiproto.protocol.Protocol;
-import com.github.zr0n1.multiproto.protocol.Version;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -12,6 +10,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import static com.github.zr0n1.multiproto.protocol.ProtocolKt.BETA_8;
+import static com.github.zr0n1.multiproto.protocol.ProtocolKt.getCurrVer;
+
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
 
@@ -20,7 +21,7 @@ public abstract class LivingEntityNameRendererMixin extends EntityRenderer {
     @SuppressWarnings("deprecation")
     private float multiproto_applyNameRenderParity(float scale, @Local(ordinal = 0) float distance,
                                                    @Local(argsOnly = true) LivingEntity e) {
-        return (Protocol.getVer().isLE(Version.B1_2_02) && Multiproto.config.nameRenderParity &&
-                e instanceof PlayerEntity) ? (float) ((double) scale * (Math.sqrt(distance) / 2.0D)) : scale;
+        return (getCurrVer().isLE(BETA_8) && Multiproto.config.nameRenderParity && e instanceof PlayerEntity) ?
+                (float) ((double) scale * (Math.sqrt(distance) / 2.0D)) : scale;
     }
 }

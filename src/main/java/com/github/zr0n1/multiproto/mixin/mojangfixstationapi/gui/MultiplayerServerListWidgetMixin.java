@@ -23,7 +23,7 @@ public abstract class MultiplayerServerListWidgetMixin {
     private void multiproto_addVersionText(int i, int x, int y, int l, Tessellator arg, CallbackInfo ci,
                                            @Local ServerData server) {
         this.parent.drawTextWithShadow(this.parent.getFontRenderer(),
-                ((MultiprotoServerData) server).multiproto_getVersion().name(true),
+                ((MultiprotoServerData) server).multiproto_getVersion().nameRange(true),
                 x + 2, y + 23, 8421504);
     }
 }

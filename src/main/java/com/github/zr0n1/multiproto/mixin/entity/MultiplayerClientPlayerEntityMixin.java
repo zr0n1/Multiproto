@@ -14,7 +14,7 @@ public abstract class MultiplayerClientPlayerEntityMixin extends PlayerEntity {
 
 //    @Inject(method = "method_1923", at = @At("HEAD"))
 //    private void multiproto_updateInventory(CallbackInfo ci) {
-//        if (VersionManager.isLE(Version.ALPHA_6) && ) {
+//        if (VersionManager.isLE(Version.ALPHAWEEN_6) && ) {
 //
 //        }
 //    }

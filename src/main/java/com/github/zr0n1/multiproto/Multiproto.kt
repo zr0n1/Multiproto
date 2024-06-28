@@ -1,12 +1,10 @@
 package com.github.zr0n1.multiproto
 
-import com.github.zr0n1.multiproto.protocol.parity.MultiplayerClientPlayerOnLadderHandler
-import com.github.zr0n1.multiproto.protocol.Protocol
-import com.github.zr0n1.multiproto.protocol.Version
+import com.github.zr0n1.multiproto.parity.MultiplayerClientPlayerOnLadderHandler
+import com.github.zr0n1.multiproto.protocol.VersionRegistry
 import net.glasslauncher.mods.api.gcapi.api.GConfig
 import net.mine_diver.unsafeevents.listener.EventListener
 import net.minecraft.client.network.MultiplayerClientPlayerEntity
-import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent.HandlerRegister
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint
@@ -35,11 +33,6 @@ internal object Multiproto {
 
     @EventListener
     private fun registerProtocolVersions(event: PacketRegisterEvent) {
-        Version.registerAll()
-    }
-
-    @EventListener
-    fun registerTextures(event: TextureRegisterEvent) {
-        if (config.textureParity) Protocol.version.textures() else Protocol.resetTextures()
+        VersionRegistry.registerAll()
     }
 }
