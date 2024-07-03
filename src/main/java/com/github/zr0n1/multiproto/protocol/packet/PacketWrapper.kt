@@ -32,7 +32,7 @@ class PacketWrapper<T : Any> (
         }
         .toTypedArray()
 
-    private val unique: Array<Any?> = Array(entries.size) {
+    private val uniqueValues: Array<Any?> = Array(entries.size) {
         if (entries[it].unique) entries[it].writeValue(holder) else null
     }
 
@@ -46,14 +46,14 @@ class PacketWrapper<T : Any> (
 
     override fun read(stream: DataInputStream) = entries.forEachIndexed { i, it ->
         it.handler.read(stream).also { data ->
-            if (it.unique) unique[i] = data
+            if (it.unique) uniqueValues[i] = data
             else fields[it.fieldIndex][holder] = data
         }
     }
 
     override fun write(stream: DataOutputStream) = entries.forEachIndexed { i, it ->
         it.handler.write(stream,
-            unique[i] ?: it.writeValue(holder)?.also { v ->
+            uniqueValues[i] ?: it.writeValue(holder)?.also { v ->
                 fields[it.fieldIndex][holder] = v
             } ?: fields[it.fieldIndex][holder])
     }.also { postWrite(holder) }
@@ -61,7 +61,7 @@ class PacketWrapper<T : Any> (
     override fun size(): Int {
         var size = 0
         entries.forEachIndexed { i, it ->
-            size += (it.handler.size(unique[i] ?: it.writeValue(holder) ?: fields[it.fieldIndex][holder]))
+            size += (it.handler.size(uniqueValues[i] ?: it.writeValue(holder) ?: fields[it.fieldIndex][holder]))
         }
         return size
     }

@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.optional.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.parity.TextureHelper;
 import com.github.zr0n1.multiproto.protocol.Protocol;
 import com.github.zr0n1.multiproto.protocol.Version;
 import net.minecraft.block.Block;
@@ -22,15 +23,15 @@ public abstract class RedstoneWireBlockTextureMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void multiproto_applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_2_02) && Multiproto.config.textureParity) {
-            cir.setReturnValue(meta > 0 ? Version.redstoneWireTextures[1] : Version.redstoneWireTextures[0]);
+        if (Protocol.verLE(Version.B1_2_02) && Multiproto.config.textureParity) {
+            cir.setReturnValue(meta > 0 ? TextureHelper.redstoneWire[1] : TextureHelper.redstoneWire[0]);
         }
     }
 
     @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
     private void multiproto_applyTextureColorParity(BlockView blockView, int x, int y, int z,
                                                     CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_4_01) && Multiproto.config.textureParity) {
+        if (Protocol.verLE(Version.B1_4_01) && Multiproto.config.textureParity) {
             cir.setReturnValue(super.getColorMultiplier(blockView, x, y, z));
         }
     }

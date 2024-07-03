@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.telvarost.mojangfixstationapi.Config;
 
-import static com.github.zr0n1.multiproto.util.UtilKt.getFabric;
+import static com.github.zr0n1.multiproto.Util.getFabric;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudVersionTextMixin extends DrawContext {
@@ -27,7 +27,7 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     @SuppressWarnings("deprecation")
     private void multiproto_versionName(CallbackInfo ci) {
         String custom = Multiproto.config.customVersionName;
-        if ((!custom.isBlank() || (Protocol.getVer().isLE(Version.B1_5_01) && Multiproto.config.showVersion)) &&
+        if ((!custom.isBlank() || (Protocol.verLE(Version.B1_5_01) && Multiproto.config.showVersion)) &&
                 !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +

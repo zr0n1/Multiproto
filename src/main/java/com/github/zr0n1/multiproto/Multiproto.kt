@@ -1,14 +1,12 @@
 package com.github.zr0n1.multiproto
 
-import com.github.zr0n1.multiproto.protocol.parity.MultiplayerClientPlayerOnLadderHandler
-import com.github.zr0n1.multiproto.protocol.Protocol
-import com.github.zr0n1.multiproto.protocol.Version
+import com.github.zr0n1.multiproto.parity.MultiplayerOnLadderHandler
+import com.github.zr0n1.multiproto.parity.VersionParity
 import net.glasslauncher.mods.api.gcapi.api.GConfig
 import net.mine_diver.unsafeevents.listener.EventListener
 import net.minecraft.client.network.MultiplayerClientPlayerEntity
-import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent
-import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent.HandlerRegister
-import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent
+import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint
 import net.modificationstation.stationapi.api.util.Namespace
 import org.apache.logging.log4j.Logger
@@ -27,17 +25,15 @@ internal object Multiproto {
     val config = Config()
 
     @EventListener
-    private fun registerPlayerHandlers(event: HandlerRegister) {
-        if (event.player is MultiplayerClientPlayerEntity) {
-            event.playerHandlers.add(MultiplayerClientPlayerOnLadderHandler(event.player as MultiplayerClientPlayerEntity))
-        }
+    private fun initJuice(event: AfterBlockAndItemRegisterEvent) {
+        VersionParity.BASE_BLOCK_JUICE
+        VersionParity.BASE_ITEM_JUICE
     }
 
     @EventListener
-    private fun registerProtocolVersions(event: PacketRegisterEvent) = Version.registerAll()
-
-    @EventListener
-    fun registerTextures(event: TextureRegisterEvent) {
-        if (config.textureParity) Protocol.version.textures() else Protocol.resetTextures()
+    private fun registerPlayerHandlers(event: PlayerEvent.HandlerRegister) {
+        if (event.player is MultiplayerClientPlayerEntity) {
+            event.playerHandlers.add(MultiplayerOnLadderHandler(event.player as MultiplayerClientPlayerEntity))
+        }
     }
 }

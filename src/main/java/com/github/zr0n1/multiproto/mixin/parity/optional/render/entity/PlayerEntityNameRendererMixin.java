@@ -23,7 +23,7 @@ public abstract class PlayerEntityNameRendererMixin extends LivingEntityRenderer
             at = @At("STORE"), ordinal = 1)
     @SuppressWarnings("deprecation")
     private float multiproto_applyNameRenderParity(float scale, @Local(argsOnly = true) PlayerEntity e) {
-        return (Protocol.getVer().isLE(Version.B1_2_02) && Multiproto.config.nameRenderParity) ?
+        return (Protocol.verLE(Version.B1_2_02) && Multiproto.config.nameRenderParity) ?
                 (float) ((double) scale * (Math.sqrt(e.getDistance(dispatcher.field_2496)) / 2.0D)) : scale;
     }
 }

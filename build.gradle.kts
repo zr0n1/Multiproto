@@ -78,7 +78,6 @@ repositories {
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings("net.glasslauncher:biny:${property("mappings")}:v2")
     modImplementation("babric:fabric-loader:${property("loader_version")}")
@@ -92,17 +91,29 @@ dependencies {
 
     modImplementation("net.modificationstation:StationAPI:${property("stapi_version")}")
     modImplementation("net.glasslauncher.mods:GlassConfigAPI:${property("gcapi_version")}")
-    // Optional dependencies
-    modLocalRuntime("com.github.calmilamsy:ModMenu:${property("modmenu_version")}") {
+
+    // optional dependencies
+    modImplementation(
+        "net.glasslauncher:HowManyItems-Fabric-Unofficial:" +
+            property("hmifabric_version")
+    ) {
         isTransitive = false
     }
-    modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:${property("hmifabric_version")}") {
-        isTransitive = false
-    }
-    modImplementation("maven.modrinth:mojangfix-stationapi-edition:${property("mojangfixstationapi_version")}") {
+    modImplementation(
+        "maven.modrinth:mojangfix-stationapi-edition:" +
+                property("mojangfixstationapi_version")
+    ) {
         isTransitive = false
     }
     implementation("com.github.GeyserMC:MCAuthLib:d9d773e5d50327c33898c65cd545a4f6ef3ba1b5") {
+        isTransitive = false
+    }
+
+    // local runtimes
+    modLocalRuntime("com.github.calmilamsy:ModMenu:${property("modmenu_version")}") {
+        isTransitive = false
+    }
+    modLocalRuntime("maven.modrinth:bh-creative:0.4.6") {
         isTransitive = false
     }
 }

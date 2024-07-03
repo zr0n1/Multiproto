@@ -2,13 +2,15 @@ package com.github.zr0n1.multiproto;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
+import com.github.zr0n1.multiproto.parity.TextureHelper;
+import com.github.zr0n1.multiproto.parity.VersionParity;
 import com.github.zr0n1.multiproto.protocol.Protocol;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.PreConfigSavedListener;
 import net.glasslauncher.mods.api.gcapi.impl.EventStorage;
 import net.minecraft.client.Minecraft;
 
-import static com.github.zr0n1.multiproto.util.UtilKt.getMinecraft;
+import static com.github.zr0n1.multiproto.Util.getMinecraft;
 
 public class Config implements PreConfigSavedListener {
     @ConfigName("Version name parity")
@@ -52,7 +54,8 @@ public class Config implements PreConfigSavedListener {
             Minecraft mc = getMinecraft();
             if (textureParityA != textureParityB) {
                 textureParity = textureParityB;
-                mc.textureManager.method_1096();
+                if (Multiproto.config.textureParity) Protocol.getVer().textures(); else TextureHelper.reset();
+                mc.worldRenderer.method_1537();
             }
             if (lightingParityA != lightingParityB && mc.isWorldRemote()) {
                 lightingParity = lightingParityB;
@@ -60,7 +63,7 @@ public class Config implements PreConfigSavedListener {
             }
             if (translationParityA != translationParityB) {
                 translationParity = translationParityB;
-                if (translationParity) Protocol.getVer().translations(); else Protocol.resetTranslations();
+                if (translationParity) Protocol.getVer().translations(); else VersionParity.resetTranslations();
             }
         }
     }

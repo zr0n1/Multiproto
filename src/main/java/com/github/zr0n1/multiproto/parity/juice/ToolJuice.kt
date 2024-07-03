@@ -1,4 +1,4 @@
-package com.github.zr0n1.multiproto.protocol.parity
+package com.github.zr0n1.multiproto.parity.juice
 
 import com.github.zr0n1.multiproto.mixin.parity.item.ToolItemAccessor
 import net.minecraft.block.Block

@@ -19,13 +19,8 @@ import java.io.IOException;
 public abstract class PacketMixin {
 
     @Inject(method = "create", at = @At("RETURN"), cancellable = true)
-    private static void multiproto_wrapPacket(int id, CallbackInfoReturnable<Packet> cir) {
-        if (Protocol.hasWrapper(id)) cir.setReturnValue(Protocol.wrap(cir.getReturnValue()));
-    }
-
-    @Inject(method = "create", at = @At("HEAD"), cancellable = true)
-    private static void multiproto_replacePacket(int id, CallbackInfoReturnable<Packet> cir) {
-        if (Protocol.isReplaced(id)) cir.setReturnValue(Protocol.replace(id));
+    private static void multiproto_translatePacket(int id, CallbackInfoReturnable<Packet> cir) {
+        if (Protocol.isTranslated(id)) cir.setReturnValue(Protocol.translate(id, cir.getReturnValue()));
     }
 
     @Inject(method = "getRawId", at = @At("HEAD"), cancellable = true)
@@ -37,14 +32,14 @@ public abstract class PacketMixin {
     @Inject(method = "readString", at = @At("HEAD"), cancellable = true)
     private static void multiproto_readString(DataInputStream stream, int maxLength, CallbackInfoReturnable<String> cir)
             throws IOException {
-        if (Protocol.getVer().isLE(Version.B1_4_01)) cir.setReturnValue(stream.readUTF());
+        if (Protocol.verLE(Version.B1_4_01)) cir.setReturnValue(stream.readUTF());
     }
 
     @Inject(method = "writeString", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeShort(I)V"),
             cancellable = true)
     private static void multiproto_writeString(String string, DataOutputStream stream, CallbackInfo ci)
             throws IOException {
-        if (Protocol.getVer().isLE(Version.B1_4_01)) {
+        if (Protocol.verLE(Version.B1_4_01)) {
             stream.writeUTF(string);
             ci.cancel();
         }

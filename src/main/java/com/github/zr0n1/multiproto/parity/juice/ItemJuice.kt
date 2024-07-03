@@ -1,10 +1,8 @@
-package com.github.zr0n1.multiproto.protocol.parity
+package com.github.zr0n1.multiproto.parity.juice
 
-import com.github.zr0n1.multiproto.Multiproto
 import com.github.zr0n1.multiproto.mixin.parity.item.ItemAccessor
 import net.minecraft.item.Item
 import net.modificationstation.stationapi.api.item.tool.ToolLevel
-import net.modificationstation.stationapi.api.util.Namespace
 
 open class ItemJuice protected constructor(val item: Item) {
     val accessor = item as ItemAccessor
@@ -15,13 +13,6 @@ open class ItemJuice protected constructor(val item: Item) {
     var hasSubtypes: Boolean = item.hasSubtypes()
     var craftingReturnItem: Item? = item.craftingReturnItem
     var translationKey: String? = item.translationKey
-
-    @Suppress("unused")
-    fun translate(prefix: String? = null) = translate(Multiproto.NAMESPACE, prefix)
-
-    fun translate(namespace: Namespace, prefix: String? = null) {
-        this.translationKey = "$namespace.${if (prefix != null) "$prefix." else ""}${item.translationKey}"
-    }
 
     open fun soak() {
         item.maxCount = this.maxCount

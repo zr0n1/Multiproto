@@ -1,23 +1,19 @@
 package com.github.zr0n1.multiproto.protocol
 
-import com.github.zr0n1.multiproto.Multiproto
-import com.github.zr0n1.multiproto.event.RegisterVersionsListener
 import com.github.zr0n1.multiproto.mixin.entity.EntityAccessor
+import com.github.zr0n1.multiproto.parity.RecipeHelper.removeCrafting
+import com.github.zr0n1.multiproto.parity.RecipeHelper.removeSmelting
+import com.github.zr0n1.multiproto.parity.RecipeHelper.replaceCrafting
 import com.github.zr0n1.multiproto.protocol.Version.Type
 import com.github.zr0n1.multiproto.protocol.packet.DataType
 import com.github.zr0n1.multiproto.protocol.packet.FieldEntry
 import com.github.zr0n1.multiproto.protocol.packet.PacketWrapper
-import com.github.zr0n1.multiproto.protocol.parity.BlockJuice.Companion.absorb
-import com.github.zr0n1.multiproto.protocol.parity.ToolJuice.Companion.absorb
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.addBlockTexture
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.remove
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.removeCraftingRecipes
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.removeSmeltingRecipes
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.replaceCraftingRecipe
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.setTexture
-import com.github.zr0n1.multiproto.protocol.parity.VersionParity.Companion.translate
-import com.github.zr0n1.multiproto.util.fabric
+import com.github.zr0n1.multiproto.parity.juice.BlockJuice.Companion.absorb
+import com.github.zr0n1.multiproto.parity.TextureHelper
+import com.github.zr0n1.multiproto.parity.juice.ToolJuice.Companion.absorb
+import com.github.zr0n1.multiproto.parity.VersionParity
+import com.github.zr0n1.multiproto.parity.VersionParity.Companion.remove
+import com.github.zr0n1.multiproto.parity.VersionParity.Companion.translate
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.item.Item
@@ -86,9 +82,6 @@ abstract class Version(
          * Beta 1.6.6 (Protocol version: 13)
          */
         @JvmField
-        val slabSideTextures = IntArray(4)
-
-        @JvmField
         val B1_6_6 = register(object : Version(Type.BETA, 13, "1.6.6"), VersionParity by B1_7_3 {
             override fun packets() = B1_7_3.packets()
 
@@ -103,12 +96,8 @@ abstract class Version(
             override fun removals() = remove(Block.PISTON, Block.STICKY_PISTON, Item.SHEARS)
 
             override fun textures() {
-                Block.BRICKS.setTexture("block/bricks")
-                Block.COBBLESTONE.setTexture("block/cobblestone")
-                slabSideTextures[0] = addBlockTexture("block/smooth_stone_slab_side").index
-                slabSideTextures[1] = addBlockTexture("block/sandstone_slab_side").index
-                slabSideTextures[2] = addBlockTexture("block/planks_slab_side").index
-                slabSideTextures[3] = addBlockTexture("block/cobblestone_slab_side").index
+                Block.BRICKS.textureId = TextureHelper.oldBricks
+                Block.COBBLESTONE.textureId = TextureHelper.oldCobble
             }
         })
 
@@ -181,7 +170,7 @@ abstract class Version(
             override fun removals() {
                 B1_5_01.removals()
                 remove(Block.COBWEB, Block.DETECTOR_RAIL, Block.POWERED_RAIL)
-                replaceCraftingRecipe(
+                replaceCrafting(
                     ItemStack(Block.LADDER, 2),
                     ItemStack(Block.LADDER, 1),
                     "# #", "###", "# #", '#', Item.STICK
@@ -218,32 +207,25 @@ abstract class Version(
          * Beta 1.2_02 (Protocol version: 8) (Notch moment)
          */
         @JvmField
-        val redstoneWireTextures = IntArray(2)
-
-        @JvmField
         val B1_2_02 = register(object : Version(Type.BETA, 8, "1.2_02"), VersionParity by B1_3_01 {
             override fun packets() = B1_3_01.packets()
 
             override fun removals() {
                 B1_3_01.removals()
                 remove(Block.BED, Item.BED, Block.REPEATER, Item.REPEATER)
-                removeCraftingRecipes(
+                removeCrafting(
                     ItemStack(Block.SLAB, 3, 3),
                     ItemStack(Block.SLAB, 3, 2),
                     ItemStack(Block.SLAB, 3, 1)
                 )
-                replaceCraftingRecipe(ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE)
-                replaceCraftingRecipe(ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE)
-                replaceCraftingRecipe(ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS)
+                replaceCrafting(ItemStack(Block.SLAB, 3), "###", '#', Block.COBBLESTONE)
+                replaceCrafting(ItemStack(Block.STONE_PRESSURE_PLATE), "###", '#', Block.STONE)
+                replaceCrafting(ItemStack(Block.WOODEN_PRESSURE_PLATE), "###", '#', Block.PLANKS)
             }
 
             override fun textures() {
                 B1_3_01.textures()
-                Block.REDSTONE_WIRE.setTexture("block/redstone_dust_cross")
-                redstoneWireTextures[0] = Block.REDSTONE_WIRE.textureId
-                addBlockTexture("block/redstone_dust_line")
-                redstoneWireTextures[1] = addBlockTexture("block/redstone_dust_cross_on").index
-                addBlockTexture("block/redstone_dust_line_on")
+                Block.REDSTONE_WIRE.textureId = TextureHelper.redstoneWire[0]
             }
 
             override fun translations() = translate(Item.GUNPOWDER)
@@ -309,9 +291,9 @@ abstract class Version(
                 }
                 Protocol.registerWrapper(103) { packet: ScreenHandlerSlotUpdateS2CPacket ->
                     PacketWrapper(packet,
-                        FieldEntry(DataType.BYTE),
-                        FieldEntry(DataType.SHORT),
-                        FieldEntry(DataType.ITEM_STACK)
+                        FieldEntry(DataType.BYTE), // sync id
+                        FieldEntry(DataType.SHORT), // slot
+                        FieldEntry(DataType.ITEM_STACK) // item stack
                     )
                 }
             }
@@ -338,7 +320,7 @@ abstract class Version(
                     Item.DYE,
                     Item.SUGAR
                 )
-                removeSmeltingRecipes(Block.CACTUS, Block.LOG)
+                removeSmelting(Block.CACTUS, Block.LOG)
             }
 
             override fun translations() {
@@ -347,16 +329,14 @@ abstract class Version(
             }
         })
 
-        /**
-         * Beta 1.1_01 (Protocol version: 7)
-         *
-         * Identical to [B1_1_02] besides chests not opening with empty hands serverside.
-         */
         @JvmField
-        @Suppress("unused")
-        val B1_1_01 = register(object : Version(Type.BETALPHA, 7, "1.1_01"), VersionParity by B1_2_02 {
-            override fun packets() = B1_1_02.packets()
+        val A1_2_6 = register(object : Version(Type.ALPHA, 6, "1.2.6"), VersionParity by B1_1_02 {
+            override fun packets() {
+                B1_1_02.packets()
+                TODO("moar packets")
+            }
         })
+
 //
 //        /**
 //         * Alpha v1.2.3_05 - Alpha v1.2.6
@@ -388,13 +368,8 @@ abstract class Version(
 //        @JvmField
 //        val ALPHA_2 = register(Type.ALPHA, 2, "1.1.1", "1.1.2_01")
 
-        internal fun registerAll() {
-            fabric.invokeEntrypoints("multiproto:register_versions", RegisterVersionsListener::class.java) { it() }
-            LIST
-        }
-
         /**
-         * @param s [String] representing a protocol versions's type and version number.
+         * @param s [String] representing a protocol version's type and version number.
          * @return [Version] which matches the given string or [.BETA_14].
          * @see Version.toString
          */
@@ -425,12 +400,6 @@ abstract class Version(
     override fun compareTo(other: Version): Int {
         return compareBy<Version> { it.type }.thenBy { it.version }.compare(this, other)
     }
-
-    @Deprecated("JAVA UTIL", ReplaceWith("ver LE other"))
-    fun isLE(other: Version) = this <= other
-
-    @Deprecated("JAVA UTIL", ReplaceWith("ver GE other"))
-    fun isGE(other: Version) = this >= other
 
     enum class Type(
         val id: String,

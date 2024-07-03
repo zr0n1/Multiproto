@@ -23,15 +23,13 @@ public abstract class LeavesBlockParityMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void multiproto_applyTextureParity(CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_1_02)) {
-            cir.setReturnValue(textureId);
-        }
+        if (Protocol.verLE(Version.B1_1_02)) cir.setReturnValue(textureId);
     }
 
     @Inject(method = "getColorMultiplier", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/BlockView;getBlockMeta(III)I", shift = At.Shift.AFTER), cancellable = true)
     private void multiproto_applyColorParity(BlockView blockView, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_1_02)) {
+        if (Protocol.verLE(Version.B1_1_02)) {
             blockView.method_1781().method_1788(x, z, 1, 1);
             double temperature = blockView.method_1781().field_2235[0];
             double humidity = blockView.method_1781().field_2236[0];
@@ -41,7 +39,7 @@ public abstract class LeavesBlockParityMixin extends Block {
 
     @Inject(method = "getColor", at = @At("HEAD"), cancellable = true)
     private void multiproto_applyItemColorParity(int meta, CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_6_6) && Multiproto.config.textureParity) {
+        if (Protocol.verLE(Version.B1_6_6) && Multiproto.config.textureParity) {
             cir.setReturnValue(super.getColor(meta));
         }
     }

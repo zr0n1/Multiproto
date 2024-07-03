@@ -1,6 +1,7 @@
 package com.github.zr0n1.multiproto.mixin.parity.optional.block;
 
 import com.github.zr0n1.multiproto.Multiproto;
+import com.github.zr0n1.multiproto.parity.TextureHelper;
 import com.github.zr0n1.multiproto.protocol.Protocol;
 import com.github.zr0n1.multiproto.protocol.Version;
 import net.minecraft.block.Block;
@@ -20,8 +21,8 @@ public abstract class SlabBlockTextureMixin {
 
     @Inject(method = "getTexture(II)I", at = @At("HEAD"), cancellable = true)
     private void multiproto_applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
-        if (Protocol.getVer().isLE(Version.B1_6_6) && Multiproto.config.textureParity) {
-            if (!isFullCube() && side > 1) cir.setReturnValue(Version.slabSideTextures[meta]);
+        if (Protocol.verLE(Version.B1_6_6) && Multiproto.config.textureParity) {
+            if (!isFullCube() && side > 1) cir.setReturnValue(TextureHelper.slabSides[meta]);
             else if (meta == 3) cir.setReturnValue(Block.COBBLESTONE.textureId);
         }
     }

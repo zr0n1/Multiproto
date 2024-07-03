@@ -1,11 +1,9 @@
-package com.github.zr0n1.multiproto.protocol.parity
+package com.github.zr0n1.multiproto.parity.juice
 
-import com.github.zr0n1.multiproto.Multiproto
 import com.github.zr0n1.multiproto.mixin.parity.block.BlockAccessor
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.sound.BlockSoundGroup
-import net.modificationstation.stationapi.api.util.Namespace
 
 class BlockJuice private constructor(val block: Block) {
     val accessor: BlockAccessor = block as BlockAccessor
@@ -36,10 +34,6 @@ class BlockJuice private constructor(val block: Block) {
     var hasEntity = Block.BLOCKS_WITH_ENTITY[block.id]
     var luminance = Block.BLOCKS_LIGHT_LUMINANCE[block.id]
     var ignoreMetaUpdates = Block.BLOCKS_IGNORE_META_UPDATE[block.id]
-
-    fun translate(namespace: Namespace, prefix: String? = null) {
-        this.translationKey = "$namespace.${if (prefix != null) "$prefix." else ""}${block.translationKey}"
-    }
     
     fun soak() {
         block.textureId = this.textureId

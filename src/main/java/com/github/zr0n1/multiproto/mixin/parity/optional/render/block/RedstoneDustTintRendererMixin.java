@@ -18,8 +18,8 @@ public abstract class RedstoneDustTintRendererMixin {
     @SuppressWarnings("deprecation")
     private void multiproto_applyTintParity(Tessellator t, float r, float g, float b,
                                             @Local(name = "var8") float luminance, @Local(name = "var6") int meta) {
-        if (Protocol.getVer().isLE(Version.B1_4_01) && meta == 0 && Multiproto.config.textureParity) r = 0F;
-        if (Protocol.getVer().isLE(Version.B1_2_02) && Multiproto.config.textureParity) r = g = b = luminance;
+        if (Protocol.verLE(Version.B1_4_01) && meta == 0 && Multiproto.config.textureParity) r = 0F;
+        if (Protocol.verLE(Version.B1_2_02) && Multiproto.config.textureParity) r = g = b = luminance;
         t.color(r, g, b);
     }
 }

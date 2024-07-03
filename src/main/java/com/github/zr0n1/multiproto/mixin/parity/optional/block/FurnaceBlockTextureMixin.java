@@ -17,7 +17,7 @@ public abstract class FurnaceBlockTextureMixin {
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     @SuppressWarnings("deprecation")
     private void multiproto_applyTextureParity(int side, CallbackInfoReturnable<Integer> cir) {
-        if ((side == 1 || side == 0) && Protocol.getVer().isLE(Version.B1_1_02) && Multiproto.config.textureParity) {
+        if ((side == 1 || side == 0) && Protocol.verLE(Version.B1_1_02) && Multiproto.config.textureParity) {
             cir.setReturnValue(Block.STONE.textureId);
         }
     }
@@ -26,7 +26,7 @@ public abstract class FurnaceBlockTextureMixin {
     @SuppressWarnings("deprecation")
     private void multiproto_applyTextureIdParity(BlockView bv, int x, int y, int z, int side,
                                                  CallbackInfoReturnable<Integer> cir) {
-        if ((side == 1 || side == 0) && Protocol.getVer().isLE(Version.B1_1_02) && Multiproto.config.textureParity) {
+        if ((side == 1 || side == 0) && Protocol.verLE(Version.B1_1_02) && Multiproto.config.textureParity) {
             cir.setReturnValue(Block.STONE.textureId);
         }
     }
