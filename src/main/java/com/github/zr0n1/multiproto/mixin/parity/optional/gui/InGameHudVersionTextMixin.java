@@ -31,7 +31,7 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
                 !minecraft.options.debugHud) {
             GL11.glPushMatrix();
             minecraft.textRenderer.drawWithShadow("Minecraft " +
-                    (custom.isBlank() ? Protocol.getVer().name() : custom), 2, 2, 16777215);
+                    (custom.isBlank() ? Protocol.getVer().name : custom), 2, 2, 16777215);
             GL11.glPopMatrix();
         }
     }
@@ -41,7 +41,7 @@ public abstract class InGameHudVersionTextMixin extends DrawContext {
     private void multiproto_addDebugText(CallbackInfo ci) {
         if (minecraft.isWorldRemote() && Multiproto.config.showDebug) {
             minecraft.textRenderer.drawWithShadow("Protocol version: " +
-                            Protocol.getVer().name(true) + " (" + Protocol.getVer().version + ")",
+                            Protocol.getVer().abbreviation + " (" + Protocol.getVer().version + ")",
                     2, (getFabric().isModLoaded("mojangfixstationapi") && Config.config.enableDebugMenuWorldSeed ?
                             116 : 100), 14737632);
         }

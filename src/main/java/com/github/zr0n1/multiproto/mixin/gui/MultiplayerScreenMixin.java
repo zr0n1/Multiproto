@@ -19,7 +19,7 @@ public abstract class MultiplayerScreenMixin extends Screen {
     private void multiproto_button(CallbackInfo ci) {
         ButtonWidget b = (ButtonWidget) buttons.get(0);
         buttons.add(new ButtonWidget(100, b.x, b.y - 24,
-                "Protocol version: " + VersionScreen.getSelected().name(true)));
+                "Protocol version: " + VersionScreen.getSelected().name));
     }
 
     @Inject(method = "buttonClicked", at = @At("HEAD"), cancellable = true)

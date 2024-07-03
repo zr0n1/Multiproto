@@ -41,7 +41,7 @@ public abstract class EditServerScreenMixin extends Screen implements Multiproto
     @SuppressWarnings("unchecked")
     private void multiproto_button(CallbackInfo ci) {
         buttons.add(new CallbackButtonWidget(width / 2 - 100, height / 4 + 72 + 12,
-                "Protocol version: " + multiproto_getVersion().name(true),
+                "Protocol version: " + multiproto_getVersion().name,
                 button -> minecraft.setScreen(new VersionScreen(this))));
     }
 

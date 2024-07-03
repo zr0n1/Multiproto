@@ -113,9 +113,6 @@ dependencies {
     modLocalRuntime("com.github.calmilamsy:ModMenu:${property("modmenu_version")}") {
         isTransitive = false
     }
-    modLocalRuntime("maven.modrinth:bh-creative:0.4.6") {
-        isTransitive = false
-    }
 }
 
 tasks {

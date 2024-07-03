@@ -117,7 +117,7 @@ class VersionScreen(private val parent: Screen) : Screen() {
 
         override fun renderEntry(index: Int, x: Int, y: Int, l: Int, tesselator: Tessellator) {
             drawCenteredTextWithShadow(textRenderer,
-                versions[index].name(),
+                versions[index].name,
                 width / 2, y + 1, 16777215
             )
             drawCenteredTextWithShadow(textRenderer,

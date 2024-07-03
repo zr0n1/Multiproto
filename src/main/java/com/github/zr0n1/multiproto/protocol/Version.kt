@@ -48,10 +48,15 @@ abstract class Version(
     @JvmField
     val version: Int,
     /**
-     * Client version number.
+     * Last client version number.
      */
-    private val client: String,
+    client: String,
 ) : VersionParity, Comparable<Version> {
+    @JvmField
+    val name = "${type.label} ${type.prefix}$client"
+    @JvmField
+    val abbreviation = "${type.abbreviation}$client"
+
     abstract fun packets()
 
     companion object {
@@ -382,11 +387,6 @@ abstract class Version(
         }
     }
 
-    @JvmOverloads
-    fun name(shorten: Boolean = false): String {
-        return type.getLabel(shorten) + (if (shorten) "" else " ") + (if (shorten) "" else type.prefix) + client
-    }
-
     /**
      * @return [String] representing the [Version] by [type] and [version].
      *
@@ -403,14 +403,12 @@ abstract class Version(
 
     enum class Type(
         val id: String,
-        private val label: String,
-        private val abbreviation: String,
+        val label: String,
+        val abbreviation: String,
         val prefix: String = ""
     ) {
         ALPHA("alpha", "Alpha", "a", "v"),
         BETALPHA("betalpha", "Beta", "b"),
         BETA("beta", "Beta", "b");
-
-        fun getLabel(shorten: Boolean): String = if (shorten) abbreviation else label
     }
 }
