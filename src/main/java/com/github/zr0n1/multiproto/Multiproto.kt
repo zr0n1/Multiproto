@@ -24,6 +24,7 @@ internal object Multiproto {
     @JvmField
     val config = Config()
 
+    @Suppress("UNUSED_PARAMETER")
     @EventListener
     private fun initJuice(event: AfterBlockAndItemRegisterEvent) {
         VersionParity.BASE_BLOCK_JUICE

@@ -15,6 +15,7 @@ object TextureHelper {
     @JvmField
     val redstoneWire = IntArray(2)
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     @EventListener
     fun register(event: TextureRegisterEvent) {
         oldBricks = blockTextureIndex("block/bricks")
@@ -44,9 +45,11 @@ object TextureHelper {
     fun addBlockTexture(namespace: Namespace, id: String): Atlas.Sprite =
         Atlases.getTerrain().addTexture(namespace.id(id))
 
+    @Suppress("unused")
     internal fun addItemTexture(id: String): Atlas.Sprite =
         Atlases.getGuiItems().addTexture(Multiproto.NAMESPACE.id(id))
 
+    @Suppress("unused")
     fun addItemTexture(namespace: Namespace, id: String): Atlas.Sprite =
         Atlases.getGuiItems().addTexture(namespace.id(id))
 }

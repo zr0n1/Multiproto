@@ -58,22 +58,7 @@ object Protocol {
     fun isTranslated(id: Int) = replacements.contains(id) || redirects.contains(id) || wrappers.contains(id)
 
     @JvmStatic
-    fun wrap(packet: Packet): Packet? = wrappers[packet.rawId]?.invoke(packet).also { it?.wrapperId = packet.rawId }
-
-    @JvmStatic
-    fun redirect(packet: Packet) = redirects[packet.rawId]?.invoke(packet)
-
-    @JvmStatic
     fun handle(packet: Packet, handler: NetworkHandler) = handlers[packet.rawId]?.invoke(packet, handler)
-
-    @JvmStatic
-    fun hasWrapper(id: Int) = id in wrappers
-
-    @JvmStatic
-    fun hasRedirect(id: Int) = redirects.containsKey(id)
-
-    @JvmStatic
-    fun isReplaced(id: Int) = replacements.containsKey(id)
 
     @JvmStatic
     fun hasApplier(id: Int) = id in handlers
