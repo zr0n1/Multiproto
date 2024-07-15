@@ -110,7 +110,7 @@ dependencies {
     }
 
     // local runtimes
-    modLocalRuntime("com.github.calmilamsy:ModMenu:${property("modmenu_version")}") {
+    modLocalRuntime("net.glasslauncher.mods:ModMenu:${property("modmenu_version")}") {
         isTransitive = false
     }
 }

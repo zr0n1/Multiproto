@@ -15,7 +15,7 @@ object TextureHelper {
     @JvmField
     val redstoneWire = IntArray(2)
 
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER")
     @EventListener
     fun register(event: TextureRegisterEvent) {
         oldBricks = blockTextureIndex("block/bricks")

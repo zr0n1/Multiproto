@@ -36,13 +36,12 @@ import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandl
  */
 abstract class Version(
     /**
-     * Version type.
-     *
      * @see Type
      */
     val type: Type,
     /**
      * Protocol version number.
+     *
      * (Example: `14` for Beta 1.7 - Beta 1.7.3.)
      */
     @JvmField
@@ -52,8 +51,20 @@ abstract class Version(
      */
     client: String,
 ) : VersionParity, Comparable<Version> {
+
+    /**
+     * Version name.
+     *
+     * (Example: Beta 1.7.3)
+     */
     @JvmField
     val name = "${type.label} ${type.prefix}$client"
+
+    /**
+     * Abbreviated version name.
+     *
+     * (Example: b1.7.3)
+     */
     @JvmField
     val abbreviation = "${type.abbreviation}$client"
 
@@ -401,6 +412,9 @@ abstract class Version(
         return compareBy<Version> { it.type }.thenBy { it.version }.compare(this, other)
     }
 
+    /**
+     * Version type, separates changes in protocol numbering and stores naming and serialization information.
+     */
     enum class Type(
         val id: String,
         val label: String,
