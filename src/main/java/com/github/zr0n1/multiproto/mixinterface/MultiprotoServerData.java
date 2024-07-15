@@ -12,7 +12,6 @@ public interface MultiprotoServerData {
         return create(nbt.getString("name"), nbt.getString("ip"), Version.parse(nbt.getString("version")));
     }
 
-    @SuppressWarnings("all")
     static ServerData create(String name, String ip, Version version) {
         ServerData data = new ServerData(name, ip);
         ((MultiprotoServerData) data).multiproto_setVersion(version);

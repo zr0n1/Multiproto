@@ -21,7 +21,6 @@
     "parity.optional.block.SlabBlockTextureMixin"
   ],
   "client": [
-    "entity.MultiplayerClientPlayerEntityMixin",
     "gui.EntryListWidgetAccessor",
     "gui.MultiplayerScreenAccessor",
     "gui.MultiplayerScreenMixin",

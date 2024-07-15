@@ -72,7 +72,6 @@ abstract class Version(
 
     companion object {
         private val _list: MutableList<Version> = ArrayList()
-        @JvmStatic
         val LIST: List<Version> by lazy { _list.sorted() }
 
         fun register(version: Version) = version.also { _list += it }
@@ -344,45 +343,6 @@ abstract class Version(
                 translate(Block.CRAFTING_TABLE, Block.SUGAR_CANE, Item.SUGAR_CANE)
             }
         })
-
-        @JvmField
-        val A1_2_6 = register(object : Version(Type.ALPHA, 6, "1.2.6"), VersionParity by B1_1_02 {
-            override fun packets() {
-                B1_1_02.packets()
-                TODO("moar packets")
-            }
-        })
-
-//
-//        /**
-//         * Alpha v1.2.3_05 - Alpha v1.2.6
-//         */
-//        @JvmField
-//        val ALPHA_6 = register(Type.ALPHA, 6, "1.2.3_05", "1.2.6")
-//
-//        /**
-//         * Alpha v1.2.3 - Alpha v1.2.3_04
-//         */
-//        @JvmField
-//        val ALPHA_5 = register(Type.ALPHA, 5, "1.2.3", "1.2.3_04")
-//
-//        /**
-//         * Alpha v1.2.2
-//         */
-//        @JvmField
-//        val ALPHA_4 = register(Type.ALPHA, 4, "1.2.2")
-//
-//        /**
-//         * Alpha v1.2.0 - Alpha v1.2.1_01
-//         */
-//        @JvmField
-//        val ALPHA_3 = register(Type.ALPHA, 3, "1.20", "1.2.1_01")
-//
-//        /**
-//         * Alpha v1.1.1 - Alpha v1.1.2_01
-//         */
-//        @JvmField
-//        val ALPHA_2 = register(Type.ALPHA, 2, "1.1.1", "1.1.2_01")
 
         /**
          * @param s [String] representing a protocol version's type and version number.

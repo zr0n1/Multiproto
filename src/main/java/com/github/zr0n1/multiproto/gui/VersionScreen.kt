@@ -24,7 +24,7 @@ class VersionScreen(private val parent: Screen) : Screen() {
     private lateinit var selectButton: ButtonWidget
     private lateinit var selectAndButton: ButtonWidget
     
-    private val versions: List<Version> = Version.LIST.reversed()
+    private val versions = Version.LIST.reversed()
 
     private val MultiplayerScreen.connectButton: ButtonWidget
         get() = (this as ScreenAccessor).buttons[0]
