@@ -18,10 +18,6 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
         return FabricLoader.getInstance().isModLoaded("mojangfixstationapi") && pl.telvarost.mojangfixstationapi.Config.config.enableDebugMenuWorldSeed;
     }
 
-    public static boolean shouldApplyHMIFabricIntegration() {
-        return FabricLoader.getInstance().isModLoaded("hmifabric");
-    }
-
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return switch (mixinClassName) {
@@ -35,8 +31,6 @@ public class MultiprotoMixinPlugin implements IMixinConfigPlugin {
                     shouldApplyMojangFixStAPIServerListIntegration();
             case "com.github.zr0n1.multiproto.mixin.gui.MultiplayerScreen" ->
                     !shouldApplyMojangFixStAPIServerListIntegration();
-            case "com.github.zr0n1.multiproto.mixin.parity.hmifabric.UtilsAccessor" ->
-                    shouldApplyHMIFabricIntegration();
             default -> true;
         };
     }

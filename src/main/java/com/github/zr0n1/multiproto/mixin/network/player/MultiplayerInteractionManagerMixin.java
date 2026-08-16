@@ -4,10 +4,10 @@ import com.github.zr0n1.multiproto.protocol.ProtocolVersion;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MultiplayerInteractionManager;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
@@ -28,98 +28,98 @@ public abstract class MultiplayerInteractionManagerMixin extends InteractionMana
     @Shadow
     private ClientNetworkHandler networkHandler;
     @Shadow
-    private boolean field_2615;
+    private boolean breakingBlock;
     @Shadow
-    private int field_2608;
+    private int breakingPosX;
     @Shadow
-    private int field_2609;
+    private int breakingPosY;
     @Shadow
-    private int field_2610;
+    private int breakingPosZ;
     @Shadow
-    private float field_2611;
+    private float blockBreakingProgress;
     @Shadow
-    private float field_2612;
+    private float lastBlockBreakingProgress;
     @Shadow
-    private float field_2613;
+    private float breakingSoundDelayTicks;
     @Shadow
-    private int field_2614;
+    private int breakingDelayTicks;
 
     public MultiplayerInteractionManagerMixin(Minecraft minecraft) {
         super(minecraft);
     }
 
     @Shadow
-    public abstract void method_1707(int i, int j, int k, int l);
+    public abstract void attackBlock(int i, int j, int k, int l);
 
     @Inject(method = "clickSlot", at = @At("HEAD"))
     private void disableShiftClick(CallbackInfoReturnable<ItemStack> cir, @Local(argsOnly = true) LocalBooleanRef shift) {
         if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) shift.set(false);
     }
 
-    @Inject(method = "method_1716", at = @At("HEAD"))
+    @Inject(method = "breakBlock", at = @At("HEAD"))
     private void sendBlockMined(int i, int j, int k, int l, CallbackInfoReturnable<Boolean> cir) {
         if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(3, i, j, k, l));
         }
     }
 
-    @Inject(method = "method_1707", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "attackBlock", at = @At(value = "HEAD"), cancellable = true)
     private void startMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
-            field_2615 = true;
+            breakingBlock = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(0, i, j, k, l));
             int id = minecraft.world.getBlockId(i, j, k);
-            if (id > 0 && field_2611 == 0.0F) {
+            if (id > 0 && blockBreakingProgress == 0.0F) {
                 Block.BLOCKS[id].onBlockBreakStart(minecraft.world, i, j, k, minecraft.player);
             }
             if (id > 0 && Block.BLOCKS[id].getHardness(this.minecraft.player) >= 1.0F) {
-                this.method_1716(i, j, k, l);
+                this.breakBlock(i, j, k, l);
             }
             ci.cancel();
         }
     }
 
-    @Inject(method = "method_1705", at = @At("HEAD"))
+    @Inject(method = "cancelBlockBreaking", at = @At("HEAD"))
     private void stopMining(CallbackInfo ci) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && field_2615) {
+        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9) && breakingBlock) {
             networkHandler.sendPacket(new PlayerActionC2SPacket(2, 0, 0, 0, 0));
-            field_2614 = 0;
+            breakingDelayTicks = 0;
         }
     }
 
-    @Inject(method = "method_1721", at = @At("HEAD"))
+    @Inject(method = "processBlockBreakingAction", at = @At("HEAD"))
     private void sendMining(int i, int j, int k, int l, CallbackInfo ci) {
         if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
-            field_2615 = true;
+            breakingBlock = true;
             networkHandler.sendPacket(new PlayerActionC2SPacket(1, i, j, k, l));
         }
     }
 
-    @Redirect(method = "method_1721", at = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
+    @Redirect(method = "processBlockBreakingAction", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MultiplayerInteractionManager;breakingBlock:Z",
             opcode = Opcodes.PUTFIELD), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I")))
     private void redirectPutField_2615(MultiplayerInteractionManager instance, boolean b) {
-        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) field_2615 = b;
+        if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) breakingBlock = b;
     }
 
-    @Redirect(method = "method_1721", at = @At(value = "INVOKE",
+    @Redirect(method = "processBlockBreakingAction", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"),
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/MultiplayerInteractionManager;field_2615:Z",
+            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/MultiplayerInteractionManager;breakingBlock:Z",
                     opcode = Opcodes.PUTFIELD, ordinal = 1)))
     private void redirectSendStopMiningPacket(ClientNetworkHandler handler, Packet packet) {
         if (!ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) handler.sendPacket(packet);
     }
 
-    @Redirect(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/MultiplayerInteractionManager;method_1707(IIII)V"))
+    @Redirect(method = "processBlockBreakingAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MultiplayerInteractionManager;attackBlock(IIII)V"))
     private void redirectStartMiningInSendMining(MultiplayerInteractionManager manager, int i, int j, int k, int l) {
         if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_9)) {
-            field_2611 = 0.0F;
-            field_2612 = 0.0F;
-            field_2613 = 0.0F;
-            field_2608 = i;
-            field_2609 = j;
-            field_2610 = k;
+            blockBreakingProgress = 0.0F;
+            lastBlockBreakingProgress = 0.0F;
+            breakingSoundDelayTicks = 0.0F;
+            breakingPosX = i;
+            breakingPosY = j;
+            breakingPosZ = k;
         } else {
-            method_1707(i, j, k, l);
+            attackBlock(i, j, k, l);
         }
     }
 }

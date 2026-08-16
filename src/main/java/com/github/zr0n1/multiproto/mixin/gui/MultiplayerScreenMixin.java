@@ -2,8 +2,8 @@ package com.github.zr0n1.multiproto.mixin.gui;
 
 import com.github.zr0n1.multiproto.gui.ProtocolVersionScreen;
 import com.github.zr0n1.multiproto.protocol.ProtocolVersionManager;
+import net.minecraft.client.gui.screen.MultiplayerScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -19,7 +19,7 @@ public abstract class SaplingBlockTextureMixin extends Block {
 
     @Inject(method = "getTexture", at = @At("HEAD"), cancellable = true)
     private void applyTextureParity(int side, int meta, CallbackInfoReturnable<Integer> cir) {
-        if (ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
+        if (ProtocolVersionManager.getVersion().isBukkitClient() || ProtocolVersionManager.isBefore(ProtocolVersion.BETA_11)) {
             cir.setReturnValue(textureId);
         }
     }

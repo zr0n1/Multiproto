@@ -13,6 +13,6 @@ public abstract class CobwebBlockBehaviorMixin {
 
     @Inject(method = "isFullCube", at = @At("HEAD"), cancellable = true)
     private void applyCobwebFullCubeParity(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(ProtocolVersionManager.getVersion() == ProtocolVersion.BETA_13);
+        cir.setReturnValue(ProtocolVersionManager.getVersion().isBukkitClient() || ProtocolVersionManager.getVersion() == ProtocolVersion.BETA_13);
     }
 }

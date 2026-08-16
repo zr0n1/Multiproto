@@ -13,13 +13,13 @@ public class ItemParityHelper {
         for (Item item : Item.ITEMS) {
             if (item instanceof ToolItem tool) {
                 ToolMaterial material = tool.getMaterial(new ItemStack(item));
-                tool.setMaxDamage((ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ?
+                tool.setMaxDamage((ProtocolVersionManager.isBeforeOrBukkitClient(ProtocolVersion.BETA_8) ?
                         (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
-                ((ToolItemAccessor) tool).setMiningSpeed(ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ?
+                ((ToolItemAccessor) tool).setMiningSpeed(ProtocolVersionManager.isBeforeOrBukkitClient(ProtocolVersion.BETA_8) ?
                         (material.getMiningLevel() + 1) * 2 : material.getMiningSpeedMultiplier());
             } else if (item instanceof SwordItem sword) {
                 ToolMaterial material = sword.getMaterial(new ItemStack(item));
-                sword.setMaxDamage((ProtocolVersionManager.isBefore(ProtocolVersion.BETA_8) ?
+                sword.setMaxDamage((ProtocolVersionManager.isBeforeOrBukkitClient(ProtocolVersion.BETA_8) ?
                         (32 << material.getMiningLevel()) * (material.getMiningLevel() == 3 ? 4 : 1) : material.getDurability()));
             }
         }

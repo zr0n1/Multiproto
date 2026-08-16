@@ -77,7 +77,7 @@ public class RecipeParityHelper {
     }
 
     public static void removeBefore(ProtocolVersion target, ItemStack... outputs) {
-        if (ProtocolVersionManager.isBefore(target)) {
+        if (ProtocolVersionManager.isBeforeOrBukkitClient(target)) {
             for (ItemStack output : outputs) {
                 CraftingRecipeManager.getInstance().getRecipes().removeIf(r -> ((CraftingRecipe) r).getOutput().equals(output));
             }

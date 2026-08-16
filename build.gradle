@@ -1,63 +1,73 @@
 plugins {
-    id 'babric-loom' version '1.4.2'
     id 'maven-publish'
+    id 'fabric-loom' version '1.17.12'
+    id 'babric-loom-extension' version '1.16.1'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+version = property("mod_version")
+group = property("maven_group")
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+base {
+    archivesName = project.archives_base_name
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 loom {
-    mixin {
-        useLegacyMixinAp = true
+    if (project.hasProperty("accesswidener_name") && project.accesswidener_name.length() > 0) {
+        accessWidenerPath = file("src/main/resources/${project.accesswidener_name}.accesswidener")
     }
-    gluedMinecraftJar()
-    customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
-    intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
+    mixin {
+        useLegacyMixinAp = false
+    }
 }
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
+    // Used for Babric Loom Extensions
+    maven {
+        name = "Babric"
+        url = "https://maven.glass-launcher.net/babric"
+    }
 
-    // Used for the fabric toolchain in this project.
+    // Used for many dependencies
     maven {
-        name = 'Babric'
-        url = 'https://maven.glass-launcher.net/babric'
+        name = "Glass Releases"
+        url = "https://maven.glass-launcher.net/releases"
     }
-    // Used for mappings.
+
+    // Used for Snapshots
     maven {
-        name = 'Glass Releases'
-        url = 'https://maven.glass-launcher.net/releases'
+        name = "Glass Snapshots"
+        url = "https://maven.glass-launcher.net/snapshots"
     }
-    // Used for StationAPI and HowManyItems.
+
+    // NyaRepo
     maven {
-        name = 'Glass Snapshots'
-        url = 'https://maven.glass-launcher.net/snapshots'
+        name = "NyaRepo"
+        url = "https://maven.fildand.cz/releases"
     }
+
     // Used for a StationAPI dependency.
     maven {
-        name = 'Froge'
-        url 'https://maven.minecraftforge.net/'
+        name = "Froge Maven"
+        url = "https://maven.minecraftforge.net/"
     }
-    maven {
-        name = 'ViaVersion'
-        url 'https://repo.viaversion.com'
-    }
+
     // Used for projects that do not have a maven repository, but do have a GitHub repository with working build scripts.
     maven {
-        name = 'Jitpack'
-        url = 'https://jitpack.io'
+        name = "Jitpack"
+        url = "https://jitpack.io"
     }
-    // Used for another StationAPI dependency
+
+    // Modrinth Maven
     exclusiveContent {
         forRepository {
+            //noinspection ForeignDelegate
             maven {
                 name = "Modrinth"
                 url = "https://api.modrinth.com/maven"
@@ -67,31 +77,78 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
     mavenCentral()
 }
 
+
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.glasslauncher:biny:${project.mappings}:v2"
-    modImplementation "babric:fabric-loader:${project.loader_version}"
+    mappings "net.glasslauncher:biny:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     implementation "org.slf4j:slf4j-api:1.8.0-beta4"
-    implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
-    implementation "blue.endless:jankson:1.2.1"
+    implementation "org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2"
+    implementation "me.carleslc:Simple-Yaml:1.8.4"
 
-    modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
-    modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}")
-    // Optional dependencies
-    modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
-        transitive false
+    modImplementation("net.modificationstation:StationAPI:${project.stapi_version}") {
+        exclude group: "babric", module: "fabric-loader"
     }
-    modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.hmifabric_version}") {
-        transitive false
+
+    if (project.hasProperty("modmenu_version")) {
+        modImplementation("net.danygames2014:modmenu:${project.modmenu_version}") {
+            transitive = false
+        }
     }
-    modImplementation("maven.modrinth:mojangfix-stationapi-edition:${project.mojangfixstationapi_version}") {
-        transitive false
+
+    if (project.hasProperty("glass_networking_version")) {
+        modImplementation("net.glasslauncher.mods:glass-networking:${project.glass_networking_version}") {
+            transitive = false
+        }
     }
+
+    if (project.hasProperty("gcapi_version")) {
+        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
+            transitive = false
+        }
+    }
+
+    if (project.hasProperty("alwaysmoreitems_version")) {
+        modImplementation("net.glasslauncher.mods:AlwaysMoreItems:${project.alwaysmoreitems_version}") {
+            transitive = false
+        }
+    }
+
+    if (project.hasProperty("retrocommands_version")) {
+        modImplementation("maven.modrinth:retrocommands:${project.retrocommands_version}-b1.7.3") {
+            transitive = false
+        }
+    }
+
+    if (project.hasProperty("whatsthis_version")) {
+        modImplementation("net.danygames2014:WhatsThis:${project.whatsthis_version}") {
+            transitive = false
+        }
+    }
+
+    if (project.hasProperty("retroauth_version")) {
+        modRuntimeOnly("maven.modrinth:retroauth:${project.retroauth_version}-b1.7.3") {
+            transitive = false
+        }
+    }
+
+    if (project.hasProperty("unitweaks_version")) {
+        modRuntimeOnly("maven.modrinth:unitweaks:${project.unitweaks_version}-b1.7.3") {
+            transitive = false
+        }
+    }
+
+    modRuntimeOnly("maven.modrinth:fast-stapi-intro:2.0.0-b1.7.3") {
+        transitive = false
+    }
+
+    modImplementation "maven.modrinth:cTg2WC1D:wHQvS6nF"
+
     implementation("com.github.GeyserMC:MCAuthLib:d9d773e5d50327c33898c65cd545a4f6ef3ba1b5") {
         transitive false
     }
@@ -106,23 +163,25 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    // Loom also requires J17.
     it.options.release = 17
 }
 
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
+// Disables the generation of the .module file
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}
+
+// Gradle 9 fails the build if there are no tests, but we are using the test package for a test mod
+tasks.withType(Test).configureEach {
+    failOnNoDiscoveredTests = false
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${archives_base_name}" }
+        rename { "${it}_" + base.archivesName.get() }
     }
 }
+
 
 // configure the maven publication
 publishing {

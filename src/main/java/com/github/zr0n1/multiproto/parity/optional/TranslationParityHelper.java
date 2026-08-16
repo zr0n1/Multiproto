@@ -16,10 +16,14 @@ public class TranslationParityHelper {
     }
 
     public static void replaceBefore(ProtocolVersion target, Block block, String key) {
-        block.setTranslationKey((ProtocolVersionManager.isBefore(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
+        block.setTranslationKey((isBeforeOrBukkitClient(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
     }
 
     public static void replaceBefore(ProtocolVersion target, Item item, String key) {
-        item.setTranslationKey((ProtocolVersionManager.isBefore(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
+        item.setTranslationKey((isBeforeOrBukkitClient(target) && Multiproto.config.translationParity ? "multiproto." : "") + key);
+    }
+
+    private static boolean isBeforeOrBukkitClient(ProtocolVersion version) {
+        return ProtocolVersionManager.isBefore(version) || (ProtocolVersionManager.getVersion().isBukkitClient());
     }
 }
